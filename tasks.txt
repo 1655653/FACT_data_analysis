@@ -1,0 +1,7 @@
+Task todo
+	output del processo di unpacking:
+					ha spacchettato tutto?
+					valutazionde dell'unpacker
+					firmware --> unpacker
+					chiarezza sul fatto di QUANTO è stato spacchettato
+	vedere quanto è unito con gli altri plug-in
