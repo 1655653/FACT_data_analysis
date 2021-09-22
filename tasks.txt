@@ -5,3 +5,7 @@ Task todo
 					firmware --> unpacker
 					chiarezza sul fatto di QUANTO è stato spacchettato
 	vedere quanto è unito con gli altri plug-in
+
+problemi da evidenziare:
+	cors policy risolto con il plug-in di chrome
+	d3 si usa sui documenti, non sulle api
