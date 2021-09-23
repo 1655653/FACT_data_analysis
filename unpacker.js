@@ -62,7 +62,7 @@ async function analyze_result(json_response){
   fw_size = json_response.firmware.analysis.unpacker.size_packed
   list_packed = json_response.firmware.analysis.unpacker.summary.packed
 
-  document.getElementById("textbox").innerHTML = "</br>Report of "+ json_response.firmware.meta_data.hid+" ( " + fw_size +" Bytes when packed, "+json_response.firmware.analysis.unpacker.size_unpacked+" Bytes when unpacked):</br>"
+  document.getElementById("textbox").innerHTML = "</br>Report of "+ json_response.firmware.meta_data.hid+" ( " + fw_size +" Bytes when packed, "+json_response.firmware.analysis.unpacker.size_unpacked+" Bytes when unpacked ):</br>"
   document.getElementById("textbox").innerHTML +="Over " + json_response.firmware.meta_data.total_files_in_firmware +" files, "
   
   if( list_packed !== undefined && json_response.firmware.analysis.unpacker.number_of_unpacked_files > 0){

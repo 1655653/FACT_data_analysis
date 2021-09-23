@@ -1,7 +1,7 @@
 Task todo
 	output del processo di unpacking:
 					ha spacchettato tutto? [X]
-					valutazionde dell'unpacker
+					valutazionde dell'unpacker [X]
 					firmware --> unpacker[X]
 					chiarezza sul fatto di QUANTO è stato spacchettato [X]
 	vedere quanto è unito con gli altri plug-in
