@@ -1,11 +1,12 @@
 Task todo
 	output del processo di unpacking:
-					ha spacchettato tutto?
+					ha spacchettato tutto? [X]
 					valutazionde dell'unpacker
-					firmware --> unpacker
-					chiarezza sul fatto di QUANTO è stato spacchettato
+					firmware --> unpacker[X]
+					chiarezza sul fatto di QUANTO è stato spacchettato 
 	vedere quanto è unito con gli altri plug-in
 
 problemi da evidenziare:
 	cors policy risolto con il plug-in di chrome
 	d3 si usa sui documenti, non sulle api
+	in futuro devo fare chiamate a piu firmware 1 o piu volte? (per la questione dell'async)
