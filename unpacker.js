@@ -11,13 +11,14 @@ async function main() {
 
 }
 
-function makeGetRequest(url,method,item) {
+function makeGetRequest(url,method,item,last) {
 	return new Promise(function (resolve, reject) {
 		axios.get(url).then(
 			(response) => {
 				var result = response.data;
 				console.log('Processing Request');
-        method(result)
+        method(result,item,last)
+        if(last) document.getElementById("textbox").innerHTML += "TOT = "+tot
 				resolve(result);
 			},
 				(error) => {
@@ -29,12 +30,14 @@ function makeGetRequest(url,method,item) {
 
 
 //?  dovrebbe  essere async
-
+var list_response;
+var list_packed;
+var tot = 0;
 async function analyze_result(json_response){  //TODO tocca vedere quanto è stato spacchettato
 
   document.getElementById("textbox").innerHTML = "Report of "+ json_response.firmware.meta_data.hid+" ( " + json_response.firmware.meta_data.size +" Bytes" + "):</br>"
   //console.log(json_response.firmware.analysis.unpacker.summary.packed)
-  var list_packed = json_response.firmware.analysis.unpacker.summary.packed
+  list_packed = json_response.firmware.analysis.unpacker.summary.packed
   document.getElementById("textbox").innerHTML +="Over " + json_response.firmware.meta_data.total_files_in_firmware +" files, "
 
   if(list_packed.length > 0)
@@ -42,24 +45,23 @@ async function analyze_result(json_response){  //TODO tocca vedere quanto è sta
   else {
     document.getElementById("textbox").innerHTML += "FACT has been able to unpack every elements  "
   }
+  var tot = 1
+  list_response= [];
+  
 
-  list_packed.forEach(function (item) {
+  list_packed.forEach(function (item,idx,array) {
     url = endpoint+"file_object/"+item+"?summary=true";
     (async () => {
-      let response = await makeGetRequest(url,analyze_FO,item)   //* uso funzioni anonime, asincrono devo lavorare sull analisi
-      console.log(response)
+      idx === array.length - 1? last = true : last = false
+      await makeGetRequest(url,analyzeFO,item,last)   //* uso funzioni anonime, asincrono devo lavorare sull analisi
     })();
-    
   });
 }
 
-var tot = 0
-function analyze_FO(json_response,item){
-  /* console.log("--------------------------")
-  console.log("name:" + json_response.file_object.meta_data.hid +" "+ item)
-  console.log("size" +  json_response.file_object.meta_data.size)  
-  tot+=json_response.file_object.meta_data.size
-  //*voglio calcolare quanti byte non ha spacchettato
-  console.log(tot)
-  console.log("--------------------------") */
+function analyzeFO(rj,item){
+  //document.getElementById("textbox").innerHTML += "TOT = "+tot
+  tot+=rj.file_object.meta_data.size
+  list_packed.push(item)
+  list_response.push(rj)
 }
+
