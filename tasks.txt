@@ -3,7 +3,7 @@ Task todo
 					ha spacchettato tutto? [X]
 					valutazionde dell'unpacker
 					firmware --> unpacker[X]
-					chiarezza sul fatto di QUANTO è stato spacchettato 
+					chiarezza sul fatto di QUANTO è stato spacchettato [X]
 	vedere quanto è unito con gli altri plug-in
 
 problemi da evidenziare:

@@ -11,14 +11,14 @@ async function main() {
 
 }
 
-function makeGetRequest(url,method,item,last) {
+function makeGetRequest(url,method,item) {
 	return new Promise(function (resolve, reject) {
 		axios.get(url).then(
 			(response) => {
 				var result = response.data;
 				console.log('Processing Request');
-        method(result,item,last)
-        if(last) document.getElementById("textbox").innerHTML += "TOT = "+tot
+        method(result,item)
+        
 				resolve(result);
 			},
 				(error) => {
@@ -33,9 +33,10 @@ function makeGetRequest(url,method,item,last) {
 var list_response;
 var list_packed;
 var tot = 0;
+var fw_size
 async function analyze_result(json_response){  //TODO tocca vedere quanto è stato spacchettato
-
-  document.getElementById("textbox").innerHTML = "Report of "+ json_response.firmware.meta_data.hid+" ( " + json_response.firmware.meta_data.size +" Bytes" + "):</br>"
+  fw_size = json_response.firmware.meta_data.size
+  document.getElementById("textbox").innerHTML = "Report of "+ json_response.firmware.meta_data.hid+" ( " + fw_size +" Bytes" + "):</br>"
   //console.log(json_response.firmware.analysis.unpacker.summary.packed)
   list_packed = json_response.firmware.analysis.unpacker.summary.packed
   document.getElementById("textbox").innerHTML +="Over " + json_response.firmware.meta_data.total_files_in_firmware +" files, "
@@ -52,8 +53,7 @@ async function analyze_result(json_response){  //TODO tocca vedere quanto è sta
   list_packed.forEach(function (item,idx,array) {
     url = endpoint+"file_object/"+item+"?summary=true";
     (async () => {
-      idx === array.length - 1? last = true : last = false
-      await makeGetRequest(url,analyzeFO,item,last)   //* uso funzioni anonime, asincrono devo lavorare sull analisi
+      await makeGetRequest(url,analyzeFO,item)   //* uso funzioni anonime, asincrono devo lavorare sull analisi
     })();
   });
 }
@@ -61,7 +61,9 @@ async function analyze_result(json_response){  //TODO tocca vedere quanto è sta
 function analyzeFO(rj,item){
   //document.getElementById("textbox").innerHTML += "TOT = "+tot
   tot+=rj.file_object.meta_data.size
+  console.log(tot)
   list_packed.push(item)
   list_response.push(rj)
+  document.getElementById("tot").innerHTML = tot +" bytes unpacked ( "+ Math.round(tot/fw_size*100)+" % )" 
 }
 
