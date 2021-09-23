@@ -56,14 +56,30 @@ async function analyze_result(json_response){  //TODO tocca vedere quanto è sta
       await makeGetRequest(url,analyzeFO,item)   //* uso funzioni anonime, asincrono devo lavorare sull analisi
     })();
   });
+
+  
+  select = document.createElement('select');
+  select.setAttribute("id", "packed")
+  select.onchange = changeFunc
+  document.getElementById('textbox').appendChild(select);
+  
 }
 
 function analyzeFO(rj,item){
-  //document.getElementById("textbox").innerHTML += "TOT = "+tot
   tot+=rj.file_object.meta_data.size
   console.log(tot)
   list_packed.push(item)
   list_response.push(rj)
+  
   document.getElementById("tot").innerHTML = tot +" bytes unpacked ( "+ Math.round(tot/fw_size*100)+" % )" 
+  op = document.createElement('option');
+  document.getElementById("packed").appendChild(op)
+  op.innerHTML += rj.file_object.meta_data.hid;
+
 }
 
+function changeFunc() {
+  var selectBox = document.getElementById("packed");
+  var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+  console.log(selectedValue);
+ }
