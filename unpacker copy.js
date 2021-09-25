@@ -73,6 +73,8 @@ async function analyze_result(json_response){
     list_packed.forEach(function (item,idx,array) {
       url = endpoint+"file_object/"+item+"?summary=true";
       (async () => {
+        await selecthead()
+        
         await makeGetRequest(url,analyzeFO,item)   //* uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
       })();
     });
@@ -115,3 +117,10 @@ function changeFO() {
   document.getElementById("info_FO").innerHTML = "File object " + selectedValue + " with uid" + list_response[selectBox.selectedIndex].request.uid + " has size " + fosize + " Bytes"
   console.log(list_response[selectBox.selectedIndex].file_object.meta_data.size)
  }
+
+ async function selecthead(){
+  return new Promise(function (resolve, reject) {
+        op = document.createElement('option');
+        document.getElementById("packed").appendChild(op);
+        op.innerHTML += "-----------";})
+  };

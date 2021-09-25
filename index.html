@@ -3,7 +3,7 @@
 <head>
   <title>FACT-VIZ</title>
   <link rel="shortcut icon" href="#">
-
+  <link rel="stylesheet" href="aligndiv.css">  
 </head>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -19,12 +19,23 @@
 <!--script for MDS-->
 <script src="unpacker.js"></script>
 
-  <body>
+  <body>Select a firmware
     <select id = "allFW"></select>
-    <div id="textbox">
-     
+    </br>
+    <div id="reportOf"></div>
+    </br>
+
+    <div class= 'parent'>
+      <div class = 'child' id="over"></div>
+<!--       <select id = "packed"  style="visibility:hidden"></select>
+ -->      
+      <div class = 'child' id="tot"></div>
+
     </div>
-    <div id="tot"></div>
+
+    </br>
+
+    <div id="info_FO"></div>
   </body>
 
 </html>
