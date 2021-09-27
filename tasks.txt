@@ -1,3 +1,4 @@
+20/09
 Task todo
 	output del processo di unpacking:
 					ha spacchettato tutto? [X]
@@ -8,5 +9,28 @@ Task todo
 
 problemi da evidenziare:
 	cors policy risolto con il plug-in di chrome
-	d3 si usa sui documenti, non sulle api
+	d3 si usa sui documenti, non sulle api 
 	in futuro devo fare chiamate a piu firmware 1 o piu volte? (per la questione dell'async)
+	
+27/09
+Task todo
+	continuo su unpacker: è giusto che siano stati spacchettati? oppure falsi positivi?
+		perchè è stato blacklistato MIME_BLACKLIST
+		vedere sul codice sorgente dell'unpacker (https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg)
+		indagare sul cpio
+	
+	aumentare il contenuto informativo per questa overview
+		software components, filetype (slide 6) 
+
+	ragionare sulla parte visuale 
+		livello dimensionale quali sono le info da visualizzare e le loro dimensioni
+	
+	info circa il processo di unpacking e info sull'oggetto
+	sunburst
+	
+upload 
+
+problemi da evidenziare:
+	https://github.com/fkie-cad/fact_extractor/blob/7d4a14d59bb8a7c6ba27ccf5623c157e5fd90c1e/fact_extractor/plugins/unpacking/generic_fs/code/generic_fs.py
+	qui per ricavare il file type checka sul path, in Otherpad.jpg c'è un minix e quindi non viene spacchettato
+	
