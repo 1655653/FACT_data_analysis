@@ -19,3 +19,9 @@ function changeFunc() {
   console.log(selectedValue);
  }
   */
+
+ /* list_cpu_arch.forEach(function (i) {
+    list_cpu_arch[i]
+    document.getElementById("cpu_architecture").innerHTML = item
+
+  });  */

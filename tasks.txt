@@ -14,15 +14,15 @@ problemi da evidenziare:
 	
 27/09
 Task todo
-	continuo su unpacker: è giusto che siano stati spacchettati? oppure falsi positivi?
-		perchè è stato blacklistato MIME_BLACKLIST
+	continuo su unpacker: è giusto che siano stati spacchettati? oppure falsi positivi? [X]
+		perchè è stato blacklistato MIME_BLACKLIST [X]
 		vedere sul codice sorgente dell'unpacker (https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg)
-		indagare sul cpio
+		
 	
-	aumentare il contenuto informativo per questa overview
+	aumentare il contenuto informativo per questa overview 
 		software components, filetype (slide 6) 
 
-	ragionare sulla parte visuale 
+	ragionare sulla parte visuale (aspetta i paper di simone)
 		livello dimensionale quali sono le info da visualizzare e le loro dimensioni
 	
 	info circa il processo di unpacking e info sull'oggetto
@@ -31,6 +31,11 @@ Task todo
 upload 
 
 problemi da evidenziare:
-	https://github.com/fkie-cad/fact_extractor/blob/7d4a14d59bb8a7c6ba27ccf5623c157e5fd90c1e/fact_extractor/plugins/unpacking/generic_fs/code/generic_fs.py
-	qui per ricavare il file type checka sul path, in Otherpad.jpg c'è un minix e quindi non viene spacchettato
+	alcuni file non blacklistati non vengono estratti
+		https://github.com/fkie-cad/fact_extractor/blob/7d4a14d59bb8a7c6ba27ccf5623c157e5fd90c1e/fact_extractor/plugins/unpacking/generic_fs/code/generic_fs.py
+		qui per ricavare il file type checka sul path, in Otherpad.jpg c'è un minix e quindi non viene spacchettato
 	
+	indagare sul cpio:
+			(anche 50b8af1c9120b7f7bf53dc7ac3afbcc83e58e03a739c4fc1a9420784447acaa4_20831152 ha lo stesso problema)
+			 patool: ... /tmp/extractor/input/262f7ea5a35b2dcc2c80b45cc1bb03347c3471e4334e73f2b0c901ab2dcaf4b9_5909600 extracted to `/tmp/fact_unpack_5idju0kw'.
+			per fact l'archivio è stato estratto!!!

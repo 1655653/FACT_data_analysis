@@ -17,20 +17,31 @@
 
 
 <!--script for MDS-->
+
+<body>
+  Select a firmware <select id = "allFW"></select>
+  
+  <input type="checkbox" id="unpacker" value="false">
+  <label name="unpacker">unpacker</label>
+  <input type="checkbox" id="cpu_architecture" value="false">
+  <label name="cpu_architecture">cpu_architecture</label>
+  <button id="start" type="button">start</button>
+  </br>
+
+
+  <div id="reportOf"></div>
+  </br>
+
+  <div  style="display: inline-block" id="over"></div> <div  style="display: inline-block" id="tot"></div>
+  </br>
+  
+  </br>
+  <div id="cpu_architecture_div"></div>
+  </br>
+
+  <div id="info_FO"></div>
+
+</body>
+
 <script src="unpacker.js"></script>
-
-  <body>Select a firmware
-    <select id = "allFW"></select>
-    </br>
-    
-    <div id="reportOf"></div>
-    </br>
-    
-    <div  style="display: inline-block" id="over"></div> <div  style="display: inline-block" id="tot"></div>
-    </br>
-
-    <div id="info_FO"></div>
-    
-  </body>
-
 </html>
