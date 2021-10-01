@@ -6,7 +6,7 @@ var url = endpoint+"firmware"
 var unpack_blacklist = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "application/x-shockwave-flash", "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/ogg", "text/plain", "application/pdf"] //? token from https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg
 
 //* cpu_architecture var
-document.getElementById("software_componentsCKBOX").checked=true
+document.getElementById("users_and_passwordsCKBOX").checked=true
 var list_response_cpu_archi=[]
 //* unpacker var
 var list_response_unpacker=[]
@@ -23,6 +23,7 @@ async function main() {
   
 	var result = await makeGetRequest(url,getallFW);
 }
+
 
 //*chiamata generica
 function makeGetRequest(url,method,item) {
@@ -90,22 +91,27 @@ async function analyze_result(json_response){
     cpu_architecture(json_response)
   } 
   if (document.getElementById("software_componentsCKBOX").checked){
-    sw_components(json_response)
+    components(json_response,"software_components")
+  } 
+  if (document.getElementById("users_and_passwordsCKBOX").checked){
+    components(json_response,"users_and_passwords")
+  } 
+  if (document.getElementById("file_typeCKBOX").checked){
+    components(json_response,"file_type")
   } 
 
 
 }
-
-function sw_components(json_response){
-  var sw_summary =  json_response.firmware.analysis.software_components.summary
+function components(json_response,component){
+  var sw_summary =  json_response.firmware.analysis[component].summary
   var sw_obj = Object.keys(sw_summary)
   console.log(sw_summary)
   console.log("-------\n"+sw_obj)
-  document.getElementById("software_components_div").innerHTML = "SOFTWARE COMPONENTS: " 
+  document.getElementById(component+"_div").innerHTML = component.toUpperCase() + ": " 
   if(sw_obj.length > 0){
     for (let i = 0; i < sw_obj.length; i++) {
       const element = sw_obj[i];
-      document.getElementById("software_components_div").innerHTML+= sw_summary[element].length + " component(s) of this type: "+ element +" "
+      document.getElementById(component+"_div").innerHTML+= sw_summary[element].length + " component(s) of this type: "+ element +" "
       
       //?creo e setto il select dei fo 
       var select = document.createElement('select');
@@ -113,24 +119,31 @@ function sw_components(json_response){
       op = document.createElement('option');
       op.innerHTML += "----"
       select.appendChild(op)
-      document.getElementById('software_components_div').appendChild(select);
+      document.getElementById(component+"_div").appendChild(select);
       
-      document.getElementById("software_components_div").innerHTML+="</br>"
+      document.getElementById(component+"_div").innerHTML+="</br>"
 
       //? chiamo tutti i fo 
+      
       sw_summary[element].forEach(function (item) {
         url = endpoint+"file_object/"+item+"?summary=true";
-        (async () => {
-          await makeGetRequest(url,analyze_sw_comp_FO,element)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
-        })();
+        if(document.getElementById("testCKBOX").checked){
+          (async () => {
+            await makeGetRequest(url,analyze_comp_FO,element)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
+          })();
+        }
       });
-
+      
+        
     }
+  }
+  else{
+    document.getElementById(component+"_div").innerHTML += "No results with this plugin"
   }
   
 }
 
-function analyze_sw_comp_FO(rj,element){
+function analyze_comp_FO(rj,element){
   console.log(rj.file_object.meta_data.hid)
   console.log(rj.request.uid)
   op = document.createElement('option');
