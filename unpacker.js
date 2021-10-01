@@ -6,7 +6,8 @@ var url = endpoint+"firmware"
 var unpack_blacklist = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "application/x-shockwave-flash", "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/ogg", "text/plain", "application/pdf"] //? token from https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg
 
 //* cpu_architecture var
-document.getElementById("cpu_architecture").checked=true
+document.getElementById("software_componentsCKBOX").checked=true
+var list_response_cpu_archi=[]
 //* unpacker var
 var list_response_unpacker=[]
 var list_packed=[] //? contiene solo gli uid dei packed
@@ -69,8 +70,9 @@ function callFW() {
 
   //? pulisco le var
   document.getElementById("cpu_architecture_div").innerHTML =""
-  document.getElementById("info_FO").innerHTML = ""
+  document.getElementById("info_unpacker_FO").innerHTML = ""
   document.getElementById("over").innerHTML = ""
+  list_response_cpu_archi=[]
   list_response_unpacker=[]
   list_packed=[]
   list_packed_hid=[]
@@ -81,17 +83,62 @@ function callFW() {
 async function analyze_result(json_response){  
   document.getElementById("reportOf").innerHTML = "</br>Report of "+ json_response.firmware.meta_data.hid + "  MIME: "+json_response.firmware.analysis.file_type.mime 
     
-  if (document.getElementById("unpacker").checked){
+  if (document.getElementById("unpackerCKBOX").checked){
     unpacker(json_response)
   } 
-  if (document.getElementById("cpu_architecture").checked){
+  if (document.getElementById("cpu_architectureCKBOX").checked){
     cpu_architecture(json_response)
+  } 
+  if (document.getElementById("software_componentsCKBOX").checked){
+    sw_components(json_response)
   } 
 
 
 }
 
+function sw_components(json_response){
+  var sw_summary =  json_response.firmware.analysis.software_components.summary
+  var sw_obj = Object.keys(sw_summary)
+  console.log(sw_summary)
+  console.log("-------\n"+sw_obj)
+  document.getElementById("software_components_div").innerHTML = "SOFTWARE COMPONENTS: " 
+  if(sw_obj.length > 0){
+    for (let i = 0; i < sw_obj.length; i++) {
+      const element = sw_obj[i];
+      document.getElementById("software_components_div").innerHTML+= sw_summary[element].length + " component(s) of this type: "+ element +" "
+      
+      //?creo e setto il select dei fo 
+      var select = document.createElement('select');
+      select.setAttribute("id", element)
+      op = document.createElement('option');
+      op.innerHTML += "----"
+      select.appendChild(op)
+      document.getElementById('software_components_div').appendChild(select);
+      
+      document.getElementById("software_components_div").innerHTML+="</br>"
 
+      //? chiamo tutti i fo 
+      sw_summary[element].forEach(function (item) {
+        url = endpoint+"file_object/"+item+"?summary=true";
+        (async () => {
+          await makeGetRequest(url,analyze_sw_comp_FO,element)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
+        })();
+      });
+
+    }
+  }
+  
+}
+
+function analyze_sw_comp_FO(rj,element){
+  console.log(rj.file_object.meta_data.hid)
+  console.log(rj.request.uid)
+  op = document.createElement('option');
+  document.getElementById(element).appendChild(op)
+  op.innerHTML += rj.file_object.meta_data.hid;
+}
+
+//* cpu_architecture
 function cpu_architecture(json_response){
   var list_cpu_arch_uids = json_response.firmware.analysis.cpu_architecture.summary
   var list_cpu_arch = Object.keys(list_cpu_arch_uids)
@@ -102,15 +149,49 @@ function cpu_architecture(json_response){
   if(list_cpu_arch.length > 0){
     for (let i = 0; i < list_cpu_arch.length; i++) {
       document.getElementById("cpu_architecture_div").innerHTML += list_cpu_arch_uids[list_cpu_arch[i]].length + " devices with this architecture: " + list_cpu_arch[i] +"</br>"
-
+       //?creo e setto il select dei fo 
+       select = document.createElement('select');
+       select.setAttribute("id", "cpu_archi_select")
+       select.onchange = select_cpu_arch_FO //? <----------- CHIAMATA AL FO SELECTED
+       op = document.createElement('option');
+       op.innerHTML += "----"
+       select.appendChild(op)
+       document.getElementById('cpu_architecture_div').appendChild(select);
+       
+       
+       
+       //? chiamo tutti i fo 
+       list_cpu_arch_uids[list_cpu_arch[i]].forEach(function (item) {
+         url = endpoint+"file_object/"+item+"?summary=true";
+         (async () => {
+           await makeGetRequest(url,analyze_cpu_arch_FO,item)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
+         })();
+       });
     }
   }
   else{
     document.getElementById("cpu_architecture_div").innerHTML += "No results with this plugin"
   }
 }
+//* cpu_architecture --> aggiunge nome alla select
+function analyze_cpu_arch_FO(rj){
+  console.log(rj.file_object.meta_data.hid)
+  console.log(rj.request.uid)
+  console.log("--------")
+  list_response_cpu_archi.push(rj) //? ---> aggiorno lista globale
+  //list_packed_hid = rj.file_object.meta_data.hid
 
+  op = document.createElement('option');
+  document.getElementById("cpu_archi_select").appendChild(op)
+  op.innerHTML += rj.file_object.meta_data.hid;
+}
 
+//* cpu_architecture --> stampa path
+function select_cpu_arch_FO(){
+  var selectBox = document.getElementById("cpu_archi_select");
+  var FOhid = selectBox.options[selectBox.selectedIndex].value;
+  console.log(FOhid)
+}
 
 //*unpacker 
 function unpacker(json_response){
@@ -177,7 +258,7 @@ function selectFO() {
   var mime_check = "The file type is not blacklisted, so it should have been unpacked ( MIME: "+selectedFO.analysis.file_type.mime+")"
   if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "during the unpacking process, a genericFS error arisen  ( MIME: "+selectedFO.analysis.file_type.mime+")"
   if(unpack_blacklist.includes(selectedFO.analysis.file_type.mime))  mime_check= "unpacking skipped due to blacklisted file type ( MIME: "+selectedFO.analysis.file_type.mime+")"
-  document.getElementById("info_FO").innerHTML = "File object " + FOhid + " with UID: " + list_response_unpacker[selectBox.selectedIndex-1].request.uid + " has size " + fosize + " Bytes </br>"+
+  document.getElementById("info_unpacker_FO").innerHTML = "</br>File object " + FOhid + " with UID: " + list_response_unpacker[selectBox.selectedIndex-1].request.uid + " has size " + fosize + " Bytes </br>"+
                                                 mime_check+"</br>Other info: " + list_response_unpacker[selectBox.selectedIndex-1].file_object.analysis.unpacker.info+""
   
   //console.log(list_response_unpacker[selectBox.selectedIndex].file_object.meta_data.size)

@@ -21,10 +21,12 @@
 <body>
   Select a firmware <select id = "allFW"></select>
   
-  <input type="checkbox" id="unpacker" value="false">
+  <input type="checkbox" id="unpackerCKBOX" value="false">
   <label name="unpacker">unpacker</label>
-  <input type="checkbox" id="cpu_architecture" value="false">
+  <input type="checkbox" id="cpu_architectureCKBOX" value="false">
   <label name="cpu_architecture">cpu_architecture</label>
+  <input type="checkbox" id="software_componentsCKBOX" value="false">
+  <label name="software_components">software_components</label>
   <button id="start" type="button">start</button>
   </br>
 
@@ -33,13 +35,18 @@
   </br>
 
   <div  style="display: inline-block" id="over"></div> <div  style="display: inline-block" id="tot"></div>
+  <div id="info_unpacker_FO"></div>
   </br>
   
   </br>
   <div id="cpu_architecture_div"></div>
+  <div id="info_cpu_arch_FO"></div>
+  </br>
+  
+  </br>
+  <div id="software_components_div"></div>
   </br>
 
-  <div id="info_FO"></div>
 
 </body>
 

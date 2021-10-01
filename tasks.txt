@@ -22,8 +22,9 @@ Task todo
 	aumentare il contenuto informativo per questa overview 
 		software components, filetype (slide 6) 
 
-	ragionare sulla parte visuale (aspetta i paper di simone)
+	ragionare sulla parte visuale (aspetta i paper di simone[X])
 		livello dimensionale quali sono le info da visualizzare e le loro dimensioni
+		
 	
 	info circa il processo di unpacking e info sull'oggetto
 	sunburst
@@ -39,3 +40,6 @@ problemi da evidenziare:
 			(anche 50b8af1c9120b7f7bf53dc7ac3afbcc83e58e03a739c4fc1a9420784447acaa4_20831152 ha lo stesso problema)
 			 patool: ... /tmp/extractor/input/262f7ea5a35b2dcc2c80b45cc1bb03347c3471e4334e73f2b0c901ab2dcaf4b9_5909600 extracted to `/tmp/fact_unpack_5idju0kw'.
 			per fact l'archivio è stato estratto!!!
+	a me serve sapere (vedere) il path del fileobject? 
+	meglio chiamata o check su un grosso file json?
+	cpu arch puo avere piu di un tipo?
