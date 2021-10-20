@@ -7,6 +7,11 @@ var unpack_blacklist = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "a
 
 //* cpu_architecture var
 document.getElementById("users_and_passwordsCKBOX").checked=true
+document.getElementById("unpackerCKBOX").checked=true
+document.getElementById("cpu_architectureCKBOX").checked=true
+document.getElementById("software_componentsCKBOX").checked=true
+document.getElementById("file_typeCKBOX").checked=true
+document.getElementById("testCKBOX").checked=true
 var list_response_cpu_archi=[]
 //* unpacker var
 var list_response_unpacker=[]
@@ -88,7 +93,8 @@ async function analyze_result(json_response){
     unpacker(json_response)
   } 
   if (document.getElementById("cpu_architectureCKBOX").checked){
-    cpu_architecture(json_response)
+    //cpu_architecture(json_response)
+    components(json_response,"cpu_architecture")
   } 
   if (document.getElementById("software_componentsCKBOX").checked){
     components(json_response,"software_components")
@@ -113,27 +119,31 @@ function components(json_response,component){
       const element = sw_obj[i];
       document.getElementById(component+"_div").innerHTML+= sw_summary[element].length + " component(s) of this type: "+ element +" "
       
-      //?creo e setto il select dei fo 
-      var select = document.createElement('select');
-      select.setAttribute("id", element)
-      op = document.createElement('option');
-      op.innerHTML += "----"
-      select.appendChild(op)
-      document.getElementById(component+"_div").appendChild(select);
-      
-      document.getElementById(component+"_div").innerHTML+="</br>"
+      if(document.getElementById("testCKBOX").checked){
+        //?creo e setto il select dei fo 
+        var select = document.createElement('select');
+        select.setAttribute("id", element)
+        op = document.createElement('option');
+        op.innerHTML += "----"
+        select.appendChild(op)
+        document.getElementById(component+"_div").appendChild(select);
+        document.getElementById(component+"_div").innerHTML+="</br>"
+        
+        document.getElementById(element).onchange = select_componentFO(element) //? <----------- CHIAMATA AL FO SELECTED
 
-      //? chiamo tutti i fo 
-      
-      sw_summary[element].forEach(function (item) {
-        url = endpoint+"file_object/"+item+"?summary=true";
-        if(document.getElementById("testCKBOX").checked){
-          (async () => {
-            await makeGetRequest(url,analyze_comp_FO,element)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
-          })();
-        }
-      });
-      
+        //? chiamo tutti i fo 
+        sw_summary[element].forEach(function (item) {
+          url = endpoint+"file_object/"+item+"?summary=true";
+          if(document.getElementById("testCKBOX").checked){
+            (async () => {
+              await makeGetRequest(url,analyze_comp_FO,element)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
+            })();
+          }
+        });}
+      else{
+        document.getElementById(component+"_div").innerHTML+="</br>"
+      }
+    
         
     }
   }
@@ -151,61 +161,11 @@ function analyze_comp_FO(rj,element){
   op.innerHTML += rj.file_object.meta_data.hid;
 }
 
-//* cpu_architecture
-function cpu_architecture(json_response){
-  var list_cpu_arch_uids = json_response.firmware.analysis.cpu_architecture.summary
-  var list_cpu_arch = Object.keys(list_cpu_arch_uids)
-
-  console.log(list_cpu_arch_uids)
-  document.getElementById("cpu_architecture_div").innerHTML = "CPU_ARCHITECTURE: " 
-
-  if(list_cpu_arch.length > 0){
-    for (let i = 0; i < list_cpu_arch.length; i++) {
-      document.getElementById("cpu_architecture_div").innerHTML += list_cpu_arch_uids[list_cpu_arch[i]].length + " devices with this architecture: " + list_cpu_arch[i] +"</br>"
-       //?creo e setto il select dei fo 
-       select = document.createElement('select');
-       select.setAttribute("id", "cpu_archi_select")
-       select.onchange = select_cpu_arch_FO //? <----------- CHIAMATA AL FO SELECTED
-       op = document.createElement('option');
-       op.innerHTML += "----"
-       select.appendChild(op)
-       document.getElementById('cpu_architecture_div').appendChild(select);
-       
-       
-       
-       //? chiamo tutti i fo 
-       list_cpu_arch_uids[list_cpu_arch[i]].forEach(function (item) {
-         url = endpoint+"file_object/"+item+"?summary=true";
-         (async () => {
-           await makeGetRequest(url,analyze_cpu_arch_FO,item)   // uso funzioni anonime, asincrono devo lavorare sull analisi del singolo file object
-         })();
-       });
-    }
-  }
-  else{
-    document.getElementById("cpu_architecture_div").innerHTML += "No results with this plugin"
-  }
-}
-//* cpu_architecture --> aggiunge nome alla select
-function analyze_cpu_arch_FO(rj){
-  console.log(rj.file_object.meta_data.hid)
-  console.log(rj.request.uid)
-  console.log("--------")
-  list_response_cpu_archi.push(rj) //? ---> aggiorno lista globale
-  //list_packed_hid = rj.file_object.meta_data.hid
-
-  op = document.createElement('option');
-  document.getElementById("cpu_archi_select").appendChild(op)
-  op.innerHTML += rj.file_object.meta_data.hid;
-}
-
-//* cpu_architecture --> stampa path
-function select_cpu_arch_FO(){
-  var selectBox = document.getElementById("cpu_archi_select");
+function select_componentFO(element){
+  var selectBox = document.getElementById(element);
   var FOhid = selectBox.options[selectBox.selectedIndex].value;
   console.log(FOhid)
 }
-
 //*unpacker 
 function unpacker(json_response){
   fw_size = json_response.firmware.analysis.unpacker.size_packed
