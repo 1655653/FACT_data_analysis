@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Strings</h2>
+
+<p>The split() method splits a string into an array of substrings, and returns the array.</p>
+
+<p id="demo"></p>
+
+<script>
+    
+
+var Tree = {
+  "uid": "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866",
+  "hid": "Netgear R8300 v. 1.0.2.144",
+  "size": 32759866,
+  "children": [
+    {
+      "uid": "739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200",
+      "hid": "/squashfs-lzma-image-x_x",
+      "size": 30553200,
+      "children": [
+        {
+          "uid": "96efd56cdfa87c4668dceba441b1b5f2390cc4d68dc073b6bbf7107f071d329c_509615",
+          "hid": "/usr/sbin/curl",
+          "size": 509615,
+          "children": [
+            
+          ]
+        },
+        {
+          "uid": "e9710bb67cf2122b1377772586ef4b95ab2b1fede789a5758b46cbbb55c11f7f_686620",
+          "hid": "/usr/sbin/wl",
+          "size": 686620,
+          "children": [
+            
+          ]
+        }
+      ]
+    }]
+}
+var elem = {
+          "uid": "29bb91c80c9b32b73b392461db16fdb42fcbdc741211fe6787c90c2e41e81bd8_17556",   //*is this
+          "hid": "/lib/libsmb-transport-samba4.so",
+          "size": 17556,
+          "children": []
+        }
+let str = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866|739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200|/lib/libsmb-transport-samba4.so";
+var  myArr = str.replaceAll("|","/").split("/").filter(d => d != "");
+var path = str.substring(str.indexOf("/")).split("/").filter(d => d != "")
+//var path = path.slice(0,path.length-1)
+path.pop()
+console.log(path)
+
+
+// var i = 1
+// var gotit = false
+// var insert = function(current,node) {
+//     //process current node here
+//     console.log('visiting ' + current);
+//     for(var j in current){
+//         if(current[j]["uid"] == myArr[i]){
+//             gotit = true
+//             var child = current[j]["children"]
+//             i++
+//             insert(child,node);
+//         }
+//         else if(gotit){
+//             var hids = current[j]["hid"].split("/").filter(d => d != "");
+             
+//         }
+//     }
+
+//     //visit children of current
+//     for (var ck in current) {
+//         if(current[ck]["uid"] == myArr[i]){
+//             var child = current[ck]["children"];
+//             insert(child);
+//             i++
+//         }
+//         else{
+            
+//         }
+//     }
+// }
+
+// //call on root node
+// insert(Tree["children"],elem);
+
+// var traverse = function(node, current) {
+//     //process current node here
+//     console.log(node)
+//     //visit children of current
+//     for (var cki in current.children) {
+//         var ck = current.children[cki];
+//         var child = node[ck];
+        
+//         traverse(node, child);
+//     }
+// }
+
+// //call on root node
+// traverse(Tree, Tree["children"]);
+
+// curr_node = Tree["children"]
+// var i = 1
+// while(curr_node!=undefined && i <myArr.length){
+//     var results = [];
+//     var searchField = "uid";
+//     var searchVal = "my Name";
+//     for (var i=0 ; i < obj.list.length ; i++)
+//     {
+//         if (obj.list[i][searchField] == searchVal) {
+//             results.push(obj.list[i]);
+//         }
+//     }
+//     curr_node=curr_node[i]
+//     i++
+    
+// }
+// console.log(curr_node)
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

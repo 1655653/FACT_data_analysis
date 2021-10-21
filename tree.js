@@ -70,34 +70,10 @@ function callFW() {
                 (async () => {
                     await BuildTree(data.firmware.meta_data.included_files, Tree["children"])
                     console.log("TREE BUILT")
-                    var root = d3.hierarchy(Tree).sum(function (d) { return d.size});
-                    partition(root);
-                    var arc = d3.arc()
-                    .startAngle(function (d) { return d.x0 })
-                    .endAngle(function (d) { return d.x1 })
-                    .innerRadius(function (d) { return d.y0 })
-                    .outerRadius(function (d) { return d.y1 });
-                    // Put it all together
-                    g.selectAll('g')  // <-- 1
-                    .data(root.descendants())
-                    .enter().append('g').attr("class", "node")  // <-- 2
-                    .append('path')  // <-- 2
-                    .attr("display", function (d) { return d.depth ? null : "none"; })
-                    .attr("d", arc)
-                    .style('stroke', '#fff')
-                    .style("fill", function (d) { return color((d.children ? d : d.parent).data.mime_type); });
-                    // Populate the <text> elements with our data-driven titles.
-                    g.selectAll(".node")
-                    .append("text")
-                    .attr("transform", function(d) {
-                        return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; })
-                        .attr("dx", "-20") // radius margin
-                        .attr("dy", ".5em") // rotation align
-                        .text(function(d) {  
-                            if(d.parent != null){
-                                if(d.depth == 1) return d.data.hid
-                                else return d.data.hid }
-                            });
+                    console.log(Tree)
+                    DrawSunburst()
+                    //document.getElementById("reportOf").innerHTML += "<br>"+JSON.stringify(Tree)
+                    
                 })();
             } 
         })
@@ -113,10 +89,39 @@ function callFW() {
 }
 function computeTextRotation(d) {
     var angle = (d.x0 + d.x1) / Math.PI * 90;
-
     // Avoid upside-down labels
-    return (angle < 120 || angle > 270) ? angle : angle + 180;  // labels as rims
-    //return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
+    //return (angle < 120 || angle > 270) ? angle : angle + 180;  // labels as rims
+    return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
+}
+function DrawSunburst(){
+    var root = d3.hierarchy(Tree).sum(function (d) { return d.size});
+    partition(root);
+    var arc = d3.arc()
+        .startAngle(function (d) { return d.x0 })
+        .endAngle(function (d) { return d.x1 })
+        .innerRadius(function (d) { return d.y0 })
+        .outerRadius(function (d) { return d.y1 });
+        // Put it all together
+    g.selectAll('g')  // <-- 1
+        .data(root.descendants())
+        .enter().append('g').attr("class", "node")  // <-- 2
+        .append('path')  // <-- 2
+        .attr("display", function (d) { return d.depth ? null : "none"; })
+        .attr("d", arc)
+        .style('stroke', '#fff')
+        .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); });
+        // Populate the <text> elements with our data-driven titles.
+    // g.selectAll(".node")
+    // .append("text")
+    // .attr("transform", function(d) {
+    //     return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; 
+    //     }).attr("dx", "-20") // radius margin
+    //         .attr("dy", ".5em") // rotation align
+    //         .text(function(d) {  
+    //             if(d.parent != null){
+    //                 return d.data.hid 
+    //             }
+    //         });
 }
 //* builds the tree calling all packed/unpacked FO
 async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
@@ -136,14 +141,66 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                     node["size"] = response.data.file_object.meta_data.size
                     node["children"] = []
         
-                    fatherNode.push(node)
-                    console.log(Tree)
+                    // fatherNode.push(node)
+                    //*path managemnt
+                    var path = response.data.file_object.meta_data.virtual_file_path[0]
+                    path = path.substring(path.indexOf("/")).split("/").filter(d => d != "")
+                    path.pop()
+                    if(path.length>0)
+                        managePath(fatherNode,path,node)
+                    else{
+                        fatherNode.push(node)
+                    }
+                    
                     await BuildTree(response.data.file_object.meta_data.included_files, node["children"]);
                 };
                 
             }
         }
- 
-function ManageTreeFolder(path){
+  
+
+function managePath(fatherNode,path,node){
+    //console.log(path)
+    //devo andare in fondo fin quando trovo una folder esistente
+    var found = false //true se trovo una folder esistente
+    fatherNode.forEach(element => {
+        if(element["hid"]==path[0]){ //se la cartella esiste
+            found = true
+            if(path.length> 0) managePath(element["children"],path.slice(1),node) //se posso continuo
+            else { //appendere il nodo
+                element["children"].push(node)
+            }
+        }
+            
+    });
+    if(!found ){ //non ho trovato alcuna cartella, la devo creare
+        if(path.length>0) {
+            var folder = {}
+            folder["uid"] = "folder"
+            folder["hid"] = path[0]
+            folder["size"] = "po ce se penza"
+            folder["children"] = []
+            fatherNode.push(folder)
+            managePath(folder["children"],path.slice(1),node) //vado giu fino a quando non ho piu path
+        }
+        else{
+            fatherNode.push(node)
+            //folder["children"].push(node)
+        }
+    }
+    
 
 }
+function hasFolder(fatherNode,folderi){
+    fatherNode.forEach(element => {
+        if (element["uid"]=="folder" && element["hid"] == folderi)
+            return true
+    });
+    return false
+}
+
+
+
+
+
+

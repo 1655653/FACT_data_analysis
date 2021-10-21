@@ -1,3 +1,57 @@
+
+
+
+//!porcodiooooooooooooooooooooooooooooooooo
+                    // while(path.length > 0){
+                    //     if(! hasFolder(fatherNode,path[0])){ //non ha la folder, la creo
+                    //         var folder = {}
+                    //         folder["uid"] = "folder"
+                    //         folder["hid"] = path[0]
+                    //         folder["size"] = "po ce se penza"
+                    //         folder["children"] = []
+                    //         tempfather.push(folder)
+                    //         tempfather = folder["children"]
+                    //         appendFolder = true
+                    //         console.log("appending"+path[0])
+                    //         console.log("tempfather"+tempfather)
+                    //         path.shift()
+                    //     }
+                    //     else{
+                    //         tempfather.forEach(element => {
+                    //             if (element["uid"]=="folder" && element["hid"] == folderi){
+                    //                 element["children"].push(node)
+                    //             }
+                                    
+                    //         });
+                    //     }
+                    // }
+                    
+                    // if(!appendFolder){
+                    //     tempfather.push(node)
+                    // }
+
+                    // fatherNode.push(tempfather)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
       //*selection with all packed elements
