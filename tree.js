@@ -69,8 +69,9 @@ function callFW() {
                 Tree["children"] = [];
                 (async () => {
                     await BuildTree(data.firmware.meta_data.included_files, Tree["children"])
-                    console.log("TREE BUILT")
+                    calculateFOlderSize(Tree)
                     console.log(Tree)
+                    console.log("TREE BUILT")
                     DrawSunburst()
                     
                 })();
@@ -84,6 +85,16 @@ function callFW() {
     list_response_unpacker=[]
     list_packed=[]
     list_packed_hid=[]
+  
+}
+function calculateFOlderSize(fatherNode){
+    if (fatherNode["children"].length == 0){ //foglia
+        return fatherNode["size"]
+    }
+    fatherNode["children"].forEach(child => {
+        fatherNode["size"] += calculateFOlderSize(child)
+    });
+    return fatherNode["size"]
   
 }
 function computeTextRotation(d) {
@@ -105,36 +116,29 @@ function DrawSunburst(){
     .style("padding", "5px")
     .style("position", "absolute")
 
-    // Three function that change the tooltip when user hover / move / leave a cell
-    // var mouseover = function(d) {
-    //     Tooltip
-    //     .style("opacity", 1)
-    //     d3.select(this)
-    //     .style("stroke", "black")
-    //     .style("opacity", 1)
-    // }
     function filter_min_arc_size_text(d, i) {return (d.dx*d.depth*radius/3)>14};
-    var mouseover = function(d) {
-        d3.select(this).attr("stroke","black")
-        return Tooltip.transition()
-            .duration(50)
-            .style("opacity", 0.9);
     
-    }
-    var mousemove = function(d) {
+    var mouseover = function(d) {
         Tooltip
-        .html(d.data.hid)
-        .style("top", (event.pageY)+15+"px")
-        .style("left",(event.pageX)+15+"px")
-        console.log(d.data.hid)
-    }
-    var mouseleave = function(d) {
-        Tooltip
-        .style("opacity", 0)
+          .style("opacity", 1)
         d3.select(this)
-        .style("stroke", "none")
-        .style("opacity", 0.8)
-    }
+          .style("stroke", "black")
+          .style("opacity", 1)
+      }
+      var mousemove = function(d) {
+        Tooltip
+          .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+"<br>size:"+d.data.size)
+          .style('left', (d3.event.pageX + 10) + 'px')
+          .style('top', (d3.event.pageY + 10) + 'px')
+      }
+      var mouseleave = function(d) {
+        Tooltip
+          .style("opacity", 0)
+        d3.select(this)
+          .style('stroke', '#fff')
+          .style("opacity", 0.9)
+      }
+    
     var root = d3.hierarchy(Tree).sum(function (d) { return d.size});
     partition(root);
     var arc = d3.arc()
@@ -145,12 +149,13 @@ function DrawSunburst(){
         // Put it all together
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
-        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.uid})  // <-- 2
+        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
         .append('path')  // <-- 2
         .attr("display", function (d) { return d.depth ? null : "none"; })
         .attr("d", arc)
         .style('stroke', '#fff')
         .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); })
+        .style("opacity", 0.9)
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
@@ -201,7 +206,7 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                 };
                 
             }
-        }
+}
   
 
 function managePath(fatherNode,path,node){
@@ -223,14 +228,13 @@ function managePath(fatherNode,path,node){
             var folder = {}
             folder["uid"] = "folder"
             folder["hid"] = path[0]
-            folder["size"] = "po ce se penza"
+            folder["size"] = 0
             folder["children"] = []
-            fatherNode.push(folder)
+            fatherNode.push(folder) //appendo la cartella
             managePath(folder["children"],path.slice(1),node) //vado giu fino a quando non ho piu path
         }
         else{
             fatherNode.push(node)
-            //folder["children"].push(node)
         }
     }
     
