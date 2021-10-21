@@ -72,7 +72,6 @@ function callFW() {
                     console.log("TREE BUILT")
                     console.log(Tree)
                     DrawSunburst()
-                    //document.getElementById("reportOf").innerHTML += "<br>"+JSON.stringify(Tree)
                     
                 })();
             } 
@@ -94,6 +93,48 @@ function computeTextRotation(d) {
     return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
 }
 function DrawSunburst(){
+    // create a tooltip
+    var Tooltip = d3.select("#treemap_div")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+    .style("position", "absolute")
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    // var mouseover = function(d) {
+    //     Tooltip
+    //     .style("opacity", 1)
+    //     d3.select(this)
+    //     .style("stroke", "black")
+    //     .style("opacity", 1)
+    // }
+    function filter_min_arc_size_text(d, i) {return (d.dx*d.depth*radius/3)>14};
+    var mouseover = function(d) {
+        d3.select(this).attr("stroke","black")
+        return Tooltip.transition()
+            .duration(50)
+            .style("opacity", 0.9);
+    
+    }
+    var mousemove = function(d) {
+        Tooltip
+        .html(d.data.hid)
+        .style("top", (event.pageY)+15+"px")
+        .style("left",(event.pageX)+15+"px")
+        console.log(d.data.hid)
+    }
+    var mouseleave = function(d) {
+        Tooltip
+        .style("opacity", 0)
+        d3.select(this)
+        .style("stroke", "none")
+        .style("opacity", 0.8)
+    }
     var root = d3.hierarchy(Tree).sum(function (d) { return d.size});
     partition(root);
     var arc = d3.arc()
@@ -104,24 +145,28 @@ function DrawSunburst(){
         // Put it all together
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
-        .enter().append('g').attr("class", "node")  // <-- 2
+        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.uid})  // <-- 2
         .append('path')  // <-- 2
         .attr("display", function (d) { return d.depth ? null : "none"; })
         .attr("d", arc)
         .style('stroke', '#fff')
-        .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); });
-        // Populate the <text> elements with our data-driven titles.
-    // g.selectAll(".node")
-    // .append("text")
-    // .attr("transform", function(d) {
-    //     return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; 
-    //     }).attr("dx", "-20") // radius margin
-    //         .attr("dy", ".5em") // rotation align
-    //         .text(function(d) {  
-    //             if(d.parent != null){
-    //                 return d.data.hid 
-    //             }
-    //         });
+        .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); })
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+    //Populate the <text> elements with our data-driven titles.
+    g.selectAll(".node")
+    .append("text")
+    .filter(filter_min_arc_size_text)
+    .attr("transform", function(d) {
+        return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; 
+        }).attr("dx", "-20") // radius margin
+            .attr("dy", ".5em") // rotation align
+            .text(function(d) {  
+                if(d.parent != null){
+                    return d.data.hid 
+                }
+            });
 }
 //* builds the tree calling all packed/unpacked FO
 async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
