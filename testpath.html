@@ -7,7 +7,8 @@
 <p>The split() method splits a string into an array of substrings, and returns the array.</p>
 
 <p id="demo"></p>
-
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script>
     
 
@@ -52,8 +53,58 @@ var path = str.substring(str.indexOf("/")).split("/").filter(d => d != "")
 //var path = path.slice(0,path.length-1)
 path.pop()
 console.log(path)
-
-
+var ListMimes = ['text/plain', 'application/x-executable', 'application/x-sharedlib', 'application/x-object', 'image/gif', 'inode/symlink', 'image/png', 'application/octet-stream']
+var ListMimes =["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+console.log(ListMimes)
+var myColor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeSet3); //assegni ogni mime ad un colore
+console.log("colorcolor"+myColor("text/plain"))
+var pp =  [
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sleep",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sh",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ln",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ash",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/echo",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ping",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ps",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mv",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/df",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/chmod",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cp",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/umount",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cat",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mkdir",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/pwd",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mknod",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/kill",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/vi",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ls",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/rm",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mount",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/reboot",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/ifconfig",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/lsmod",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/insmod",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/halt",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/poweroff",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/route",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/sysctl",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/arp",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/rmmod",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/killall",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/env",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/top",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/test",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/passwd",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/expr",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[[",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/telnet",
+                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/sbin/telnetd"
+            ]
+          pp.forEach(s => {
+            console.log(s.substring(s.indexOf("|")).split("|").filter(d => d != "").at(-1))
+            
+          });
 // var i = 1
 // var gotit = false
 // var insert = function(current,node) {
