@@ -38,9 +38,13 @@ function DrawSunburst(){
     }
     var mousemove = function(d) {
         var m =""
+        var b = "<br>size(bytes):"+d.data.size
         if(d.data.uid != "folder") m = "<br>mime type: "+d.data.mime
+        if(d.data.size==0){
+            b = ""
+        }
         Tooltip
-            .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+"<br>size(bytes):"+d.data.bytes+m)
+            .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+b+m)
             .style('left', (d3.event.pageX + 10) + 'px')
             .style('top', (d3.event.pageY + 10) + 'px')
     }

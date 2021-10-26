@@ -65,7 +65,7 @@ function callFW() {
                     await BuildTree(data.firmware.meta_data.included_files, Tree)
                     
                     calculateLeaves(Tree) 
-                    //calculateFOlderSize(Tree)
+                    //calculateFOlderSize(Tree)//!per ora me ne sbatto della grandezza delle folder
                     calculateMimes(Tree) 
                     
                     console.log("TREE BUILT")

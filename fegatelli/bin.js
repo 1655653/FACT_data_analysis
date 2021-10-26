@@ -43,7 +43,46 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
   // }
 }
 
+//! old one
+//* builds the tree calling all packed/unpacked FO
+async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
+  if( included_files.length > 0){
+      promises = [];
+      included_files.forEach(function(item) {
+          url = endpoint+"file_object/"+item+"?summary=true";
+          promises.push(axios.get(url));
+      });
+      const res_File_objects = await Promise.all(promises)
+      for(let response of res_File_objects){
+          if(! ListMimes.includes(response.data.file_object.analysis.file_type.mime)) ListMimes.push(response.data.file_object.analysis.file_type.mime)
 
+          var node = {}
+          node["uid"] = response.data.request.uid
+          node["hid"] = response.data.file_object.meta_data.hid
+          node["bytes"] = response.data.file_object.meta_data.size
+          node["mime"] = response.data.file_object.analysis.file_type.mime
+          node["contacome"]=1
+          node["leaves"]=0
+          node["children"] = []
+
+          // fatherNode.push(node)
+          //*path managemnt
+          var path = response.data.file_object.meta_data.virtual_file_path[0]
+          
+          console.log(response.data.file_object.meta_data.virtual_file_path)}
+          path = path.substring(path.indexOf("/")).split("/").filter(d => d != "")
+          path.pop()
+          if(path.length>0)
+              managePath(fatherNode.children,path,node)
+          else{
+              fatherNode.children.push(node)
+          }
+          
+          await BuildTree(response.data.file_object.meta_data.included_files, node);
+      };
+      
+  }
+}
 
 
 

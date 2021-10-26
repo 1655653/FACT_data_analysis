@@ -17,9 +17,10 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         node = {}
                         node["uid"] = response.data.request.uid
                         node["hid"] = path.substring(path.indexOf("|")).split("|").filter(d => d != "").at(-1) //uso path per avere gli alias
-                        node["bytes"] = response.data.file_object.meta_data.size
                         node["mime"] = response.data.file_object.analysis.file_type.mime
-                        node["contacome"]=1
+                        node["bytes"] = response.data.file_object.meta_data.size //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+                        node["contacome"]=1 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+                        node["size"] = response.data.file_object.meta_data.size
                         node["leaves"]=0
                         node["children"] = []
                         path = path.substring(path.indexOf("/")).split("/").filter(d => d != "") //uso path per avere il singolo path
@@ -61,9 +62,10 @@ function managePath(fatherNode,path,node){
             var folder = {}
             folder["uid"] = "folder"
             folder["hid"] = path[0]
-            folder["bytes"] = 0
+            folder["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+            folder["contacome"]=1 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+            folder["size"] = 0
             folder["leaves"] = 0
-            folder["contacome"]=1
             folder["children"] = []
             fatherNode.push(folder) //appendo la cartella
             managePath(folder["children"],path.slice(1),node) //vado giu fino a quando non ho piu path
@@ -120,23 +122,21 @@ function calculateMimes(fatherNode){
 }
 
 
-function calculateFOlderSize(fatherNode){ //! non funziona!!! devo inserire questa info dentro ["size"] e non ["bytes"] perchè senno draw s'incazza
+function calculateFOlderSize(fatherNode){ //! non funziona!!! devo inserire questa info dentro ["size"] e non ["bytes"] perchè senno draw s'incazza, 
+    //!per ora me ne sbatto della grandezza delle folder
 
     fatherNode.children.forEach(child => { //se entra qua ha almeno un figlio e quindi non è foglia
                     
-
-        fatherNode["mime_types"]=buildMimelist(ListMimes) //? costruisco la lista di mime deelle folder
-
-        if(child.leaves != 0) { //il figlio non è una foglia, sommo
-            //console.log("folder "+fatherNode.hid)
-            //fatherNode.bytes+=calculateFOlderSize(child)
+        if(fatherNode.uid == "folder"){
+            fatherNode.size+=calculateFOlderSize(child)
         }
-        else{ //il figlio è una foglia
-            //fatherNode.bytes+= child.bytes
+        else{
+            calculateFOlderSize(child)
         }
+        
     });
-    //console.log("outfromloop: "+fatherNode.hid+" with size:"+fatherNode.size)
-    return fatherNode.bytes
+    console.log("outfromloop: "+fatherNode.hid+" with size:"+fatherNode.size)
+    return fatherNode.size
   
 }
 
