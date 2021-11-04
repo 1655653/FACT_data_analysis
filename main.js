@@ -71,10 +71,12 @@ function callFW() {
                     console.log("TREE BUILT")
                     console.log(Tree)
                     DrawSunburst()
-
+                    
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
-                    document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone
+                    //document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 1
+                    document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
 
+                    
                 })();
             } 
         })
@@ -89,17 +91,64 @@ function callFW() {
   
 }
 //* filter mime 
-function RemoveMimeFromTree(fatherNode,mime_filtered){
-    
+
+function LabelMimeFOFromTree(fatherNode,mime_filtered){
     //console.log("lenght before "+fatherNode.children.length)
     l = [] //? riempio la lista con le posizioni degli elementi da eliminare
     for (let i = 0; i < fatherNode.children.length; i++) {
         const child = fatherNode.children[i];
-        //console.log("child")
-        //console.log(child)
         if(child.uid!="folder"){ //?se non è foglia, inserisco la posizione dell'elemento
             mime_filtered.forEach(element => {
-                if(child.mime == element) l.push(i)
+                if(child.mime == element) {
+                    // console.log("child")
+                    // console.log(child)
+                    l.push(i)
+                }
+            });
+        }
+    }
+    //console.log(l)
+    //? ciclo sulla lista di index, labello l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha  index -1)
+    if(l.length>0){
+        for (let i = 0; i < l.length; i++) {
+            const pos = l[i];
+            //console.log(fatherNode.children[pos])
+            fatherNode.children[pos]["filtered"] = true
+        }
+        
+    }
+    //console.log("lenght after "+fatherNode.children.length)
+    // console.log("this is the tree DURING the filter")
+    // console.log(Tree)
+    //? chiamata ricorsiva
+    fatherNode.children.forEach(child => {
+        //console.log("calling--> " + child.hid)
+        LabelMimeFOFromTree(child,mime_filtered)
+    });
+
+    var filtchild= 0
+    fatherNode.children.forEach(child => {
+        if(child.filtered) filtchild++
+    });
+    if(filtchild == fatherNode.children.length && filtchild>0) fatherNode["filtered"] = true
+  
+    
+
+}
+
+function RemoveMimeFOFromTree(fatherNode,mime_filtered){
+    fatherNode["leaves"]=0
+    //console.log("lenght before "+fatherNode.children.length)
+    l = [] //? riempio la lista con le posizioni degli elementi da eliminare
+    for (let i = 0; i < fatherNode.children.length; i++) {
+        const child = fatherNode.children[i];
+        if(child.uid!="folder"){ //?se non è foglia, inserisco la posizione dell'elemento
+            mime_filtered.forEach(element => {
+                if(child.mime == element) {
+                    // console.log("child")
+                    // console.log(child)
+                    l.push(i)
+                }
             });
         }
     }
@@ -108,6 +157,7 @@ function RemoveMimeFromTree(fatherNode,mime_filtered){
     if(l.length>0){
         for (let i = 0; i < l.length; i++) {
             const pos = l[i];
+            //console.log(fatherNode.children[pos])
             fatherNode.children.splice(pos,1)
             for (let j = 0; j < l.length; j++) {
                 l[j]--
@@ -116,31 +166,39 @@ function RemoveMimeFromTree(fatherNode,mime_filtered){
         
     }
     //console.log("lenght after "+fatherNode.children.length)
+    // console.log("this is the tree DURING the filter")
+    // console.log(Tree)
     //? chiamata ricorsiva
     fatherNode.children.forEach(child => {
         //console.log("calling--> " + child.hid)
-        RemoveMimeFromTree(child,mime_filtered)
+        RemoveMimeFOFromTree(child,mime_filtered)
     });
 
 }
 
 function FilterMIME(){
+    console.log(Tree)
     mime_filtered = []
     ListMimes.forEach(element => {
-        console.log(element.replace(/[/.]/g,"_")) 
+        //console.log(element.replace(/[/.]/g,"_")) 
         if(d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
     });
-    console.log("FINITO")
-    RemoveMimeFromTree(Tree,mime_filtered)
-    // console.log("this is the tree after the filter")
-    // console.log(Tree)
-    PruneTree(Tree)
-    console.log(Tree)
-    calculateLeaves(Tree)
-    calculateFOlderSize(Tree)
-    calculateMimes(Tree)
-
-    console.log("this is the tree after the filter and prune")
+    // //console.log(mime_filtered)
+    if(d3.select('#filterType').property('checked')){ //? checked è remove, unchecked è opacize
+        RemoveMimeFOFromTree(Tree,mime_filtered)
+        calculateLeaves(Tree)
+        calculateMimes(Tree)
+    }
+    else{
+        LabelMimeFOFromTree(Tree,mime_filtered)
+    }
+    // //console.log("this is the tree after the filter")
+    // PruneTree(Tree)
+    // //calculateFOlderSize(Tree)
+    DrawSunburst()
+    // // console.log("this is the tree after the filter and prune")
+    // // console.log(Tree)
+    
 }
 
 function PruneTree(fatherNode){
@@ -183,5 +241,10 @@ function BuildMimeFilterUI(list_m){
         d3.select("#reportOf").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
         d3.select("#reportOf").append("text").text(element+"  ");
     });
+    d3.select("#reportOf").append('input').attr('type','checkbox').attr("id","filterType")
+    d3.select("#reportOf").append("text").text("Label filter   ").attr("id","filtername");
+    
+    d3.select('#filterType').on('click', function(){d3.select('#filterType').property('checked')? d3.select('#filtername').text("Remove filter   "): d3.select('#filtername').text("Label filter   ")})
+
     d3.select("#reportOf").append("button").text("filter").attr("id","mime_filter_start")
 }

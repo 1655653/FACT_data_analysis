@@ -18,6 +18,16 @@ var partition = d3.partition()
     .size([2 * Math.PI, radius]);
 //* --------------------SUNBURST VARS
 function DrawSunburst(){
+    //reset old draw
+    d3.select("#treemap_div").selectAll("*").remove();
+    svg = d3.select("#treemap_div")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    g = svg.append("g")
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+    
+    
     // create a tooltip
     var Tooltip = d3.select("#treemap_div")
     .append("div")
@@ -52,7 +62,7 @@ function DrawSunburst(){
         Tooltip
             .style("opacity", 0)
         d3.select(this)
-            .style("opacity", 0.9)
+            .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
     }
 
     var root = d3.hierarchy(Tree).sum(function (d) { 
@@ -74,21 +84,7 @@ function DrawSunburst(){
         // Put it all together
     
 
-    //*color testing
-    //console.log(ListMimes)
-    var myColor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeSet3); //assegni ogni mime ad un colore
-    
-    const getColorByValue = function(d) {
-        if(d.data.uid != "folder"){
-            return myColor(d.data.mime) //quel mime ha quel colore
-        }
-        else{ //voglio che esamini la lista dei mime con i suoi pesi e generi la somma. come range ho i colori, come dominio? ad ogni nodo devo dargli la lista di mime con i pesi
-            //
-            var sss = d3.scaleLinear().domain([10, 100]).range(["brown", "steelblue"]);
-            var NEWmyColor = d3.scaleOrdinal().domain().range(d3.schemeSet3);
-        }
-    }
-    
+
 
     //* draw each node
     
@@ -101,7 +97,7 @@ function DrawSunburst(){
         .style('stroke', 'white')
         .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); })
         //.style("fill", getColorByValue)
-        .style("opacity", 0.9)
+        .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
