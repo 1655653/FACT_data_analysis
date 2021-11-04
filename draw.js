@@ -87,7 +87,7 @@ function DrawSunburst(){
 
 
     //* draw each node
-    
+    var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20b)
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
         .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
@@ -95,9 +95,31 @@ function DrawSunburst(){
         .attr("display", function (d) { return d.depth  })
         .attr("d", arc)
         .style('stroke', 'white')
-        .style("fill", function (d) { return color((d.children ? d : d.parent).data.hid); })
-        //.style("fill", getColorByValue)
-        .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
+        //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
+        .style("fill", function (d) { 
+            if(d.data.mime){
+                console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
+                return mycolor(d.data.mime)  
+            } 
+            else{
+               var e = d.data.mime_types
+               var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
+               var maxM = Object.keys(d.data.mime_types)[0]
+               for (const key in e) {
+                   if (Object.hasOwnProperty.call(e, key)) {
+                       const element = e[key];
+                       console.log(element)
+                       if(element > maxV ) {
+                        maxM = key
+                        maxV = element
+                       }
+                   }
+               }
+            }
+            console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
+            console.log(d.data.mime_types)
+            return mycolor(maxM)})
+            .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)

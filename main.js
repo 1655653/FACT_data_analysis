@@ -138,6 +138,7 @@ function LabelMimeFOFromTree(fatherNode,mime_filtered){
 
 function RemoveMimeFOFromTree(fatherNode,mime_filtered){
     fatherNode["leaves"]=0
+    delete fatherNode["mime_types"]
     //console.log("lenght before "+fatherNode.children.length)
     l = [] //? riempio la lista con le posizioni degli elementi da eliminare
     for (let i = 0; i < fatherNode.children.length; i++) {
@@ -153,7 +154,7 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
         }
     }
     //console.log(l)
-    //? ciclo sulla lista di index, elimino l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha  index -1)
+    //? ciclo sulla lista di index, elimino l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha index -1)
     if(l.length>0){
         for (let i = 0; i < l.length; i++) {
             const pos = l[i];
@@ -177,7 +178,6 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
 }
 
 function FilterMIME(){
-    console.log(Tree)
     mime_filtered = []
     ListMimes.forEach(element => {
         //console.log(element.replace(/[/.]/g,"_")) 
@@ -195,6 +195,7 @@ function FilterMIME(){
     // //console.log("this is the tree after the filter")
     // PruneTree(Tree)
     // //calculateFOlderSize(Tree)
+    console.log(Tree)
     DrawSunburst()
     // // console.log("this is the tree after the filter and prune")
     // // console.log(Tree)

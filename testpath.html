@@ -10,101 +10,123 @@
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script>
-    
+    var obj = { first: 'someVal' };
+    console.log(Object.keys(obj)[0]); //returns 'someVal'
 
-var Tree = {
-  "uid": "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866",
-  "hid": "Netgear R8300 v. 1.0.2.144",
-  "size": 32759866,
-  "children": [
-    {
-      "uid": "739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200",
-      "hid": "/squashfs-lzma-image-x_x",
-      "size": 30553200,
-      "children": [
-        {
-          "uid": "96efd56cdfa87c4668dceba441b1b5f2390cc4d68dc073b6bbf7107f071d329c_509615",
-          "hid": "/usr/sbin/curl",
-          "size": 509615,
-          "children": [
-            
-          ]
-        },
-        {
-          "uid": "e9710bb67cf2122b1377772586ef4b95ab2b1fede789a5758b46cbbb55c11f7f_686620",
-          "hid": "/usr/sbin/wl",
-          "size": 686620,
-          "children": [
-            
-          ]
-        }
-      ]
-    }]
+
+    var e = {"mime_types":{
+    "application/octet-stream": 1,
+    "application/x-executable": 89,
+    "application/x-object": 13,
+    "application/x-sharedlib": 47,
+    "image/gif": 5,
+    "image/png": 3,
+    "inode/symlink": 54,
+    "text/plain": 58,
+    "undefined": 0}}
+var maxV = e[Object.keys(e)[0]];
+var maxM = Object.keys(e)[0]
+for (const key in e) {
+    if (Object.hasOwnProperty.call(e, key)) {
+        if(e[key] > maxV) maxM = key
+    }
 }
-var elem = {
-          "uid": "29bb91c80c9b32b73b392461db16fdb42fcbdc741211fe6787c90c2e41e81bd8_17556",   //*is this
-          "hid": "/lib/libsmb-transport-samba4.so",
-          "size": 17556,
-          "children": []
-        }
-let str = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866|739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200|/lib/libsmb-transport-samba4.so";
-var  myArr = str.replaceAll("|","/").split("/").filter(d => d != "");
-var path = str.substring(str.indexOf("/")).split("/").filter(d => d != "")
-//var path = path.slice(0,path.length-1)
-path.pop()
-console.log(path)
-var ListMimes = ['text/plain', 'application/x-executable', 'application/x-sharedlib', 'application/x-object', 'image/gif', 'inode/symlink', 'image/png', 'application/octet-stream']
-var ListMimes =["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-console.log(ListMimes)
-var myColor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeSet3); //assegni ogni mime ad un colore
-console.log("colorcolor"+myColor("text/plain"))
-var pp =  [
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sleep",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sh",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ln",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ash",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/echo",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ping",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ps",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mv",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/df",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/chmod",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cp",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/umount",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cat",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mkdir",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/pwd",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mknod",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/kill",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/vi",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ls",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/rm",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mount",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/reboot",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/ifconfig",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/lsmod",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/insmod",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/halt",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/poweroff",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/route",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/sysctl",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/arp",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/rmmod",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/killall",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/env",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/top",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/test",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/passwd",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/expr",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[[",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/telnet",
-                "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/sbin/telnetd"
-            ]
-          pp.forEach(s => {
-            console.log(s.substring(s.indexOf("|")).split("|").filter(d => d != "").at(-1))
+console.log(maxM)
+
+console.log(e)
+// var Tree = {
+//   "uid": "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866",
+//   "hid": "Netgear R8300 v. 1.0.2.144",
+//   "size": 32759866,
+//   "children": [
+//     {
+//       "uid": "739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200",
+//       "hid": "/squashfs-lzma-image-x_x",
+//       "size": 30553200,
+//       "children": [
+//         {
+//           "uid": "96efd56cdfa87c4668dceba441b1b5f2390cc4d68dc073b6bbf7107f071d329c_509615",
+//           "hid": "/usr/sbin/curl",
+//           "size": 509615,
+//           "children": [
             
-          });
+//           ]
+//         },
+//         {
+//           "uid": "e9710bb67cf2122b1377772586ef4b95ab2b1fede789a5758b46cbbb55c11f7f_686620",
+//           "hid": "/usr/sbin/wl",
+//           "size": 686620,
+//           "children": [
+            
+//           ]
+//         }
+//       ]
+//     }]
+// }
+// var elem = {
+//           "uid": "29bb91c80c9b32b73b392461db16fdb42fcbdc741211fe6787c90c2e41e81bd8_17556",   //*is this
+//           "hid": "/lib/libsmb-transport-samba4.so",
+//           "size": 17556,
+//           "children": []
+//         }
+// let str = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866|739293a0061018e50c87e9cca962d161c7d73ababb7bb2de3d4442226a9e00ec_30553200|/lib/libsmb-transport-samba4.so";
+// var  myArr = str.replaceAll("|","/").split("/").filter(d => d != "");
+// var path = str.substring(str.indexOf("/")).split("/").filter(d => d != "")
+// //var path = path.slice(0,path.length-1)
+// path.pop()
+// console.log(path)
+// var ListMimes = ['text/plain', 'application/x-executable', 'application/x-sharedlib', 'application/x-object', 'image/gif', 'inode/symlink', 'image/png', 'application/octet-stream']
+// var ListMimes =["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+// console.log(ListMimes)
+// var myColor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeSet3); //assegni ogni mime ad un colore
+// console.log("colorcolor"+myColor("text/plain"))
+// var pp =  [
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sleep",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/sh",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ln",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ash",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/echo",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ping",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ps",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mv",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/df",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/chmod",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cp",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/umount",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/cat",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mkdir",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/pwd",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mknod",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/kill",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/vi",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/ls",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/rm",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/bin/mount",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/reboot",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/ifconfig",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/lsmod",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/insmod",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/halt",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/poweroff",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/route",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/sysctl",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/arp",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/sbin/rmmod",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/killall",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/env",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/top",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/test",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/passwd",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/expr",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/[[",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/bin/telnet",
+//                 "|de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970|/usr/sbin/telnetd"
+//             ]
+//           pp.forEach(s => {
+//             console.log(s.substring(s.indexOf("|")).split("|").filter(d => d != "").at(-1))
+            
+//           });
 // var i = 1
 // var gotit = false
 // var insert = function(current,node) {
