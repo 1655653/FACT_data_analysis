@@ -11,9 +11,14 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
-
+<style>
+  body {
+  font-family: "Open Sans", sans-serif;
+}
+  </style>
 
 <body>
+
     Select a firmware <select id = "allFW"></select>
     <input type="checkbox" id="unpackerCKBOX" value="false">
     <label name="unpacker">unpacker</label>
@@ -24,7 +29,10 @@
     </br>
     
     <div id="reportOf"></div>
-    <div id="treemap_div"></div>
+    
+    <div class="container" id="container" style="display: flex; ">
+      <div id="treemap_div"></div>
+    </div>
   
 </body>
   

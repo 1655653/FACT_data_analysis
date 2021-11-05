@@ -11,6 +11,8 @@ var svg = d3.select("#treemap_div")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+d3.select("#container").attr("height", height + margin.top + margin.bottom)
+d3.select("#treemap_div").attr("width", "60%")
 var g = svg.append("g")
         .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 // Data strucure
@@ -43,6 +45,7 @@ function DrawSunburst(){
     var mouseover = function(d) {
         Tooltip
             .style("opacity", 1)
+            .style("visibility", "visible")
         d3.select(this)
             .style("opacity", 1)
     }
@@ -61,8 +64,10 @@ function DrawSunburst(){
     var mouseleave = function(d) {
         Tooltip
             .style("opacity", 0)
+            .style("visibility", "hidden")
+
         d3.select(this)
-            .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
+            .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
     }
 
     var root = d3.hierarchy(Tree).sum(function (d) { 
@@ -87,7 +92,10 @@ function DrawSunburst(){
 
 
     //* draw each node
-    var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20b)
+    ///var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20b)
+
+
+    console.log(Tree)
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
         .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
@@ -96,33 +104,38 @@ function DrawSunburst(){
         .attr("d", arc)
         .style('stroke', 'white')
         //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
-        .style("fill", function (d) { 
-            if(d.data.mime){
-                console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
-                return mycolor(d.data.mime)  
-            } 
-            else{
-               var e = d.data.mime_types
-               var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
-               var maxM = Object.keys(d.data.mime_types)[0]
-               for (const key in e) {
-                   if (Object.hasOwnProperty.call(e, key)) {
-                       const element = e[key];
-                       console.log(element)
-                       if(element > maxV ) {
-                        maxM = key
-                        maxV = element
-                       }
-                   }
-               }
-            }
-            console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
-            console.log(d.data.mime_types)
-            return mycolor(maxM)})
-            .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.9})
+        .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
+        .style("fill", function (d) { 
+            if(d.data.mime){
+                //console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
+                return mycolor(d.data.mime)  
+            } 
+            else{
+                if(d.data.mime_types){
+                    var e = d.data.mime_types
+                    //console.log(d)
+                    var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
+                    var maxM = Object.keys(d.data.mime_types)[0]
+                    for (const key in e) {
+                        if (Object.hasOwnProperty.call(e, key)) {
+                            const element = e[key];
+                            //console.log(element)
+                            if(element > maxV ) {
+                                maxM = key
+                                maxV = element
+                            }
+                        }
+                    }
+                    return mycolor(maxM)
+                }
+                return "white"
+            }
+            // console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
+            //console.log(d.data.mime_types)
+        })
 
     
 }

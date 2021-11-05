@@ -48,9 +48,11 @@ function callFW() {
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
                 document.getElementById("reportOf").innerHTML += "</br>"+ "Total " + data.firmware.meta_data.total_files_in_firmware +" files "
+                
                 Tree["uid"] = data.request.uid
                 Tree["hid"] = data.firmware.meta_data.hid
                 Tree["mime"] = data.firmware.analysis.file_type.mime
+                ListMimes.push(data.firmware.analysis.file_type.mime)
                 Tree["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                 Tree["contacome"]=1//? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                 Tree["size"] = data.firmware.meta_data.size
@@ -73,7 +75,7 @@ function callFW() {
                     DrawSunburst()
                     
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
-                    //document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 1
+                    
                     document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
 
                     
@@ -235,17 +237,23 @@ function PruneTree(fatherNode){
     });
 
 }
+var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20)
 
 //*interface to filter mimes
 function BuildMimeFilterUI(list_m){
+    d3.select("#container").append("div").attr("id","filter_menu").style("flex-grow","1").style("line-height", "3.3")
     list_m.forEach(element => {
-        d3.select("#reportOf").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
-        d3.select("#reportOf").append("text").text(element+"  ");
+        d3.select("#filter_menu").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
+        d3.select("#filter_menu").append("text").text(element).style("color", mycolor(element));
+        d3.select("#filter_menu").append('br');
     });
-    d3.select("#reportOf").append('input').attr('type','checkbox').attr("id","filterType")
-    d3.select("#reportOf").append("text").text("Label filter   ").attr("id","filtername");
+    d3.select("#filter_menu").append('input').attr('type','checkbox').attr("id","filterType")
+    d3.select("#filter_menu").append("text").text("Label filter   ").attr("id","filtername")
+    d3.select("#filter_menu").append('br');
     
     d3.select('#filterType').on('click', function(){d3.select('#filterType').property('checked')? d3.select('#filtername').text("Remove filter   "): d3.select('#filtername').text("Label filter   ")})
 
-    d3.select("#reportOf").append("button").text("filter").attr("id","mime_filter_start")
+    d3.select("#filter_menu").append("button").text("filter").attr("id","mime_filter_start")
+    
+    
 }
