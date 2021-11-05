@@ -92,7 +92,6 @@ function DrawSunburst(){
 
 
     //* draw each node
-    ///var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20b)
 
 
     console.log(Tree)
@@ -105,37 +104,67 @@ function DrawSunburst(){
         .style('stroke', 'white')
         //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
         .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
+        .style("fill", function (d) {
+            if(d.data.packed) return "black" 
+            if(d.data.mime){
+                return colormimeSupertype(d.data.mime.split("/")[0])  
+            } 
+            else{
+                var only = 0
+                var mime
+                for (const key in d.data.mime_types) {
+                    if (Object.hasOwnProperty.call(d.data.mime_types, key)) {
+                        const element = d.data.mime_types[key];
+                        if(element!=0){
+                            only++
+                            mime = key
+                        }
+                        
+                    }
+                }
+                if(only == 1) {//? il nodo non foglia ha solo 1 f{
+                    return colormimeSupertype(mime.split("/")[0])
+                }
+                else return "yellow"
+
+                
+            }
+
+        })
+        // .style("fill", function (d) {
+        //     if(d.data.packed) return "black" 
+        //     if(d.data.mime){
+        //         //console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
+        //         return mycolor(d.data.mime)  
+        //     } 
+        //     else{
+        //         if(d.data.mime_types){
+        //             var e = d.data.mime_types
+        //             //console.log(d)
+        //             var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
+        //             var maxM = Object.keys(d.data.mime_types)[0]
+        //             for (const key in e) {
+        //                 if (Object.hasOwnProperty.call(e, key)) {
+        //                     const element = e[key];
+        //                     //console.log(element)
+        //                     if(element > maxV ) {
+        //                         maxM = key
+        //                         maxV = element
+        //                     }
+        //                 }
+        //             }
+        //             return mycolor(maxM)
+        //         }
+        //         return "white"
+        //     }
+        
+        //     console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
+        //     console.log(d.data.mime_types)
+        // })
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
-        .style("fill", function (d) { 
-            if(d.data.mime){
-                //console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
-                return mycolor(d.data.mime)  
-            } 
-            else{
-                if(d.data.mime_types){
-                    var e = d.data.mime_types
-                    //console.log(d)
-                    var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
-                    var maxM = Object.keys(d.data.mime_types)[0]
-                    for (const key in e) {
-                        if (Object.hasOwnProperty.call(e, key)) {
-                            const element = e[key];
-                            //console.log(element)
-                            if(element > maxV ) {
-                                maxM = key
-                                maxV = element
-                            }
-                        }
-                    }
-                    return mycolor(maxM)
-                }
-                return "white"
-            }
-            // console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
-            //console.log(d.data.mime_types)
-        })
+        
 
     
 }

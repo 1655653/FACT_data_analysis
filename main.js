@@ -12,10 +12,11 @@ var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
-list_packed=[]
+var list_packed=[]
 list_packed_hid=[]
 
-ListMimes = ["undefined"]
+ListMimes = ["undefined"] //? lista con i subtypes
+ListSuperMimes = ["undefined"]//?lista con solo i types
 //* checkbox mngm
 document.getElementById("unpackerCKBOX").checked=true
 
@@ -48,11 +49,12 @@ function callFW() {
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
                 document.getElementById("reportOf").innerHTML += "</br>"+ "Total " + data.firmware.meta_data.total_files_in_firmware +" files "
-                
+                list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
                 Tree["uid"] = data.request.uid
                 Tree["hid"] = data.firmware.meta_data.hid
                 Tree["mime"] = data.firmware.analysis.file_type.mime
                 ListMimes.push(data.firmware.analysis.file_type.mime)
+                ListSuperMimes.push(data.firmware.analysis.file_type.mime.split("/")[0])
                 Tree["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                 Tree["contacome"]=1//? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                 Tree["size"] = data.firmware.meta_data.size
@@ -72,6 +74,7 @@ function callFW() {
                     
                     console.log("TREE BUILT")
                     console.log(Tree)
+
                     DrawSunburst()
                     
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
@@ -183,7 +186,8 @@ function FilterMIME(){
     mime_filtered = []
     ListMimes.forEach(element => {
         //console.log(element.replace(/[/.]/g,"_")) 
-        if(d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
+        if(!mime_filtered.includes(element) && d3.select('#'+element.split("/")[0]).property('checked')) mime_filtered.push(element)
+        if(!mime_filtered.includes(element) && d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
     });
     // //console.log(mime_filtered)
     if(d3.select('#filterType').property('checked')){ //? checked è remove, unchecked è opacize
@@ -237,23 +241,51 @@ function PruneTree(fatherNode){
     });
 
 }
-var mycolor = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20)
-
+var colormimetype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory20)
+var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory10)
 //*interface to filter mimes
 function BuildMimeFilterUI(list_m){
-    d3.select("#container").append("div").attr("id","filter_menu").style("flex-grow","1").style("line-height", "3.3")
+    d3.select("#container").append("div").attr("id","filter_menu_type").style("flex-grow","1").style("line-height", "3.3")
+    d3.select("#container").append("div").attr("id","filter_menu_subtype").style("flex-grow","1").style("line-height", "3.3")
+    
+    if(list_packed){
+        d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","packedFO") 
+        d3.select("#filter_menu_type").append("text").text("packed").style("color", "black");
+        d3.select("#filter_menu_type").append('br');
+    }
+    list_m.sort()
     list_m.forEach(element => {
-        d3.select("#filter_menu").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
-        d3.select("#filter_menu").append("text").text(element).style("color", mycolor(element));
-        d3.select("#filter_menu").append('br');
+        if (! document.getElementById(element.split("/")[0])) {
+            d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id",element.split("/")[0]).on("click", setCheckbox)
+            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]));
+            d3.select("#filter_menu_type").append('br');
+        }
+        d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
+        d3.select("#filter_menu_subtype").append("text").text(element).style("color", colormimeSupertype(element));
+        d3.select("#filter_menu_subtype").append('br');
     });
-    d3.select("#filter_menu").append('input').attr('type','checkbox').attr("id","filterType")
-    d3.select("#filter_menu").append("text").text("Label filter   ").attr("id","filtername")
-    d3.select("#filter_menu").append('br');
+    d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","filterType")
+    d3.select("#filter_menu_type").append("text").text("Label filter   ").attr("id","filtername")
+    d3.select("#filter_menu_type").append('br');
     
-    d3.select('#filterType').on('click', function(){d3.select('#filterType').property('checked')? d3.select('#filtername').text("Remove filter   "): d3.select('#filtername').text("Label filter   ")})
+    d3.select('#filter_menu_type').on('click', function(){d3.select('#filter_menu_type').property('checked')? d3.select('#filtername').text("Remove filter   "): d3.select('#filtername').text("Label filter   ")})
 
-    d3.select("#filter_menu").append("button").text("filter").attr("id","mime_filter_start")
+    d3.select("#filter_menu_type").append("button").text("filter").attr("id","mime_filter_start")
     
     
+}
+
+function setCheckbox(){
+    ListMimes.forEach(element => {
+        if(d3.select('#'+element.split("/")[0]).property('checked')){
+            ListMimes.forEach(e => {
+                d3.select("#"+element.replace(/[/.]/g,"_")).property('checked',"true")
+            });
+        }
+        else{
+            ListMimes.forEach(e => {
+                d3.select("#"+element.replace(/[/.]/g,"_")).property('checked',"false")
+            });
+        }
+    });
 }

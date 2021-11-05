@@ -1,4 +1,5 @@
 //* builds the tree calling all packed/unpacked FO
+
 async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
             if( included_files.length > 0){
                 promises = [];
@@ -8,14 +9,16 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                 });
                 const res_File_objects = await Promise.all(promises)
                 for(let response of res_File_objects){
-                    if(! ListMimes.includes(response.data.file_object.analysis.file_type.mime)) ListMimes.push(response.data.file_object.analysis.file_type.mime)
-
+                    var m = response.data.file_object.analysis.file_type.mime
+                    if(! ListMimes.includes(m)) ListMimes.push(m)
+                    if(!ListSuperMimes.includes(m.split("/")[0]))ListSuperMimes.push(m.split("/")[0])
 
                     var node = {}
                     response.data.file_object.meta_data.virtual_file_path.forEach(path => {
                         //console.log(path)
                         node = {}
                         node["uid"] = response.data.request.uid
+                        if(list_packed && list_packed.includes(response.data.request.uid)) node["packed"] = true
                         node["hid"] = path.substring(path.indexOf("|")).split("|").filter(d => d != "").at(-1) //uso path per avere gli alias
                         node["mime"] = response.data.file_object.analysis.file_type.mime
                         node["bytes"] = response.data.file_object.meta_data.size //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
