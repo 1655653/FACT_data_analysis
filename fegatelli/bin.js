@@ -193,7 +193,6 @@ return mycolor(maxM) }
 // //   //return (angle < 120 || angle > 270) ? angle : angle + 180;  // labels as rims
 // //   return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
 // // }
-// //!porcodiooooooooooooooooooooooooooooooooo
 //                     // while(path.length > 0){
 //                     //     if(! hasFolder(fatherNode,path[0])){ //non ha la folder, la creo
 //                     //         var folder = {}
