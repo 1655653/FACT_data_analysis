@@ -10,6 +10,7 @@ document.getElementById("byteCBOX").checked=true
 var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
 
 //* global vars
+// var expandcheckbox = false
 list_response_cpu_archi=[]
 list_response_unpacker=[]
 var list_packed=[]
@@ -74,10 +75,10 @@ function callFW() {
                     
                     console.log("TREE BUILT")
                     console.log(Tree)
-
-                    DrawSunburst()
                     
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
+                    DrawSunburst()
+                    
                     
                     document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
 
@@ -183,6 +184,11 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
 }
 
 function FilterMIME(){
+    // expandcheckbox = d3.select('#expandcheckbox').property('checked')
+    // ListMimes.forEach(element => {
+    //     d3.select('#text'+element.split("/")[0]).style("color", expandcheckbox? colormimeSupertype(element): colormimeSupertype(element.split("/")[0]));
+    //     d3.select('#text'+element.replace(/[/.]/g,"_")).style("color", expandcheckbox? colormimeSupertype(element): colormimeSupertype(element.split("/")[0]));
+    // });
     mime_filtered = []
     ListMimes.forEach(element => {
         //console.log(element.replace(/[/.]/g,"_")) 
@@ -245,47 +251,70 @@ var colormimetype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory2
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory10)
 //*interface to filter mimes
 function BuildMimeFilterUI(list_m){
-    d3.select("#container").append("div").attr("id","filter_menu_type").style("flex-grow","1").style("line-height", "3.3")
+    d3.select("#container").append("div").attr("id","filter_menu_type").style("flex-grow","1").style("line-height", "3.3")//?div side to side
     d3.select("#container").append("div").attr("id","filter_menu_subtype").style("flex-grow","1").style("line-height", "3.3")
     
-    if(list_packed){
-        d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","packedFO") 
+    if(list_packed){//? se ci sono packed allora li mette
+        d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","packedFO")  
         d3.select("#filter_menu_type").append("text").text("packed").style("color", "black");
         d3.select("#filter_menu_type").append('br');
     }
     list_m.sort()
-    list_m.forEach(element => {
-        if (! document.getElementById(element.split("/")[0])) {
+    list_m.forEach(element => { 
+        if (! document.getElementById(element.split("/")[0])) { //? metto i macro tipi
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id",element.split("/")[0]).on("click", setCheckbox)
-            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]));
+            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]));
+            d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","details"+element.split("/")[0]).on("click", function(){showsubType(element.split("/")[0])})
             d3.select("#filter_menu_type").append('br');
         }
-        d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")) //mi salvo l'id con il replace perchè al dom non piace lo slash
-        d3.select("#filter_menu_subtype").append("text").text(element).style("color", colormimeSupertype(element));
-        d3.select("#filter_menu_subtype").append('br');
+        if(element!="undefined"){ //? metto i subtypes
+            d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")).style("visibility", "hidden") //mi salvo l'id con il replace perchè al dom non piace lo slash
+            d3.select("#filter_menu_subtype").append("text").text(element).attr("id","text"+element.replace(/[/.]/g,"_")).style("color", colormimeSupertype(element.split("/")[0])).style("visibility", "hidden");
+            d3.select("#filter_menu_subtype").append('br');
+        }
     });
+    //? tipo di filtro
     d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","filterType")
     d3.select("#filter_menu_type").append("text").text("Label filter   ").attr("id","filtername")
     d3.select("#filter_menu_type").append('br');
     
-    d3.select('#filter_menu_type').on('click', function(){d3.select('#filter_menu_type').property('checked')? d3.select('#filtername').text("Remove filter   "): d3.select('#filtername').text("Label filter   ")})
-
+    d3.select('#filterType').on('click', function(){d3.select('#filterType').property('checked')? d3.select('#filtername').text("Remove filter"): d3.select('#filtername').text("Label filter")})
+    
+    // d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","expandcheckbox")
+    // d3.select("#filter_menu_type").append("text").text("verbose").attr("id","expand")
+    // d3.select("#filter_menu_type").append('br');
+    
     d3.select("#filter_menu_type").append("button").text("filter").attr("id","mime_filter_start")
     
     
 }
 
-function setCheckbox(){
-    ListMimes.forEach(element => {
-        if(d3.select('#'+element.split("/")[0]).property('checked')){
-            ListMimes.forEach(e => {
-                d3.select("#"+element.replace(/[/.]/g,"_")).property('checked',"true")
-            });
+function showsubType(type){
+    ListMimes.forEach(subtype => {
+        var op = "hidden"
+        if(type == subtype.split("/")[0]){
+            if(d3.select('#details'+type).property('checked')){
+                op = "visible"
+            }
+            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
+            d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op).style("color", colormimeSupertype(subtype)) 
+        }
+
+    });
+    DrawSunburst()
+}
+//?coerenza ra i due div quando metto il check o lo tolgo  
+var setCheckbox = function() {
+    ListMimes.forEach(e => {
+        if(d3.select('#'+e.split("/")[0]).property('checked')){
+            d3.select("#"+e.replace(/[/.]/g,"_")).property('checked',"true")
+            // .style("visibility", "visible")
+            // d3.select("#text"+e.replace(/[/.]/g,"_")).style("visibility", "visible")
         }
         else{
-            ListMimes.forEach(e => {
-                d3.select("#"+element.replace(/[/.]/g,"_")).property('checked',"false")
-            });
+            document.getElementById(e.replace(/[/.]/g,"_")).checked = false;  
+            // d3.select("#"+e.replace(/[/.]/g,"_")).style("visibility", "hidden")
+            // d3.select("#text"+e.replace(/[/.]/g,"_")).style("visibility", "hidden")     
         }
     });
 }

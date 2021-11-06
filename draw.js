@@ -107,6 +107,8 @@ function DrawSunburst(){
         .style("fill", function (d) {
             if(d.data.packed) return "black" 
             if(d.data.mime){
+                if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked'))
+                    return colormimeSupertype(d.data.mime)
                 return colormimeSupertype(d.data.mime.split("/")[0])  
             } 
             else{
@@ -122,7 +124,9 @@ function DrawSunburst(){
                         
                     }
                 }
-                if(only == 1) {//? il nodo non foglia ha solo 1 f{
+                if(only == 1) {//? il nodo non foglia ha solo 1 tipo di figlio
+                    if(d3.select('#details'+mime.split("/")[0]).property('checked'))
+                        return colormimeSupertype(mime)
                     return colormimeSupertype(mime.split("/")[0])
                 }
                 else return "yellow"
@@ -131,36 +135,6 @@ function DrawSunburst(){
             }
 
         })
-        // .style("fill", function (d) {
-        //     if(d.data.packed) return "black" 
-        //     if(d.data.mime){
-        //         //console.log(d.data.hid + "nonfolder: "+d.data.mime +""+mycolor(d.data.mime))
-        //         return mycolor(d.data.mime)  
-        //     } 
-        //     else{
-        //         if(d.data.mime_types){
-        //             var e = d.data.mime_types
-        //             //console.log(d)
-        //             var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
-        //             var maxM = Object.keys(d.data.mime_types)[0]
-        //             for (const key in e) {
-        //                 if (Object.hasOwnProperty.call(e, key)) {
-        //                     const element = e[key];
-        //                     //console.log(element)
-        //                     if(element > maxV ) {
-        //                         maxM = key
-        //                         maxV = element
-        //                     }
-        //                 }
-        //             }
-        //             return mycolor(maxM)
-        //         }
-        //         return "white"
-        //     }
-        
-        //     console.log(d.data.hid+mycolor(maxM)+maxM+maxV)
-        //     console.log(d.data.mime_types)
-        // })
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
