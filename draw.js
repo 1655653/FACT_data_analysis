@@ -86,7 +86,13 @@ function DrawSunburst(){
         .endAngle(function (d) { return d.x1 })
         .innerRadius(function (d) { return d.y0 })
         .outerRadius(function (d) { return d.y1 });
-        // Put it all together
+    //     // Put it all together
+    var x = d3.scaleLinear()
+            .range([0, 2 * Math.PI]);
+
+    var y = d3.scaleSqrt()
+            .range([0, radius]);
+    
     
 
 
@@ -98,17 +104,18 @@ function DrawSunburst(){
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
         .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
-        .append('path')  // <-- 2
+        .append('path')
+            .attr("class", function(d){return d.data.mime? d.data.mime.split("/")[0]: "folder"})
+            .attr("id",function(d){return d.data.mime? d.data.mime.replace(/[/.]/g,"_"): "folder"})// <-- 2
         .attr("display", function (d) { return d.depth  })
         .attr("d", arc)
         .style('stroke', 'white')
         //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
-        .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
         .style("fill", function (d) {
             if(d.data.packed) return "black" 
             if(d.data.mime){
                 if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked'))
-                    return colormimeSupertype(d.data.mime)
+                return colormimeSupertype(d.data.mime)
                 return colormimeSupertype(d.data.mime.split("/")[0])  
             } 
             else{
@@ -126,20 +133,35 @@ function DrawSunburst(){
                 }
                 if(only == 1) {//? il nodo non foglia ha solo 1 tipo di figlio
                     if(d3.select('#details'+mime.split("/")[0]).property('checked'))
-                        return colormimeSupertype(mime)
+                    return colormimeSupertype(mime)
                     return colormimeSupertype(mime.split("/")[0])
                 }
-                else return "yellow"
-
+                else return "#7da19d" //folder yellow
+                
                 
             }
-
+            
         })
+        .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
+        .on("click",zoom)
         
+
+        function zoom(d){
+            console.log(d.data.hid)
+            svg.transition()
+              .duration(750)
+              .tween("scale", function() {
+                var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+                    yd = d3.interpolate(y.domain(), [d.y0, 1]),
+                    yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+                return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+              })
+            .selectAll("g")
+              .attrTween("d", function(d) { return function() { return arc(d); }; });
+        }
 
     
 }
-

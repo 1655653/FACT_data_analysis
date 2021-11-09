@@ -224,7 +224,7 @@ function analyze_packed_FO(rj){
 function selectFO() {
   var selectBox = document.getElementById("packed");
   var FOhid = selectBox.options[selectBox.selectedIndex].value;
-  console.log(FOhid)
+  console.log(selectBox.selectedIndex)
   var fosize = list_response_unpacker[selectBox.selectedIndex-1].file_object.meta_data.size   ///selectBox.selectedIndex-1 perchè ho aggiunto "---"
   var selectedFO = list_response_unpacker[selectBox.selectedIndex-1].file_object
   console.log(selectedFO)

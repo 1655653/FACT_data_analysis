@@ -8,15 +8,16 @@ document.getElementById("unpackerCKBOX").checked=true
 document.getElementById("byteCBOX").checked=true
 
 var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
-
+var all_REST_response={}//? collazione di tutte le chiamate api, ordinate con chiave l'UID
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
 var list_packed=[]
-list_packed_hid=[]
+var list_packed_hid=[]
+var list_packed_uid = []
 
-ListMimes = ["undefined"] //? lista con i subtypes
-ListSuperMimes = ["undefined"]//?lista con solo i types
+ListMimes = [] //? lista con i subtypes
+ListSuperMimes = []//?lista con solo i types
 //* checkbox mngm
 document.getElementById("unpackerCKBOX").checked=true
 
@@ -49,7 +50,7 @@ function callFW() {
             document.getElementById("reportOf").innerHTML = "</br>Report of "+ data.firmware.meta_data.hid + "  MIME: "+data.firmware.analysis.file_type.mime 
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
-                document.getElementById("reportOf").innerHTML += "</br>"+ "Total " + data.firmware.meta_data.total_files_in_firmware +" files "
+                document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
                 list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
                 Tree["uid"] = data.request.uid
                 Tree["hid"] = data.firmware.meta_data.hid
@@ -84,7 +85,8 @@ function callFW() {
                     
                     document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
-
+                    packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
+                    
                     
                 })();
             } 
@@ -99,8 +101,46 @@ function callFW() {
     list_packed_hid=[]
   
 }
+function packedUI(unpack_list_size){
+    var txt =""
+    if(list_packed && unpack_list_size>0){//? se ci sono packed allora li mette
+        txt ="FACT has not been able to unpack "+ list_packed.length + " elements  " 
+        d3.select("#reportOf").append("text").text(txt)
+        select = document.createElement('select');
+        select.setAttribute("id", "packed_select")
+
+        select.onchange = selectedPackedFO //? lista dei FO packed
+
+        opt = document.createElement('option');
+        opt.innerHTML += "----"
+        select.appendChild(opt)
+        list_packed_hid.forEach(element => {
+            var op = document.createElement('option')
+            op.innerHTML += element
+            select.appendChild(op)
+        });
+        document.getElementById("reportOf").append(select);
+        d3.select("#reportOf").append('br');
+    }
+    else if(unpack_list_size == 0){
+        txt ="FACT unpacked 0 elements " 
+        d3.select("#reportOf").append("text").text(txt)
+    }
+    else {
+        txt = "FACT has been able to unpack every elements  "
+        d3.select("#reportOf").append("text").text(txt)
+    }
+    d3.select("#reportOf").append("br")
+    d3.select("#reportOf").append("text").attr("id","log_packed_FO")
+    d3.select("#reportOf").append("br")
+}
 function resetTree(){
     Tree = JSON.parse(JSON.stringify(BackupTree))
+    mime_filtered = []
+    ListMimes.forEach(e => {
+        document.getElementById(e.replace(/[/.]/g,"_")).checked = false
+        document.getElementById(e.split("/")[0]).checked = false
+    });
     DrawSunburst()
 }
 //* filter mime 
@@ -144,7 +184,7 @@ function LabelMimeFOFromTree(fatherNode,mime_filtered){
         if(child.filtered) filtchild++
     });
     if(filtchild == fatherNode.children.length && filtchild>0) fatherNode["filtered"] = true
-  
+    
     
 
 }
@@ -194,11 +234,9 @@ mime_filtered = []
 function FilterMIME(){
     
     ListMimes.forEach(element => {
-        //console.log(element.replace(/[/.]/g,"_")) 
         if(!mime_filtered.includes(element) && d3.select('#'+element.split("/")[0]).property('checked')) mime_filtered.push(element)
         if(!mime_filtered.includes(element) && d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
     });
-    // //console.log(mime_filtered)
     if(mode != "mode = highligths"){ //? checked è remove, unchecked è opacize
         RemoveMimeFOFromTree(Tree,mime_filtered)
         calculateLeaves(Tree)
@@ -206,17 +244,38 @@ function FilterMIME(){
     }
     else{
         LabelMimeFOFromTree(Tree,mime_filtered)
+        
     }
-    // //console.log("this is the tree after the filter")
-    // PruneTree(Tree)
-    // //calculateFOlderSize(Tree)
+    
     console.log(Tree)
     DrawSunburst()
-    // // console.log("this is the tree after the filter and prune")
-    // // console.log(Tree)
+    
     
 }
+function LabelPackedFOFromTree(Tree,list_packed){
+    Tree.children.forEach(child => {
+        list_packed.forEach(element => {
+            if(element==child.uid) child["filtered"] = true
+        });
+        LabelPackedFOFromTree(child,list_packed) 
+    });
+}
 
+function selectedPackedFO(){
+    var selectBox = document.getElementById("packed_select");
+    if(selectBox.selectedIndex==0) return //case "---"
+    var FO = list_packed_uid[selectBox.selectedIndex-1]
+    var selectedFO = all_REST_response[FO].data.file_object
+    console.log(selectedFO)
+    var mime_check = "The file type is not blacklisted, so it should have been unpacked ( MIME: "+selectedFO.analysis.file_type.mime+")"
+    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process, a genericFS error arisen  ( MIME: "+selectedFO.analysis.file_type.mime+")"
+    if(unpack_blacklist.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking skipped due to blacklisted file type ( MIME: "+selectedFO.analysis.file_type.mime+")"
+    d3.select("#log_packed_FO").text(mime_check)
+    //LabelPackedFOFromTree(Tree,list_packed)
+
+
+    
+}
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory10)
 var mode = "mode = highligths"
 //*interface to filter mimes
@@ -224,25 +283,28 @@ function BuildMimeFilterUI(list_m){
     d3.select("#container").append("div").attr("id","filter_menu_type").style("flex-grow","1").style("line-height", "3.3")//?div side to side
     d3.select("#container").append("div").attr("id","filter_menu_subtype").style("flex-grow","1").style("line-height", "3.3")
     
-    if(list_packed){//? se ci sono packed allora li mette
-        d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","packedFO")  
-        d3.select("#filter_menu_type").append("text").text("packed").style("color", "black");
-        d3.select("#filter_menu_type").append('br');
-    }
+    d3.select("#filter_menu_type").append('text').text("mixed folder").style("color","#7da19d")
+    d3.select("#filter_menu_type").append('br');
+    
     list_m.sort()
     list_m.forEach(element => { 
         if (! document.getElementById(element.split("/")[0])) { //? metto i macro tipi
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id",element.split("/")[0]).on("click", setCheckbox)
-            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]));
+            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]))
+                .on("mouseover", function() {highligthTheseMime(element,"super")})
+                .on("mouseleave", function() {DehighligthTheseMime(element,"super")});
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","details"+element.split("/")[0]).on("click", function(){showsubType(element.split("/")[0])})
             d3.select("#filter_menu_type").append('br');
         }
         if(element!="undefined"){ //? metto i subtypes
-            d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")).style("visibility", "hidden") //mi salvo l'id con il replace perchè al dom non piace lo slash
-            d3.select("#filter_menu_subtype").append("text").text(element).attr("id","text"+element.replace(/[/.]/g,"_")).style("color", colormimeSupertype(element.split("/")[0])).style("visibility", "hidden");
+            d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")).style("visibility", "hidden").on("click", setSubCheckbox) //mi salvo l'id con il replace perchè al dom non piace lo slash
+            d3.select("#filter_menu_subtype").append("text").text(element).attr("id","text"+element.replace(/[/.]/g,"_")).style("color", colormimeSupertype(element.split("/")[0])).style("visibility", "hidden")
+                .on("mouseover", function() {highligthTheseMime(element,"sub")})
+                .on("mouseleave", function() {DehighligthTheseMime(element,"sub")});
             d3.select("#filter_menu_subtype").append('br');
         }
     });
+    
     //? tipo di filtro
     d3.select("#filter_menu_type").append("button").text(mode).attr("id","filtername")
     d3.select("#filter_menu_type").append('br');
@@ -258,33 +320,59 @@ function BuildMimeFilterUI(list_m){
     
     
 }
+function highligthTheseMime(type,suosub){
+    var name = "#"+type.replace(/[/.]/g,"_")
+    if(suosub=="super"){
+        name = '.'+type.split("/")[0]
+    }
+    d3.selectAll(name)
+        .style("opacity", function(d) {return 1})
+    }
+    
+    
+function DehighligthTheseMime(type,suosub) {
+    var name = "#"+type.replace(/[/.]/g,"_")
+    if(suosub=="super"){
+        name = '.'+type.split("/")[0]
+    }
+    d3.selectAll(name)
+        .style("opacity", function(d) {return 0.8})
+    }
 
 function showsubType(type){
+    var color = colormimeSupertype(type)
+    var opacity = 1
     ListMimes.forEach(subtype => {
         var op = "hidden"
         if(type == subtype.split("/")[0]){
             if(d3.select('#details'+type).property('checked')){
                 op = "visible"
+                color = "black"
+                opacity = 0.3
             }
             d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
             d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op).style("color", colormimeSupertype(subtype)) //! devo assegnare il colore coerente con il supertipo
         }
 
     });
+    d3.select("#text"+type).style("color",color).style("opacity", opacity)
     DrawSunburst()
 }
 //?coerenza ra i due div quando metto il check o lo tolgo  
+var setSubCheckbox = function() {
+    ListMimes.forEach(e => {
+        if(! d3.select("#"+e.replace(/[/.]/g,"_")).property('checked')) {
+            document.getElementById(e.split("/")[0]).checked = false;  
+        }
+    });
+}
 var setCheckbox = function() {
     ListMimes.forEach(e => {
         if(d3.select('#'+e.split("/")[0]).property('checked')){
             d3.select("#"+e.replace(/[/.]/g,"_")).property('checked',"true")
-            // .style("visibility", "visible")
-            // d3.select("#text"+e.replace(/[/.]/g,"_")).style("visibility", "visible")
         }
         else{
             document.getElementById(e.replace(/[/.]/g,"_")).checked = false;  
-            // d3.select("#"+e.replace(/[/.]/g,"_")).style("visibility", "hidden")
-            // d3.select("#text"+e.replace(/[/.]/g,"_")).style("visibility", "hidden")     
         }
     });
 }

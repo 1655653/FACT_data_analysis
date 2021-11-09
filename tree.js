@@ -1,3 +1,4 @@
+
 //* builds the tree calling all packed/unpacked FO
 
 async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
@@ -9,6 +10,8 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                 });
                 const res_File_objects = await Promise.all(promises)
                 for(let response of res_File_objects){
+                    all_REST_response[response.data.request.uid] = response
+                    
                     var m = response.data.file_object.analysis.file_type.mime
                     if(! ListMimes.includes(m)) ListMimes.push(m)
                     if(!ListSuperMimes.includes(m.split("/")[0]))ListSuperMimes.push(m.split("/")[0])
@@ -37,6 +40,14 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         //console.log(Tree)
                     });
                     node["hid"] = response.data.file_object.meta_data.hid
+                    if(list_packed){
+                        list_packed.forEach(element => {
+                            if(node["uid"]==element) {
+                                list_packed_hid.push(node["hid"])
+                                list_packed_uid.push(node["uid"])
+                            }
+                        });
+                    }
                     await BuildTree(response.data.file_object.meta_data.included_files, node);
                     
                     
