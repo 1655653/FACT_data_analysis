@@ -105,8 +105,8 @@ function DrawSunburst(){
         .data(root.descendants())
         .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
         .append('path')
-            .attr("class", function(d){return d.data.mime? d.data.mime.split("/")[0]: "folder"})
-            .attr("id",function(d){return d.data.mime? d.data.mime.replace(/[/.]/g,"_"): "folder"})// <-- 2
+            .attr("class", function(d){return d.data.mime? "path"+d.data.mime.split("/")[0]: "folder"})
+            .attr("id",function(d){return d.data.mime? "path"+d.data.mime.replace(/[/.]/g,"_"): "folder"})// <-- 2
         .attr("display", function (d) { return d.depth  })
         .attr("d", arc)
         .style('stroke', 'white')
@@ -114,8 +114,10 @@ function DrawSunburst(){
         .style("fill", function (d) {
             if(d.data.packed) return "black" 
             if(d.data.mime){
-                if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked'))
-                return colormimeSupertype(d.data.mime)
+                if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked')){
+                    if(moreThanOne(d.data.mime))
+                        return colormimeSubtype(d.data.mime)
+                }
                 return colormimeSupertype(d.data.mime.split("/")[0])  
             } 
             else{
@@ -133,7 +135,8 @@ function DrawSunburst(){
                 }
                 if(only == 1) {//? il nodo non foglia ha solo 1 tipo di figlio
                     if(d3.select('#details'+mime.split("/")[0]).property('checked'))
-                    return colormimeSupertype(mime)
+                        if(moreThanOne(mime))
+                            return colormimeSubtype(mime)
                     return colormimeSupertype(mime.split("/")[0])
                 }
                 else return "#7da19d" //folder yellow

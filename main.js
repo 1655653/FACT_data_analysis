@@ -276,7 +276,8 @@ function selectedPackedFO(){
 
     
 }
-var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory10)
+var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory20)
+var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
 var mode = "mode = highligths"
 //*interface to filter mimes
 function BuildMimeFilterUI(list_m){
@@ -285,12 +286,13 @@ function BuildMimeFilterUI(list_m){
     
     d3.select("#filter_menu_type").append('text').text("mixed folder").style("color","#7da19d")
     d3.select("#filter_menu_type").append('br');
-    
+    //! COLORI TUTTI SBALLATI!!!
     list_m.sort()
     list_m.forEach(element => { 
         if (! document.getElementById(element.split("/")[0])) { //? metto i macro tipi
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id",element.split("/")[0]).on("click", setCheckbox)
-            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0]).style("color", colormimeSupertype(element.split("/")[0]))
+            d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0])
+                .style("color", colormimeSupertype(element.split("/")[0]))
                 .on("mouseover", function() {highligthTheseMime(element,"super")})
                 .on("mouseleave", function() {DehighligthTheseMime(element,"super")});
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","details"+element.split("/")[0]).on("click", function(){showsubType(element.split("/")[0])})
@@ -298,7 +300,12 @@ function BuildMimeFilterUI(list_m){
         }
         if(element!="undefined"){ //? metto i subtypes
             d3.select("#filter_menu_subtype").append('input').attr('type','checkbox').attr("id",element.replace(/[/.]/g,"_")).style("visibility", "hidden").on("click", setSubCheckbox) //mi salvo l'id con il replace perchè al dom non piace lo slash
-            d3.select("#filter_menu_subtype").append("text").text(element).attr("id","text"+element.replace(/[/.]/g,"_")).style("color", colormimeSupertype(element.split("/")[0])).style("visibility", "hidden")
+            d3.select("#filter_menu_subtype").append("text").text(element).attr("id","text"+element.replace(/[/.]/g,"_"))
+                .style("color", function(){ //? se ci sono almeno due sottotipi uso colori diversi, senno uso quello del supertipo
+                    if(moreThanOne(element))return colormimeSubtype(element)
+                    return colormimeSupertype(element.split("/")[0])
+                })
+                .style("visibility", "hidden")
                 .on("mouseover", function() {highligthTheseMime(element,"sub")})
                 .on("mouseleave", function() {DehighligthTheseMime(element,"sub")});
             d3.select("#filter_menu_subtype").append('br');
@@ -320,10 +327,17 @@ function BuildMimeFilterUI(list_m){
     
     
 }
+function moreThanOne(element){
+    var howmany=0
+    ListMimes.forEach(i => {
+        if(element.split("/")[0]==i.split("/")[0]) howmany++ 
+    });
+    return howmany>1? true: false
+}
 function highligthTheseMime(type,suosub){
-    var name = "#"+type.replace(/[/.]/g,"_")
+    var name = "#path"+type.replace(/[/.]/g,"_")
     if(suosub=="super"){
-        name = '.'+type.split("/")[0]
+        name = '.path'+type.split("/")[0]
     }
     d3.selectAll(name)
         .style("opacity", function(d) {return 1})
@@ -331,9 +345,9 @@ function highligthTheseMime(type,suosub){
     
     
 function DehighligthTheseMime(type,suosub) {
-    var name = "#"+type.replace(/[/.]/g,"_")
+    var name = "#path"+type.replace(/[/.]/g,"_")
     if(suosub=="super"){
-        name = '.'+type.split("/")[0]
+        name = '.path'+type.split("/")[0]
     }
     d3.selectAll(name)
         .style("opacity", function(d) {return 0.8})
@@ -350,8 +364,8 @@ function showsubType(type){
                 color = "black"
                 opacity = 0.3
             }
-            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
-            d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op).style("color", colormimeSupertype(subtype)) //! devo assegnare il colore coerente con il supertipo
+            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", function(){console.log(op);return op})
+            d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
         }
 
     });
