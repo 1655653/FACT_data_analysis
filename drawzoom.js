@@ -18,7 +18,12 @@ var g = svg.append("g")
 // Data strucure
 //!----------------HERE-------------------------
 var partition = d3.partition() 
-    .size([2 * Math.PI, radius]);
+        
+var x = d3.scaleLinear()
+.range([0, 2 * Math.PI]);
+
+var y = d3.scaleSqrt()
+.range([0, radius]);
 //!-----------------------------------------
 
 //* --------------------SUNBURST VARS
@@ -86,10 +91,10 @@ function DrawSunburst(){
     partition(root);
     //!---------------HERE--------------------------
     var arc = d3.arc()
-        .startAngle(function (d) {return d.x0 })
-        .endAngle(function (d) { return d.x1 })
-        .innerRadius(function (d) { return d.y0 })
-        .outerRadius(function (d) { return d.y1 });
+    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
     //!-----------------------------------------
     //     // Put it all together
     
@@ -149,8 +154,19 @@ function DrawSunburst(){
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
-        
+        .on("click", click)
 
-        
+        function click(d) {
+            svg.transition()
+                .duration(750)
+                .tween("scale", function() {
+                  var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+                      yd = d3.interpolate(y.domain(), [d.y0, 1]),
+                      yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+                  return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+                })
+              .selectAll("path")
+                .attrTween("d", function(d) { return function() { return arc(d); }; });
+          }
     
 }
