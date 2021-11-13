@@ -276,7 +276,7 @@ function selectedPackedFO(){
 
     
 }
-var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeCategory20)
+var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeAccent)
 var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
 var mode = "mode = highligths"
 //*interface to filter mimes
@@ -286,7 +286,7 @@ function BuildMimeFilterUI(list_m){
     
     d3.select("#filter_menu_type").append('text').text("mixed folder").style("color","#7da19d")
     d3.select("#filter_menu_type").append('br');
-    
+    //! COLORI TUTTI SBALLATI!!!
     list_m.sort()
     list_m.forEach(element => { 
         if (! document.getElementById(element.split("/")[0])) { //? metto i macro tipi
