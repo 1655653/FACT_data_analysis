@@ -5,7 +5,8 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
   width = 700 - margin.left - margin.right,
   height = 700 - margin.top - margin.bottom;
 var radius = Math.min(width, height) / 2;
-var color = d3.scaleOrdinal(d3.schemeCategory20b);
+
+
 
 var svg = d3.select("#treemap_div")
     .append("svg")

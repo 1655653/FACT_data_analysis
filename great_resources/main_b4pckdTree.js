@@ -1,7 +1,7 @@
 var endpoint = "http://192.168.30.177:5000/rest/"
 var url = endpoint+"firmware"
 
-var UNPACK_BLACKLISTED = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "application/x-shockwave-flash", "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/ogg", "text/plain", "application/pdf"] //? token from https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg
+var unpack_blacklist = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "application/x-shockwave-flash", "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/ogg", "text/plain", "application/pdf"] //? token from https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg
 //*
 //* checkbox mngm
 document.getElementById("unpackerCKBOX").checked=true
@@ -104,18 +104,26 @@ function callFW() {
     list_packed_hid=[]
   
 }
-
 function packedUI(unpack_list_size){
     var txt =""
     if(list_packed && unpack_list_size>0){//? se ci sono packed allora li mette
         txt ="FACT has not been able to unpack "+ list_packed.length + " elements  " 
         d3.select("#reportOf").append("text").text(txt)
-            .append("button").text("expand").attr("id","packed_tree_expand_btn")
-                .on("click",expandpackedTree)
-            .append('br')
-        d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
-        
-        
+        select = document.createElement('select');
+        select.setAttribute("id", "packed_select")
+
+        select.onchange = selectedPackedFO //? lista dei FO packed
+
+        opt = document.createElement('option');
+        opt.innerHTML += "----"
+        select.appendChild(opt)
+        list_packed_hid.forEach(element => {
+            var op = document.createElement('option')
+            op.innerHTML += element
+            select.appendChild(op)
+        });
+        document.getElementById("reportOf").append(select);
+        d3.select("#reportOf").append('br');
     }
     else if(unpack_list_size == 0){
         txt ="FACT unpacked 0 elements " 
@@ -127,21 +135,29 @@ function packedUI(unpack_list_size){
     }
     d3.select("#reportOf").append("br")
     d3.select("#reportOf").append("text").attr("id","log_packed_FO")
+    d3.select("#reportOf").append("br")
 }
 
-function talkAboutPackedFO(FOuid){
+
+
+
+function selectedPackedFO(){
+    var selectBox = document.getElementById("packed_select");
+    if(selectBox.selectedIndex==0) return //case "---"
+    var FOuid = list_packed_uid[selectBox.selectedIndex-1]
     var selectedFO = all_REST_response[FOuid].data.file_object
     console.log(selectedFO)
     console.log(FOuid)
-    var tail = " ( MIME: "+selectedFO.analysis.file_type.mime+")"
-    var mime_check = "The file type of " + selectedFO.meta_data.hid + " is not blacklisted, so it should have been unpacked" +tail
-    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.meta_data.hid + ", a genericFS error arisen"+tail
-    if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking of " + selectedFO.meta_data.hid + " skipped due to blacklisted file type"+tail
+    var tail = "( MIME: "+selectedFO.analysis.file_type.mime+") other info: " + selectedFO.analysis.unpacker.info
+    var mime_check = "The file type is not blacklisted, so it should have been unpacked" +tail
+    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process, a genericFS error arisen"+tail
+    if(unpack_blacklist.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking skipped due to blacklisted file type"+tail
     d3.select("#log_packed_FO").text(mime_check+"      ")
         .append("button").text("download").attr("id","dwld")
             .on("click",function(){download( FOuid ,selectedFO.analysis.file_type.mime)})
+    //LabelPackedFOFromTree(Tree,list_packed)
+    
 }
-
 function download(uid,contentType){
     var urldw = endpoint+"binary/"+uid
     d3.json(urldw, function(data) {

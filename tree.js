@@ -135,25 +135,6 @@ function calculateMimes(fatherNode){
 
 }
 
-
-function calculateFOlderSize(fatherNode){ //! non funziona!!! devo inserire questa info dentro ["size"] e non ["bytes"] perchè senno draw s'incazza, 
-    //!per ora me ne sbatto della grandezza delle folder
-
-    fatherNode.children.forEach(child => { //se entra qua ha almeno un figlio e quindi non è foglia
-                    
-        if(fatherNode.uid == "folder"){
-            fatherNode.size+=calculateFOlderSize(child)
-        }
-        else{
-            calculateFOlderSize(child)
-        }
-        
-    });
-    console.log("outfromloop: "+fatherNode.hid+" with size:"+fatherNode.size)
-    return fatherNode.size
-  
-}
-
 function calculateLeaves(fatherNode){
     if (fatherNode["children"].length == 0){ //foglia
         //console.log("leaf"+fatherNode.hid)
@@ -175,6 +156,126 @@ function calculateLeaves(fatherNode){
 }
 
 
+//* filter mime 
 
+function LabelMimeFOFromTree(fatherNode,mime_filtered){
+    //console.log("lenght before "+fatherNode.children.length)
+    l = [] //? riempio la lista con le posizioni degli elementi da eliminare
+    for (let i = 0; i < fatherNode.children.length; i++) {
+        const child = fatherNode.children[i];
+        if(child.uid!="folder"){ //?se non è foglia, inserisco la posizione dell'elemento
+            mime_filtered.forEach(element => {
+                if(child.mime == element) {
+                    // console.log("child")
+                    // console.log(child)
+                    l.push(i)
+                }
+            });
+        }
+    }
+    //console.log(l)
+    //? ciclo sulla lista di index, labello l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha  index -1)
+    if(l.length>0){
+        for (let i = 0; i < l.length; i++) {
+            const pos = l[i];
+            //console.log(fatherNode.children[pos])
+            fatherNode.children[pos]["filtered"] = true
+        }
+        
+    }
+    //console.log("lenght after "+fatherNode.children.length)
+    // console.log("this is the tree DURING the filter")
+    // console.log(Tree)
+    //? chiamata ricorsiva
+    fatherNode.children.forEach(child => {
+        //console.log("calling--> " + child.hid)
+        LabelMimeFOFromTree(child,mime_filtered)
+    });
 
+    var filtchild= 0
+    fatherNode.children.forEach(child => {
+        if(child.filtered) filtchild++
+    });
+    if(filtchild == fatherNode.children.length && filtchild>0) fatherNode["filtered"] = true
+    
+    
 
+}
+
+function RemoveMimeFOFromTree(fatherNode,mime_filtered){
+    fatherNode["leaves"]=0
+    delete fatherNode["mime_types"]
+    //console.log("lenght before "+fatherNode.children.length)
+    l = [] //? riempio la lista con le posizioni degli elementi da eliminare
+    for (let i = 0; i < fatherNode.children.length; i++) {
+        const child = fatherNode.children[i];
+        if(child.uid!="folder"){ //?se non è foglia, inserisco la posizione dell'elemento
+            mime_filtered.forEach(element => {
+                if(child.mime == element) {
+                    // console.log("child")
+                    // console.log(child)
+                    l.push(i)
+                }
+            });
+        }
+    }
+    //console.log(l)
+    //? ciclo sulla lista di index, elimino l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha index -1)
+    if(l.length>0){
+        for (let i = 0; i < l.length; i++) {
+            const pos = l[i];
+            //console.log(fatherNode.children[pos])
+            fatherNode.children.splice(pos,1)
+            for (let j = 0; j < l.length; j++) {
+                l[j]--
+            }
+        }
+        
+    }
+    //console.log("lenght after "+fatherNode.children.length)
+    // console.log("this is the tree DURING the filter")
+    // console.log(Tree)
+    //? chiamata ricorsiva
+    fatherNode.children.forEach(child => {
+        //console.log("calling--> " + child.hid)
+        RemoveMimeFOFromTree(child,mime_filtered)
+    });
+
+}
+function LabelPackedFOFromTree(Tree,list_packed){
+    Tree.children.forEach(child => {
+        list_packed.forEach(element => {
+            if(element==child.uid) child["filtered"] = true
+        });
+        LabelPackedFOFromTree(child,list_packed) 
+    });
+}
+
+function resetTree(){
+    Tree = JSON.parse(JSON.stringify(BackupTree))
+    mime_filtered = []
+    ListMimes.forEach(e => {
+        document.getElementById(e.replace(/[/.]/g,"_")).checked = false
+        document.getElementById(e.split("/")[0]).checked = false
+    });
+    DrawSunburst()
+}
+
+//! non funziona!!!
+function calculateFOlderSize(fatherNode){ //! non funziona!!! devo inserire questa info dentro ["size"] e non ["bytes"] perchè senno draw s'incazza, 
+    //!per ora me ne sbatto della grandezza delle folder
+
+    fatherNode.children.forEach(child => { //se entra qua ha almeno un figlio e quindi non è foglia
+                    
+        if(fatherNode.uid == "folder"){
+            fatherNode.size+=calculateFOlderSize(child)
+        }
+        else{
+            calculateFOlderSize(child)
+        }
+        
+    });
+    console.log("outfromloop: "+fatherNode.hid+" with size:"+fatherNode.size)
+    return fatherNode.size
+  
+}

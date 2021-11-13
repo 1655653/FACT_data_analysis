@@ -1,18 +1,92 @@
-if(d.data.hid == "bin") 
-var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
-var maxM = Object.keys(d.data.mime_types)[0]
-for (const key in d.data.mime_types) {
-    if (Object.hasOwnProperty.call(d.data.mime_types, key)) {
-        if(d.data.hid == "bin") console.log(maxM + "" +maxV)
-        if(d.data.mime_types[key] > maxV) maxM = key
-    }
-}
-if(d.data.hid == "bin")
-console.log(d.data.hid+"folder: "+maxM +""+mycolor(maxM))
-return mycolor(maxM) }
+//!---------------
+        // select = document.createElement('select');
+        // select.setAttribute("id", "packed_select")
+
+        // select.onchange = selectedPackedFO //? lista dei FO packed
+
+        // opt = document.createElement('option');
+        // opt.innerHTML += "----"
+        // select.appendChild(opt)
+        // list_packed_hid.forEach(element => {
+        //     var op = document.createElement('option')
+        //     op.innerHTML += element
+        //     select.appendChild(op)
+        // });
+        // document.getElementById("reportOf").append(select);
 
 
 
+
+
+
+
+
+
+
+// if(d.data.hid == "bin") 
+// var maxV = d.data.mime_types[Object.keys(d.data.mime_types)[0]];
+// var maxM = Object.keys(d.data.mime_types)[0]
+// for (const key in d.data.mime_types) {
+//     if (Object.hasOwnProperty.call(d.data.mime_types, key)) {
+//         if(d.data.hid == "bin") console.log(maxM + "" +maxV)
+//         if(d.data.mime_types[key] > maxV) maxM = key
+//     }
+// }
+// if(d.data.hid == "bin")
+// console.log(d.data.hid+"folder: "+maxM +""+mycolor(maxM))
+// return mycolor(maxM) }
+
+
+//!------------
+var heightbc = height/3
+var marginbc = {top: 10, right: 30, bottom: 90, left: 40}
+var svg_bc_pckd = d3.select("#reportOf")
+.append("svg")
+    .attr("width", width + marginbc.left + marginbc.right)
+    .attr("height", heightbc + marginbc.top + marginbc.bottom)
+.append("g")
+    .attr("transform",
+        "translate(" + marginbc.left + "," + marginbc.top + ")");
+// X axis
+d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv", function(data) {
+    
+    var x = d3.scaleBand()
+        .range([ 0, width ])
+        .domain(data.map(function(d) { return d.Country; }))
+        .padding(0.2);
+    svg_bc_pckd.append("g")
+        .attr("transform", "translate(0," + heightbc + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    // Add Y axis
+    var y = d3.scaleLinear()
+        .domain([0, 13000])
+        .range([ heightbc, 0]);
+    svg_bc_pckd.append("g")
+        .call(d3.axisLeft(y));    
+    // Bars
+    svg_bc_pckd.selectAll("mybar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", function(d) { return x(d.Country); })
+        .attr("width", x.bandwidth())
+        .attr("fill", "#69b3a2")
+        // no bar at the beginning thus:
+        .attr("height", function(d) { return heightbc - y(0); }) // always equal to 0
+        .attr("y", function(d) { return y(0); })
+    // Animation
+    svg_bc_pckd.selectAll("rect")
+        .transition()
+        .duration(800)
+        .attr("y", function(d) { return y(d.Value); })
+        .attr("height", function(d) { return heightbc - y(d.Value); })
+        .delay(function(d,i){console.log(i) ; return(i*100)})
+})
+
+//!---------------
 
 
 
