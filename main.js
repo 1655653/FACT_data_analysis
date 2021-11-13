@@ -32,6 +32,7 @@ d3.json(url, function(data) {
         select.appendChild(op);
         op.innerHTML += item;
     });
+    
 })
 
 document.getElementById("start").onclick = callFW//? <---- chiamata quando premi bottone
@@ -48,6 +49,7 @@ function callFW() {
         url = endpoint+"firmware/"+selectedValue+"?summary=true"
         d3.json(url, function(data) { //?<----- chiamata alle api
             document.getElementById("reportOf").innerHTML = "</br>Report of "+ data.firmware.meta_data.hid + "  MIME: "+data.firmware.analysis.file_type.mime 
+            d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
                 document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
@@ -264,17 +266,55 @@ function LabelPackedFOFromTree(Tree,list_packed){
 function selectedPackedFO(){
     var selectBox = document.getElementById("packed_select");
     if(selectBox.selectedIndex==0) return //case "---"
-    var FO = list_packed_uid[selectBox.selectedIndex-1]
-    var selectedFO = all_REST_response[FO].data.file_object
+    var FOuid = list_packed_uid[selectBox.selectedIndex-1]
+    var selectedFO = all_REST_response[FOuid].data.file_object
     console.log(selectedFO)
-    var mime_check = "The file type is not blacklisted, so it should have been unpacked ( MIME: "+selectedFO.analysis.file_type.mime+")"
+    console.log(FOuid)
+    var mime_check = "The file type is not blacklisted, so it should have been unpacked ( MIME: "+selectedFO.analysis.file_type.mime+") instead: " + selectedFO.analysis.unpacker.info
     if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process, a genericFS error arisen  ( MIME: "+selectedFO.analysis.file_type.mime+")"
     if(unpack_blacklist.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking skipped due to blacklisted file type ( MIME: "+selectedFO.analysis.file_type.mime+")"
-    d3.select("#log_packed_FO").text(mime_check)
+    d3.select("#log_packed_FO").text(mime_check+"      ")
+        .append("button").text("download").attr("id","dwld")
+            .on("click",function(){download( FOuid ,selectedFO.analysis.file_type.mime)})
     //LabelPackedFOFromTree(Tree,list_packed)
-
-
     
+}
+function download(uid,contentType){
+    var urldw = endpoint+"binary/"+uid
+    d3.json(urldw, function(data) {
+        //alert("download started");
+        var b64 = data.binary
+        const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+    
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+    
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+            }
+    
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+    
+        const blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+        }
+        const blob = b64toBlob(b64, contentType);
+        const blobUrl = URL.createObjectURL(blob);
+    
+        //window.location = blobUrl;
+        // // Construct the <a> element
+        var link = document.createElement("a");
+        link.download = data.file_name
+        link.href = blobUrl;
+    
+        document.body.appendChild(link);
+        link.click();
+    })
 }
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeAccent)
 var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
@@ -339,8 +379,8 @@ function highligthTheseMime(type,suosub){
     if(suosub=="super"){
         name = '.path'+type.split("/")[0]
     }
-    d3.selectAll(name)
-        .style("opacity", function(d) {return 1})
+    d3.selectAll(name).style("opacity", function(d) {return 1})
+        
     }
     
     

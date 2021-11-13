@@ -25,8 +25,8 @@ main();
 //* gestione con promise delle chiamate api a FACT
 async function main() {
 	//var result = await makeGetRequest(url,analyze_result);
+  url = endpoint+"binary"
   
-	var result = await makeGetRequest(url,getallFW);
 }
 
 
