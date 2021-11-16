@@ -48,7 +48,19 @@ function callFW() {
     if(selectedValue != "---"){
         url = endpoint+"firmware/"+selectedValue+"?summary=true"
         d3.json(url, function(data) { //?<----- chiamata alle api
-            document.getElementById("reportOf").innerHTML = "</br>Report of "+ data.firmware.meta_data.hid + "  MIME: "+data.firmware.analysis.file_type.mime 
+            
+            //?----- cpu_architecture string
+            var cpu_info =  []
+            for (const key in data.firmware.analysis.cpu_architecture.summary) {
+                if (Object.hasOwnProperty.call(data.firmware.analysis.cpu_architecture.summary, key)) {
+                    const element = data.firmware.analysis.cpu_architecture.summary[key];
+                    cpu_info.push(key)
+                }
+            }
+            var plu = "  cpu architecture"
+            cpu_info.length > 1 ? plu += "s: " : plu+= ": "
+
+            document.getElementById("reportOf").innerHTML = "</br>Report of "+ data.firmware.meta_data.hid + "  MIME: "+data.firmware.analysis.file_type.mime + plu +cpu_info
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
@@ -80,15 +92,14 @@ function callFW() {
                     console.log(Tree)
                     BackupTree = JSON.parse(JSON.stringify(Tree))
                     
-                    
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
-                    
-                    DrawSunburst()
-                    
                     
                     document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
+
+
+                    DrawSunburst()
                     
                     
                 })();

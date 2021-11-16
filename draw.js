@@ -109,16 +109,17 @@ function DrawSunburst(){
     console.log(Tree)
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
-        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid})  // <-- 2
+        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid.replace(/[/.]/g,"_")})  // <-- 2
         .append('path')
-            .attr("class", function(d){return d.data.mime? "path"+d.data.mime.split("/")[0]: "folder"})
-            .attr("id",function(d){return d.data.mime? "path"+d.data.mime.replace(/[/.]/g,"_"): "folder"})// <-- 2
+            .attr("class", function(d){return d.data.mime? "path"+d.data.mime.split("/")[0]: "folder"}) //?mime supertype
+            .attr("id",function(d){return d.data.mime? "path"+d.data.mime.replace(/[/.]/g,"_"): "folder"})//? mime subtype// <-- 2
         .attr("display", function (d) { return d.depth  })
         .attr("d", arc)
         .style('stroke', 'white')
         //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
         .style("fill", function (d) {
-            if(d.data.packed) return "black" 
+            var expandbtn = document.getElementById("packed_tree_expand");
+            if(d.data.packed && expandbtn.style.display !== "none") return "black" 
             if(d.data.mime){
                 if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked')){
                     if(moreThanOne(d.data.mime))
@@ -158,6 +159,8 @@ function DrawSunburst(){
         .on("click", click)
 
         function click(d) {
+            colorMiniSunburst(d)
+            //console.log(d)
             svg.transition()
                 .duration(750)
                 .tween("scale", function() {
@@ -171,3 +174,4 @@ function DrawSunburst(){
           }
     
 }
+

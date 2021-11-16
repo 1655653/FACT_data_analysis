@@ -98,7 +98,7 @@ function expandpackedTree(){
                 .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on('click', click);
+            .on('click', clickPackedFO);
 
             // Add Circle for the nodes
             nodeEnter.append('circle')
@@ -203,9 +203,12 @@ function expandpackedTree(){
             }
 
             // Toggle children on click.
-            function click(d) {
+            function clickPackedFO(d) {
                 console.log(d)
-                if(d.data.leaf) talkAboutPackedFO(d.data.uid)
+                if(d.data.leaf) {
+                    talkAboutPackedFO(d.data.uid)
+                    zoomOnPackedFO(d.data.uid)
+                }
                 if (d.children) {
                     d._children = d.children;
                     d.children = null;
@@ -214,6 +217,7 @@ function expandpackedTree(){
                     d._children = null;
                 }
                 update(d);
+                
             }
         }
     } else {
@@ -222,4 +226,11 @@ function expandpackedTree(){
         expandbtn.style.display = "none";
         d3.select("#log_packed_FO").style("visibility","hidden")
   }
+}
+
+function zoomOnPackedFO(FOuid){
+    var selectedFO = all_REST_response[FOuid].data.file_object
+    var hid = selectedFO.meta_data.hid
+    g.selectAll('.node#'+hid.replace(/[/.]/g,"_")).select("path").dispatch('click')
+
 }

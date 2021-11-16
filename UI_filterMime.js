@@ -47,7 +47,9 @@ function BuildMimeFilterUI(list_m){
     
     d3.select("#filter_menu_type").append("button").text("filter").attr("id","mime_filter_start")
     d3.select("#filter_menu_type").append("button").text("reset").attr("id","mime_filter_reset")
-    
+    d3.select("#filter_menu_type").append('br');
+    DrawMiniSunburst()
+
     
 }
 

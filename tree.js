@@ -21,6 +21,7 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         //console.log(path)
                         node = {}
                         node["uid"] = response.data.request.uid
+                        node["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2)
                         if(list_packed && list_packed.includes(response.data.request.uid)) node["packed"] = true
                         node["hid"] = path.substring(path.indexOf("|")).split("|").filter(d => d != "").at(-1) //uso path per avere gli alias
                         node["mime"] = response.data.file_object.analysis.file_type.mime
@@ -75,6 +76,7 @@ function managePath(fatherNode,path,node){
         if(path.length>0) {
             var folder = {}
             folder["uid"] = "folder"
+            folder["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2)
             folder["hid"] = path[0]
             folder["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
             folder["contacome"]=1 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
@@ -259,6 +261,7 @@ function resetTree(){
         document.getElementById(e.split("/")[0]).checked = false
     });
     DrawSunburst()
+    DrawMiniSunburst()
 }
 
 //! non funziona!!!
