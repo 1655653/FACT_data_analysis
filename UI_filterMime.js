@@ -4,8 +4,8 @@ var mode = "mode = highligths"
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeAccent)
 var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
 function BuildMimeFilterUI(list_m){
-    d3.select("#container").append("div").attr("id","filter_menu_type").style("flex-grow","1").style("line-height", "3.3")//?div side to side
-    d3.select("#container").append("div").attr("id","filter_menu_subtype").style("flex-grow","1").style("line-height", "3.3")
+    d3.select("#container").append("div").attr("id","filter_menu_type").attr("class","filter_menu")
+    d3.select("#container").append("div").attr("id","filter_menu_subtype").attr("class","filter_menu")
     
     d3.select("#filter_menu_type").append('text').text("mixed folder").style("color","#7da19d")
     d3.select("#filter_menu_type").append('br');
@@ -112,7 +112,7 @@ function showsubType(type){
         if(type == subtype.split("/")[0]){
             if(d3.select('#details'+type).property('checked')){
                 op = "visible"
-                color = "black"
+                color = "#8e9297"
                 opacity = 0.3
             }
             d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", function(){console.log(op);return op})

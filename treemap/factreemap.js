@@ -180,7 +180,7 @@ function unpacker(data){
                 .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
                 .text(function(d){ return  d.data.name})
                 .attr("font-size", "15px")
-                .attr("fill", "white")
+                .attr("fill", "#4f545c")
             //value of each rect
             svg
                 .selectAll("vals")
@@ -191,7 +191,7 @@ function unpacker(data){
                   .attr("y", function(d){ return d.y0+35})    // +20 to adjust position (lower)
                   .text(function(d){ return d.data.size })
                   .attr("font-size", "11px")
-                  .attr("fill", "white")
+                  .attr("fill", "#4f545c")
             
             //mime type
             console.log(root.descendants())

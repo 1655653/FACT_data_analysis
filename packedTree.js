@@ -44,7 +44,7 @@ function expandpackedTree(){
         var treeData = buildpackedTree(list_packed_uid)
         console.log(treeData)
         var heightbc = height/5
-        var marginbc = {top: 10, right: 90, bottom: 30, left: 90}
+        var marginbc = {top: 10, right: 90, bottom: 30, left: 150}
         var svg_bc_pckd = d3.select("#packed_tree_expand")
             .append("svg")
                 .attr("width", width + marginbc.left + marginbc.right)

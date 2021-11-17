@@ -10,10 +10,11 @@ var radius = Math.min(width, height) / 2;
 
 var svg = d3.select("#treemap_div")
     .append("svg")
+        .attr("id","bigsun")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
 d3.select("#container").attr("height", height + margin.top + margin.bottom)
-d3.select("#treemap_div").attr("width", "60%")
+//d3.select("#treemap_div").attr("width", "60%").attr("flex-grow","1")
 var g = svg.append("g")
         .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 // Data strucure
@@ -30,9 +31,10 @@ var y = d3.scaleSqrt()
 //* --------------------SUNBURST VARS
 function DrawSunburst(){
     //reset old draw
-    d3.select("#treemap_div").selectAll("*").remove();
+    d3.select("#treemap_div").select("#bigsun").remove();
     svg = d3.select("#treemap_div")
     .append("svg")
+    .attr("id","bigsun")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     g = svg.append("g")
@@ -44,12 +46,12 @@ function DrawSunburst(){
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-    .style("position", "absolute")
+    // .style("background-color", "#4f545c")
+    // .style("border", "solid")
+    // .style("border-width", "2px")
+    // .style("border-radius", "5px")
+    // .style("padding", "5px")
+    // .style("position", "absolute")
     
     var mouseover = function(d) {
         Tooltip
@@ -115,11 +117,11 @@ function DrawSunburst(){
             .attr("id",function(d){return d.data.mime? "path"+d.data.mime.replace(/[/.]/g,"_"): "folder"})//? mime subtype// <-- 2
         .attr("display", function (d) { return d.depth  })
         .attr("d", arc)
-        .style('stroke', 'white')
+        .style('stroke', '#4f545c')
         //.style("fill", function (d) { return color(d.data.mime? d.data.mime :d.parent.hid); })
         .style("fill", function (d) {
             var expandbtn = document.getElementById("packed_tree_expand");
-            if(d.data.packed && expandbtn.style.display !== "none") return "black" 
+            //if(d.data.packed && expandbtn.style.display !== "none") return "black" 
             if(d.data.mime){
                 if(d3.select('#details'+d.data.mime.split("/")[0]).property('checked')){
                     if(moreThanOne(d.data.mime))

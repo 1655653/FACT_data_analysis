@@ -3,6 +3,7 @@
 <head>
   <title>FACT-VIZ</title>
   <link rel="shortcut icon" href="#">
+  <link rel="stylesheet" href="ciessesse.css">
 </head>
 
 <!-- Load d3.js -->
@@ -11,29 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
-<style>
-  body {
-    font-family: "Open Sans", sans-serif;
-  }
-  .node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 3px;
-}
-
-.node text {
-  font: 12px sans-serif;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
-}
-</style>
-
-<body>
-
+<body >
     Select a firmware <select id = "allFW"></select>
     <input type="checkbox" id="unpackerCKBOX" value="false">
     <label name="unpacker">unpacker</label>
@@ -46,8 +25,10 @@
     
     <div id="reportOf"></div>
     
-    <div class="container" id="container" style="display: flex; ">
+    <div class="container" id="container">
       <div id="treemap_div"></div>
+      <div id="riempitivo"></div> 
+
     </div>
   
 </body>
