@@ -9,10 +9,12 @@ body {
   }
 #container{
     display: flex;
+    width: 100%;
 }
-#riempitivo{
-    width: 30%;
-    height: 500px;
+#violin_div{
+    order:0; /*0 is for debugging, 7 is the right*/
+    width:33%
+
 }
 /* sunburst */
 #treemap_div {
@@ -20,9 +22,8 @@ body {
     /* flex-grow: 1; */
     display: flex;
 }
-#riempitivo{
-    order:7
-}
+
+
 .tooltip{
     background-color: #4f545c;
     border: solid;

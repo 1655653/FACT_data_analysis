@@ -9,6 +9,12 @@ document.getElementById("byteCBOX").checked=true
 
 var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
 var all_REST_response={}//? collazione di tutte le chiamate api, ordinate con chiave l'UID
+
+var Tree = {}
+var BackupTree = {}
+
+var violin_data;
+var violin_dom;
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
@@ -36,9 +42,6 @@ d3.json(url, function(data) {
 })
 
 document.getElementById("start").onclick = callFW//? <---- chiamata quando premi bottone
-
-var Tree = {}
-var BackupTree = {}
 //* starts analysis on a selected FW
 function callFW() {
     console.log("STARTED")
@@ -101,7 +104,9 @@ function callFW() {
 
                     DrawSunburst()
                     
-                    
+                    buildViolinData(data.firmware.analysis.cve_lookup)
+
+                    DrawViolin()
                 })();
             } 
         })

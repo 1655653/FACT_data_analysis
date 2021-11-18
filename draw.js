@@ -1,7 +1,7 @@
 
 //*--------------------SUNBURST VARS
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
+var margin = {top: 10, right: 10, bottom: 10, left: 0},
   width = 700 - margin.left - margin.right,
   height = 700 - margin.top - margin.bottom;
 var radius = Math.min(width, height) / 2;
