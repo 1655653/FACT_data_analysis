@@ -21,10 +21,11 @@ function DrawViolin(){
     var y_viol = d3.scaleBand()
     .range([ 0, width_violin ])
     .domain(violin_dom)
-    //.paddingInner(1)
-
+    .padding(0.05)     // This is important: it is the space between 2 groups. 0 means no padding. 1 is the maximum.
+    
     svg_violin.append("g").call( d3.axisLeft(y_viol) )
     
+    var si = d3.scaleLinear().domain([4,20]).range([16,12]) //scala per il font size
     svg_violin.selectAll("text").text(function(d){
         var sp = d.split(" ")
         var name = sp[0]
@@ -33,7 +34,7 @@ function DrawViolin(){
     })
     .attr("transform", "translate(-25,10)rotate(-75)")
     .style("text-anchor", "start")
-    .style("font-size", 16)
+    .style("font-size", si(violin_dom.length))
 
     svg_violin.append("g")
       .attr("transform", "translate(0," + width_violin + ")")
