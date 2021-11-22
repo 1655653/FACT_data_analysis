@@ -47,7 +47,7 @@ function expandpackedTree(){
         var marginbc = {top: 10, right: 90, bottom: 30, left: 150}
         var svg_bc_pckd = d3.select("#packed_tree_expand")
             .append("svg")
-                .attr("width", width + marginbc.left + marginbc.right)
+                .attr("width", "100%")
                 .attr("height", heightbc + marginbc.top + marginbc.bottom)
             .append("g")
                 .attr("transform",
@@ -227,6 +227,45 @@ function expandpackedTree(){
         d3.select("#log_packed_FO").style("visibility","hidden")
   }
 }
+
+
+function packedUI(unpack_list_size){
+    var txt =""
+    if(list_packed && unpack_list_size>0){//? se ci sono packed allora li mette
+        txt ="FACT has not been able to unpack "+ list_packed.length + " elements  " 
+        d3.select("#reportOf").append("text").text(txt)
+            .append("button").text("expand").attr("id","packed_tree_expand_btn")
+                .on("click",expandpackedTree)
+            .append('br')
+        d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
+        
+        
+    }
+    else if(unpack_list_size == 0){
+        txt ="FACT unpacked 0 elements " 
+        d3.select("#reportOf").append("text").text(txt)
+    }
+    else {
+        txt = "FACT has been able to unpack every elements  "
+        d3.select("#reportOf").append("text").text(txt)
+    }
+    d3.select("#reportOf").append("br")
+    d3.select("#reportOf").append("text").attr("id","log_packed_FO")
+}
+
+function talkAboutPackedFO(FOuid){
+    var selectedFO = all_REST_response[FOuid].data.file_object
+    console.log(selectedFO)
+    console.log(FOuid)
+    var tail = " ( MIME: "+selectedFO.analysis.file_type.mime+")"
+    var mime_check = "The file type of " + selectedFO.meta_data.hid + " is not blacklisted, so it should have been unpacked" +tail
+    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.meta_data.hid + ", a genericFS error arisen"+tail
+    if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking of " + selectedFO.meta_data.hid + " skipped due to blacklisted file type"+tail
+    d3.select("#log_packed_FO").text(mime_check+"      ")
+        .append("button").text("download").attr("id","dwld")
+            .on("click",function(){download( FOuid ,selectedFO.analysis.file_type.mime)})
+}
+
 
 function zoomOnPackedFO(FOuid){
     var selectedFO = all_REST_response[FOuid].data.file_object

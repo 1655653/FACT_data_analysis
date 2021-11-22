@@ -4,10 +4,34 @@ function DrawViolin(){
     width_violin = 600 - margin_violin.left - margin_violin.right,
     height_violin = 700 - margin_violin.top - margin_violin.bottom;
 
+    // create a tooltip
+    var tooltip_violin = d3.select("#violin_div")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    var mouseover = function(d) {
+        tooltip_violin
+            .style("opacity", 1)
+            .style("visibility", "visible")
+        d3.select(this).raise().attr("stroke","black");
+    }
+    var mousemove = function(d) {
+        tooltip_violin
+            .html("hid:"+d.hid+ "<br>uid:" + d.uid + "<br>cve_name:"+d.cpe_name+ "<br>score:"+d.score2)
+            .style('left', (d3.event.pageX + 10) + 'px')
+            .style('top', (d3.event.pageY + 10) + 'px')
+    }
+    var mouseleave = function(d) {
+        tooltip_violin
+            .style("opacity", 0)
+            .style("visibility", "hidden")
+        d3.select(this).attr("stroke","white");
+
+    }
     // append the svg_violin object to the body of the page
     var svg_violin = d3.select("#violin_div")
     .append("svg")
-    .attr("width", "140%")
+    .attr("width", "100%")
     .attr("height", height_violin + margin_violin.top + margin_violin.bottom)
     .append("g")
     .attr("transform",
@@ -25,7 +49,7 @@ function DrawViolin(){
     
     svg_violin.append("g").call( d3.axisLeft(y_viol) )
     
-    var si = d3.scaleLinear().domain([4,20]).range([16,12]) //scala per il font size
+    var si = d3.scaleLinear().domain([4,20]).range([16,9]) //scala per il font size
     svg_violin.selectAll("text").text(function(d){
         var sp = d.split(" ")
         var name = sp[0]
@@ -49,7 +73,7 @@ function DrawViolin(){
     var sumstat = d3.nest()  // nest function allows to group the calculation per level of a factor
         .key(function(d) { 
             //console.log(d)
-            return d.cve;})
+            return d.cpe;})
         .rollup(function(d) {   // For each key..
             input = d.map(function(g) { return g.score2;})    // Keep the variable called Sepal_Length
             bins = histogram(input)   // And compute the binning on it.
@@ -105,25 +129,30 @@ function DrawViolin(){
             .data(violin_data)
             .enter()
             .append("circle")
-            .on("click",function(d){console.log(d)})
-            
+            .on("click",function(d){zoomOnPackedFO(d.uid)})
+            .on("mouseover",mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave)
+            .on("dblclick",DownloadFO)
+
             .transition()
             .delay(function(d,i){return(i*3)})
             .duration(1500)
             .attr("cy", function(d){ 
-                return (y_viol(d.cve) + y_viol.bandwidth()/2 - Math.random()*jitterWidth)
+                return (y_viol(d.cpe) + y_viol.bandwidth()/2 - Math.random()*jitterWidth)
             })
             .attr("cx", function(d){return(x_viol(d.score2))})
             .attr("r", 5)
-            .style("fill", function(d){ return(dotColor(d.fo_name))})
+            .style("fill", function(d){ return(dotColor(d.uid))})
             .attr("stroke", "white")
 
         d3.selectAll(".viol_hist").transition()
           .duration(4000)
           .style("opacity","1")
 }
-
-
+var DownloadFO = function(d) {
+    console.log("download started"); download( d.uid ,all_REST_response[d.uid].data.file_object.analysis.file_type.mime )
+}
 
 //* create the datastructure for the violin chart
 function buildViolinData(cve_lookup){
@@ -135,13 +164,23 @@ function buildViolinData(cve_lookup){
             violin_dom.push(cve_key)
             cve.forEach(element => {
                 var cve_res = all_REST_response[element].data.file_object.analysis.cve_lookup.cve_results
+                var hidd = all_REST_response[element].data.file_object.meta_data.hid
                 for (const key in cve_res) {
                     if (Object.hasOwnProperty.call(cve_res, key)) {
                         const fo = cve_res[key];
                         for (const key in fo) {
                             if (Object.hasOwnProperty.call(fo, key)) {
                                 const fo_cve = fo[key];
-                                var el = {"fo_name":element,"score2":fo_cve.score2,"cve":cve_key,}
+                                var el = {
+                                        "uid":element,
+                                        "hid":hidd,
+                                        "score2":fo_cve.score2,
+                                        "score3":fo_cve.score3,
+                                        "cpe":cve_key,
+                                        "cpe_name":key,
+                                        "cpe_version":fo_cve.cpe_version
+
+                                    }
                                 violin_data.push(el)
                             }
                         }
@@ -151,6 +190,7 @@ function buildViolinData(cve_lookup){
             });
         }
     }
+    
     
 }
 //? esempio

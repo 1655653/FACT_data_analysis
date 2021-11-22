@@ -1,7 +1,7 @@
 
 //*--------------------SUNBURST VARS
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 0},
+var margin = {top: 10, right: 10, bottom: 10, left: 100},
   width = 700 - margin.left - margin.right,
   height = 700 - margin.top - margin.bottom;
 var radius = Math.min(width, height) / 2;
@@ -32,6 +32,7 @@ var y = d3.scaleSqrt()
 function DrawSunburst(){
     //reset old draw
     d3.select("#treemap_div").select("#bigsun").remove();
+    d3.select("#treemap_div").select(".tooltip").remove();
     svg = d3.select("#treemap_div")
     .append("svg")
     .attr("id","bigsun")
@@ -92,13 +93,13 @@ function DrawSunburst(){
     }); 
     //console.log(root)
     partition(root);
-    //!---------------HERE--------------------------
+
+    //* arc management
     var arc = d3.arc()
     .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
     .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
     .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
     .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
-    //!-----------------------------------------
     //     // Put it all together
     
     
@@ -111,7 +112,7 @@ function DrawSunburst(){
     console.log(Tree)
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
-        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid.replace(/[/.]/g,"_")})  // <-- 2
+        .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid.replace(/[/.]/g,"_").replace(/\s/g, '')})  // <-- 2
         .append('path')
             .attr("class", function(d){return d.data.mime? "path"+d.data.mime.split("/")[0]: "folder"}) //?mime supertype
             .attr("id",function(d){return d.data.mime? "path"+d.data.mime.replace(/[/.]/g,"_"): "folder"})//? mime subtype// <-- 2

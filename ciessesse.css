@@ -13,12 +13,12 @@ body {
 }
 #violin_div{
     order:0; /*0 is for debugging, 7 is the right*/
-    width:33%
+    width:40%
 
 }
 /* sunburst */
 #treemap_div {
-    /* width: 30%; */
+    width: 35%;
     /* flex-grow: 1; */
     display: flex;
 }

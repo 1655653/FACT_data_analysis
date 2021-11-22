@@ -75,7 +75,12 @@ function DrawMiniSunburst(){
 function colorMiniSunburst(n){
     gmini.selectAll('path')
         .style("fill", function(d){
-            if(d.data.vi == n.data.vi ) return "green"
-            return "black" 
+            return d.data.vi == n.data.vi? "green": "black" 
+        })
+        .style("stroke",function(d){
+            return d.data.vi == n.data.vi? "white": "#4f545c" 
+        })
+        .style("opacity",function(d){
+            return d.data.vi == n.data.vi? "1": "0.8" 
         })
 }

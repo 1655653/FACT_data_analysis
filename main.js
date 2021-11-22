@@ -9,12 +9,17 @@ document.getElementById("byteCBOX").checked=true
 
 var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
 var all_REST_response={}//? collazione di tutte le chiamate api, ordinate con chiave l'UID
+var all_NIST_REST_response={}//? collazione di tutte le chiamate api del nist , ordinate con chiave la cve
 
 var Tree = {}
 var BackupTree = {}
 
 var violin_data;
 var violin_dom;
+
+var SCORE_TYPE = "exploitability_score"
+var heatmap_data;
+var heatmap_dom;
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
@@ -67,6 +72,7 @@ function callFW() {
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
+                //***build root of Tree
                 document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
                 list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
                 Tree["uid"] = data.request.uid
@@ -85,28 +91,47 @@ function callFW() {
                 }
                 (async () => {
                     INCLUDED_FILES= data.firmware.meta_data.included_files
+                    
+                    //***building tree
+                    console.log("BUILDING TREE")
                     await BuildTree(data.firmware.meta_data.included_files, Tree)
-                    
                     calculateLeaves(Tree) 
-                    //calculateFOlderSize(Tree)//!per ora me ne sbatto della grandezza delle folder
+                    //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
                     calculateMimes(Tree) 
-                    
                     console.log("TREE BUILT")
                     console.log(Tree)
+
+
                     BackupTree = JSON.parse(JSON.stringify(Tree))
                     
+                    //***building heatmap
+                    console.log("BUILDING HEATMAP")
+                    await buildHeatmapData(data.firmware.analysis.cve_lookup)
+                    DrawHeatmap(heatmap_data)
+                    console.log("HEATMAP BUILT")
+                    console.log(heatmap_data)
+
+
+                    BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
+
+                    //***building sunburst
+                    console.log("BUILDING SUNBURST")
+
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
                     
                     document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
-
-
                     DrawSunburst()
-                    
-                    buildViolinData(data.firmware.analysis.cve_lookup)
+                    console.log("SUNBURST BUILT")
 
-                    DrawViolin()
+
+                    
+                    
+                    
+                    //buildViolinData(data.firmware.analysis.cve_lookup)
+                    //DrawViolin()
+
                 })();
             } 
         })
@@ -121,42 +146,6 @@ function callFW() {
   
 }
 
-function packedUI(unpack_list_size){
-    var txt =""
-    if(list_packed && unpack_list_size>0){//? se ci sono packed allora li mette
-        txt ="FACT has not been able to unpack "+ list_packed.length + " elements  " 
-        d3.select("#reportOf").append("text").text(txt)
-            .append("button").text("expand").attr("id","packed_tree_expand_btn")
-                .on("click",expandpackedTree)
-            .append('br')
-        d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
-        
-        
-    }
-    else if(unpack_list_size == 0){
-        txt ="FACT unpacked 0 elements " 
-        d3.select("#reportOf").append("text").text(txt)
-    }
-    else {
-        txt = "FACT has been able to unpack every elements  "
-        d3.select("#reportOf").append("text").text(txt)
-    }
-    d3.select("#reportOf").append("br")
-    d3.select("#reportOf").append("text").attr("id","log_packed_FO")
-}
-
-function talkAboutPackedFO(FOuid){
-    var selectedFO = all_REST_response[FOuid].data.file_object
-    console.log(selectedFO)
-    console.log(FOuid)
-    var tail = " ( MIME: "+selectedFO.analysis.file_type.mime+")"
-    var mime_check = "The file type of " + selectedFO.meta_data.hid + " is not blacklisted, so it should have been unpacked" +tail
-    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.meta_data.hid + ", a genericFS error arisen"+tail
-    if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking of " + selectedFO.meta_data.hid + " skipped due to blacklisted file type"+tail
-    d3.select("#log_packed_FO").text(mime_check+"      ")
-        .append("button").text("download").attr("id","dwld")
-            .on("click",function(){download( FOuid ,selectedFO.analysis.file_type.mime)})
-}
 
 function download(uid,contentType){
     var urldw = endpoint+"binary/"+uid

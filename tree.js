@@ -262,6 +262,7 @@ function resetTree(){
     });
     DrawSunburst()
     DrawMiniSunburst()
+    g.selectAll('.node#'+Tree.hid.replace(/[/.]/g,"_").replace(/\s/g, '')).select("path").dispatch('click')
 }
 
 //! non funziona!!!
