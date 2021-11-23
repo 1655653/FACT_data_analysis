@@ -25,8 +25,8 @@ body {
 /* sunburst */
 #treemap_div {
     width: 35%;
-    /* flex-grow: 1; */
     display: flex;
+    /* flex-grow: 1; */
 }
 
 

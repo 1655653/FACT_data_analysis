@@ -263,6 +263,7 @@ function resetTree(){
     DrawSunburst()
     DrawMiniSunburst()
     g.selectAll('.node#'+Tree.hid.replace(/[/.]/g,"_").replace(/\s/g, '')).select("path").dispatch('click')
+    heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
 }
 
 //! non funziona!!!

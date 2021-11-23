@@ -1,21 +1,17 @@
 function DrawHeatmap(data){
     // set the dimensions and margins of the graph
-    var margin = {top: 0, right: 25, bottom: 60, left: 100},
+    var margin = {top: 0, right: 25, bottom: 50, left: 100},
       width_heatmap = 600 - margin.left - margin.right,
-      height_heatmap = 530 - margin.top - margin.bottom; //470
+      height_heatmap = width_heatmap
     
     // append the svg object to the body of the page
     d3.select("#violin_div").selectAll("*").remove()
+    
 
-    function changeScore(text){
-        SCORE_TYPE = text
-        heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
-        DrawHeatmap(heatmap_data)
-    }
     d3.select("#violin_div").append("div").attr("id","div_score")
-    d3.select("#div_score").append("button").text("exploitability_score").attr("id","btn_es").on("click",function(d){changeScore(d3.select(this).text())})
-    d3.select("#div_score").append("button").text("impact_score").attr("id","btn_is").on("click",function(d){changeScore(d3.select(this).text())})
-    d3.select("#div_score").append("button").text("base_score").attr("id","btn_bs").on("click",function(d){changeScore(d3.select(this).text())})
+    d3.select("#div_score").append("button").text("exploitability_score").attr("id","btn_es").on("click",function(d){SCORE_TYPE = d3.select(this).text();DrawHeatmap(data)})
+    d3.select("#div_score").append("button").text("impact_score").attr("id","btn_is").on("click",function(d){SCORE_TYPE = d3.select(this).text();DrawHeatmap(data)})
+    d3.select("#div_score").append("button").text("base_score").attr("id","btn_bs").on("click",function(d){SCORE_TYPE = d3.select(this).text();DrawHeatmap(data)})
 
     var svg_heatmap = d3.select("#violin_div").style("display","flex")//!!!!metti nel css
     .append("svg")
@@ -24,6 +20,7 @@ function DrawHeatmap(data){
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
+    
    
    var oi_num_scale = d3.map(data, function(d){return d[SCORE_TYPE];}).keys()
     var cpe_names = d3.map(data, function(d){return d.cpe_name;}).keys() //
@@ -47,19 +44,12 @@ function DrawHeatmap(data){
         
       svg_heatmap.append("g")
         .attr("id", "axisG")
-        .style("font-size", 10)
+        .style("font-size", 18)
         .call(d3.axisLeft(y_heatmap).tickSize(0))
         .select(".domain").remove()
-
-      d3.select("#axisG").selectAll("text")
-      .text(function(d){
-        const regex = new RegExp('[0-9*]', 'g');
-        const version = d.split(" ").filter((href) => href.match(regex));
-        var sp = d.split(" ")
-        var name = sp[0]
-        if(sp.at(-1)=="(CRITICAL)") name+="⚠️"
-        return name+ " " + version
-      }).on("click",function(d){heatRemove(d)})
+        
+      
+      
       
       // Build color scale
       var max = 1
@@ -139,6 +129,15 @@ function DrawHeatmap(data){
             .attr("x", width_heatmap/2.5)
             .attr("y", height_heatmap+30)
             .text(SCORE_TYPE);
+    d3.select("#axisG").selectAll("text")
+            .text(function(d){
+              const regex = new RegExp('[0-9*]', 'g');
+              var version = d.split(" ").filter((href) => href.match(regex));
+              var sp = d.split(" ")
+              var name = sp[0]
+              if(sp.at(-1)=="(CRITICAL)") version =version+"⚠️"
+              return name+ " " + version
+            }).on("click",function(d){heatRemove(d)}).call(wrap, 20);
     // // Add subtitle to graph
     // svg_heatmap.append("text")
     //         .attr("x", 0)
@@ -250,26 +249,35 @@ function DrawHeatmap(data){
       d3.select("#uid_list_hp").remove()
       d3.select("#violin_div").append("div").attr("id","uid_list_hp").style("width","100px")
       
+    //   d3.select("#uid_list_hp").append("text")
+    //         .text("AOOOOOOOOOO").attr("id","aoporcdo").on("mouseover",console.log(d3.select(this)))
+            //.append("button")
+            //.on("click",download(uid,r.analysis.file_type.mime))
+        // d3.select("#aoporcdo")
+        //     .on("mouseover",console.log(d3.select(this)))
+        //     .append("br")
       d.uid_affected.forEach(uid => {
-          var r = all_REST_response[uid].data.file_object
-          var hiddd= r.meta_data.hid 
+          //var r = all_REST_response[uid].data.file_object
+          var hiddd= "r.meta_data.hid "
         
         d3.select("#uid_list_hp").append("br")
         d3.select("#uid_list_hp").append("br")
         d3.select("#uid_list_hp").append("text")
-            .text(hiddd).style("word-break", "break-all").attr("id","aoporcdo")
-            .on("click",function(d){g.selectAll('.node#'+hiddd.replace(/[/.]/g,"_")).select("path").dispatch('click')})
-            .append("button").text("download")
-            .on("click",function(d){download(uid,r.analysis.file_type.mime)})
+            .text("aoooo").style("word-break", "break-all").attr("id","aoporcdo")
+            //.append("button")
+            .on("click",function(d){console.log("eeeeeeeeee")})
             .append("br")
       });
 
 
     }
 
-
-
     function reduceSquare(d,rect,old_x,old_y,old_w,old_h){
+        d3.select("#uid_list_hp").append("text")
+            .text("aoooo").style("word-break", "break-all").attr("id","aoporcdo")
+            //.append("button")
+            .on("click",console.log("eeeeeeeeee"))
+            .append("br")
         d3.selectAll(".tooltip").style("visibility", "hidden")
         tooltip_heatmap.style("visibility", "visible")
       d3.select("#uid_list_hp").remove()
