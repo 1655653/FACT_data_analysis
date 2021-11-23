@@ -196,7 +196,7 @@ function DrawHeatmap(data){
       var x_rect = parseFloat(rect_selected.attr("x"))
       var y_rect = parseFloat(rect_selected.attr("y"))
       var w = (w_old+str) *10
-      var h = (h_old+str)*cpe_names.length
+      var h = (h_old+str+2)*cpe_names.length
       
       d3.selectAll("rect").attr("opacity","0.1")
     
@@ -216,7 +216,7 @@ function DrawHeatmap(data){
         .attr("width",w)
         .attr("height",h)
         .attr("x", "0")
-        .attr("y", "0")
+        .attr("y", "4")
       
 
       //*generate circles

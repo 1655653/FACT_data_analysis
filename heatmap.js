@@ -34,7 +34,7 @@ function DrawHeatmap(data){
         .domain(oi_num_scale)
         .padding(0.05);
       svg_heatmap.append("g")
-        .style("font-size", 15)
+        .style("font-size", 17)
         .attr("transform", "translate(0," + height_heatmap + ")")
         .call(d3.axisBottom(x_heatmap).tickSize(0))
         .select(".domain").remove()
@@ -45,21 +45,22 @@ function DrawHeatmap(data){
         .domain(cpe_names)
         .padding(0.05)
         
+    var si = d3.scaleLinear().domain([0,20]).range([20,9]) //scala per il font size della y
       svg_heatmap.append("g")
         .attr("id", "axisG")
-        .style("font-size", 10)
+        .style("font-size", si(cpe_names.length))
         .call(d3.axisLeft(y_heatmap).tickSize(0))
         .select(".domain").remove()
 
       d3.select("#axisG").selectAll("text")
       .text(function(d){
-        const regex = new RegExp('[0-9*]', 'g');
-        const version = d.split(" ").filter((href) => href.match(regex));
-        var sp = d.split(" ")
-        var name = sp[0]
-        if(sp.at(-1)=="(CRITICAL)") name+="⚠️"
-        return name+ " " + version
-      }).on("click",function(d){heatRemove(d)})
+            const regex = new RegExp('[0-9*]', 'g');
+            var version = d.split(" ").filter((href) => href.match(regex));
+            var sp = d.split(" ")
+            var name = sp[0]
+            if(sp.at(-1)=="(CRITICAL)") version =version+"⚠️"
+            return name+ " " + version
+        }).on("click",function(d){heatRemove(d)}).call(wrap, 20);
       
       // Build color scale
       var max = 1
@@ -162,11 +163,12 @@ function DrawHeatmap(data){
     }
     function clickSquare(d){
     tooltip_heatmap.style("visibility", "hidden")
+    d3.selectAll("#tooltip_big_square").remove()
     // create a tooltip
     var tooltip_big_square = d3.select("#violin_div")
     .append("div")
     .style("opacity", 0)
-    .attr("class", "tooltip")
+    .attr("class", "tooltip").attr("id","tooltip_big_square").style("max-width","300px").style("word-break","break-all")
     var mouseover = function(d) {
         tooltip_big_square
             .style("opacity", 1)
@@ -197,7 +199,7 @@ function DrawHeatmap(data){
       var x_rect = parseFloat(rect_selected.attr("x"))
       var y_rect = parseFloat(rect_selected.attr("y"))
       var w = (w_old+str) *10
-      var h = (h_old+str)*cpe_names.length
+      var h = (h_old+str+2)*cpe_names.length
       
       d3.selectAll("rect").attr("opacity","0.1")
     
@@ -217,7 +219,7 @@ function DrawHeatmap(data){
         .attr("width",w)
         .attr("height",h)
         .attr("x", "0")
-        .attr("y", "0")
+        .attr("y", "4")
       
 
       //*generate circles
@@ -480,7 +482,30 @@ async function buildHeatmapData(cve_lookup){
     
     console.log("-------------------HEATMAP DATASET BUILT")
 }
-
+//*utility to wrap axis y text
+function wrap(text, width) {
+    text.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 0.3, // ems
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy")),
+          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        }
+      }
+    });
+  }
 // esempio
 // [
     //     {
