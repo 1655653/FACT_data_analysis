@@ -25,7 +25,7 @@ var x = d3.scaleLinear()
 
 var y = d3.scaleSqrt()
 .range([0, radius]);
-
+d3.select("#byteCBOX").on("change",function(){DrawSunburst()})
 //* --------------------SUNBURST VARS
 function DrawSunburst(){
     //reset old draw
