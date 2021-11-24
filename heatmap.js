@@ -170,19 +170,24 @@ function DrawHeatmap(data){
         tooltip_big_square
             .style("opacity", 1)
             .style("visibility", "visible")
-        //d3.select(this).raise().attr("stroke","black");
+        d3.select(this).raise().style("stroke","black");
     }
     var mousemove = function(d) {
+        var tail = "<br> "
+        if(d.attackComplexity)tail+="attack complexity: "+d.attackComplexity + "<br>"
+        if(d.attackVector)tail+="attack vector: "+d.attackVector+ "<br>"
+        if(d.baseSeverity)tail+="base severity: "+d.baseSeverity+ "<br>"
         tooltip_big_square
-            .html("cve_code:"+d.cve_code+ "<br>score:" + d[SCORE_TYPE] + "<br>description:"+d.description)
+            .html("cve_code:"+d.cve_code+ "<br>score:" + d[SCORE_TYPE] + tail+ "<br>description:"+d.description)
             .style('left', (d3.event.pageX + 10) + 'px')
             .style('top', (d3.event.pageY + 10) + 'px')
+        console.log(d)
     }
     var mouseleave = function(d) {
         tooltip_big_square
             .style("opacity", 0)
             .style("visibility", "hidden")
-        //d3.select(this).attr("stroke","white");
+        d3.select(this).style("stroke","white");
         //d3.select(this).style("opacity",1)
 
     }
@@ -241,10 +246,22 @@ function DrawHeatmap(data){
           .transition()
           .duration(1500)
           .attr("r", 7)
-          .attr("cx", function(f){return Math.random() * w})
-          .attr("cy",function(f){return Math.random() * w})
+          .attr("cx", function(f){ //cerchi a caso in un raggio d'azione 
+                var angle = Math.random()*Math.PI*2;
+                var A = (Math.random() *(w/2)) * Math.cos(angle)
+                return w/2+A;
+            })
+           .attr("cy",function(f){
+                var angle = Math.random()*Math.PI*2;
+                var A = (Math.random() *(h/2)) * Math.sin(angle)
+                return h/2+A;
+            })
           d3.selectAll("circle").raise()
       }
+//       
+
+
+
       //*append the uids
       d3.select("#uid_list_hp").remove()
       d3.select("#violin_div").append("div").attr("id","uid_list_hp").style("width","100px")

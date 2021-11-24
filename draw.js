@@ -161,7 +161,9 @@ function DrawSunburst(){
 
         function click(d) {
             colorMiniSunburst(d)
-            //console.log(d)
+            // height: fit-content;
+            // align-self: center;
+            console.log(d)
             svg.transition()
                 .duration(750)
                 .tween("scale", function() {
@@ -172,6 +174,14 @@ function DrawSunburst(){
                 })
               .selectAll("path")
                 .attrTween("d", function(d) { return function() { return arc(d); }; });
+            if(d.height == 0){
+                d3.select("#treemap_div").append("button").attr("id","dwnl_leaf").text("download").style("height","fit-content").style("align-self","center")
+                .on("click",function(f){download(d.data.uid,d.data.mime)})
+                .append("br")
+            }
+            else{
+                d3.select("#dwnl_leaf").remove()
+            }
           }
     
 }

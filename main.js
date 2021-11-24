@@ -17,7 +17,7 @@ var BackupTree = {}
 var violin_data;
 var violin_dom;
 
-var SCORE_TYPE = "exploitability_score"
+var SCORE_TYPE = "base_score"
 var heatmap_data;
 var heatmap_dom;
 //* global vars
