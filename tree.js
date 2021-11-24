@@ -10,7 +10,14 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                 });
                 const res_File_objects = await Promise.all(promises)
                 for(let response of res_File_objects){
-                    all_REST_response[response.data.request.uid] = response
+                    //all_REST_response[response.data.request.uid] = response
+                    var ioi_response = {}
+                    ioi_response["hid"]= response.data.file_object.meta_data.hid
+                    ioi_response["unpacker"]= response.data.file_object.analysis.unpacker
+                    ioi_response["cve_results"]= response.data.file_object.analysis.cve_lookup.cve_results
+                    ioi_response["mime"]= response.data.file_object.analysis.file_type.mime
+
+                    all_REST_response[response.data.request.uid] = ioi_response
                     
                     var m = response.data.file_object.analysis.file_type.mime
                     if(! ListMimes.includes(m)) ListMimes.push(m)

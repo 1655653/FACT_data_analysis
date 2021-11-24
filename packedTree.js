@@ -7,11 +7,11 @@ function buildpackedTree(list_packed_uid){
     //nodes
     list_unpack_errors=[]
     list_packed_uid.forEach(element => {
-        var selectedFO = all_REST_response[element].data.file_object
-        var errtype = selectedFO.analysis.unpacker.info
+        var selectedFO = all_REST_response[element]
+        var errtype = selectedFO.unpacker.info
         if(errtype == undefined) errtype = "undefined error"
-        if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) errtype = "genericFSerror"
-        if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime)) errtype = "blacklisted file type"
+        if(selectedFO.unpacker["0_ERROR_genericFS"]) errtype = "genericFSerror"
+        if(UNPACK_BLACKLISTED.includes(selectedFO.mime)) errtype = "blacklisted file type"
         if(! list_unpack_errors.includes(errtype)) 
         {
             list_unpack_errors.push(errtype)
@@ -22,11 +22,11 @@ function buildpackedTree(list_packed_uid){
     //leaves
     packedTree.children.forEach(err => {
         list_packed_uid.forEach(  (fo ,index)=> {
-            var selectedFO = all_REST_response[fo].data.file_object
-            var errtype = selectedFO.analysis.unpacker.info
+            var selectedFO = all_REST_response[fo]
+            var errtype = selectedFO.unpacker.info
             if(errtype == undefined) errtype = "undefined error"
-            if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) errtype = "genericFSerror"
-            if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime)) errtype = "blacklisted file type"
+            if(selectedFO.unpacker["0_ERROR_genericFS"]) errtype = "genericFSerror"
+            if(UNPACK_BLACKLISTED.includes(selectedFO.mime)) errtype = "blacklisted file type"
             var el ={"name": list_packed_hid[index], "leaf" : true, "uid": fo} 
             if(err.name==errtype) err.children.push(el)
         });
@@ -254,22 +254,22 @@ function packedUI(unpack_list_size){
 }
 
 function talkAboutPackedFO(FOuid){
-    var selectedFO = all_REST_response[FOuid].data.file_object
+    var selectedFO = all_REST_response[FOuid]
     console.log(selectedFO)
     console.log(FOuid)
-    var tail = " ( MIME: "+selectedFO.analysis.file_type.mime+")"
-    var mime_check = "The file type of " + selectedFO.meta_data.hid + " is not blacklisted, so it should have been unpacked" +tail
-    if(selectedFO.analysis.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.meta_data.hid + ", a genericFS error arisen"+tail
-    if(UNPACK_BLACKLISTED.includes(selectedFO.analysis.file_type.mime))  mime_check= "Unpacking of " + selectedFO.meta_data.hid + " skipped due to blacklisted file type"+tail
+    var tail = " ( MIME: "+selectedFO.mime+")"
+    var mime_check = "The file type of " + selectedFO.hid + " is not blacklisted, so it should have been unpacked" +tail
+    if(selectedFO.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.hid + ", a genericFS error arisen"+tail
+    if(UNPACK_BLACKLISTED.includes(selectedFO.mime))  mime_check= "Unpacking of " + selectedFO.hid + " skipped due to blacklisted file type"+tail
     d3.select("#log_packed_FO").text(mime_check+"      ")
         .append("button").text("download").attr("id","dwld")
-            .on("click",function(){download( FOuid ,selectedFO.analysis.file_type.mime)})
+            .on("click",function(){download( FOuid ,selectedFO.mime)})
 }
 
 
 function zoomOnPackedFO(FOuid){
-    var selectedFO = all_REST_response[FOuid].data.file_object
-    var hid = selectedFO.meta_data.hid
+    var selectedFO = all_REST_response[FOuid]
+    var hid = selectedFO.hid
     g.selectAll('.node#'+hid.replace(/[/.]/g,"_")).select("path").dispatch('click')
 
 }

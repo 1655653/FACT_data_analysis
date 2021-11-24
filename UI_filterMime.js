@@ -4,8 +4,8 @@ var mode = "mode = highligths"
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeAccent)
 var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
 function BuildMimeFilterUI(list_m){
-    d3.select("#container").append("div").attr("id","filter_menu_type").attr("class","filter_menu")
-    d3.select("#container").append("div").attr("id","filter_menu_subtype").attr("class","filter_menu")
+    d3.select("#treemap_div").append("div").attr("id","filter_menu_type").attr("class","filter_menu")
+    d3.select("#treemap_div").append("div").attr("id","filter_menu_subtype").attr("class","filter_menu")
     
     d3.select("#filter_menu_type").append('text').text("mixed folder").style("color","#7da19d")
     d3.select("#filter_menu_type").append('br');
@@ -42,6 +42,7 @@ function BuildMimeFilterUI(list_m){
     d3.select('#filtername').on('click', function(){
         mode == "mode = highligths"? mode = "mode = remove": mode = "mode = highligths"
         d3.select('#filtername').text(mode)
+        FilterMIME()
     })
     
     
@@ -60,6 +61,11 @@ function FilterMIME(){
     ListMimes.forEach(element => {
         if(!mime_filtered.includes(element) && d3.select('#'+element.split("/")[0]).property('checked')) mime_filtered.push(element)
         if(!mime_filtered.includes(element) && d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
+        if(!d3.select('#'+element.split("/")[0]).property('checked') && !d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')){
+            mime_filtered = mime_filtered.filter(e => e != element)
+            Tree = JSON.parse(JSON.stringify(BackupTree))
+            LabelMimeFOFromTree(Tree,mime_filtered)
+        }
     });
     if(mode != "mode = highligths"){ //? checked è remove, unchecked è opacize
         RemoveMimeFOFromTree(Tree,mime_filtered)
@@ -71,7 +77,7 @@ function FilterMIME(){
         
     }
     
-    console.log(Tree)
+    console.log(mime_filtered)
     DrawSunburst()
     
 }
@@ -93,20 +99,23 @@ function highligthTheseMime(type,suosub){
     }
     d3.selectAll(name).style("opacity", function(d) {return 1})
         
-    }
-    
+}
+
 function DehighligthTheseMime(type,suosub) {
     var name = "#path"+type.replace(/[/.]/g,"_")
     if(suosub=="super"){
         name = '.path'+type.split("/")[0]
     }
     d3.selectAll(name)
-        .style("opacity", function(d) {return 0.8})
-    }
+        .style("opacity", function(d) {return d.data.filtered? 0.2:0.8})
+        
+}
 
 function showsubType(type){
+    d3.select("#filter_menu_subtype").style("display","block")
     var color = colormimeSupertype(type)
     var opacity = 1
+    not_checked = 0
     ListMimes.forEach(subtype => {
         var op = "hidden"
         if(type == subtype.split("/")[0]){
@@ -115,11 +124,13 @@ function showsubType(type){
                 color = "#8e9297"
                 opacity = 0.3
             }
-            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", function(){console.log(op);return op})
+            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", function(){return op})
             d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
         }
+        if(!d3.select('#details'+subtype.split("/")[0]).property('checked')) not_checked++
 
     });
+    if(not_checked==ListMimes.length) d3.select("#filter_menu_subtype").style("display","none")
     d3.select("#text"+type).style("color",color).style("opacity", opacity)
     DrawSunburst()
 }
@@ -130,14 +141,17 @@ var setSubCheckbox = function() {
             document.getElementById(e.split("/")[0]).checked = false;  
         }
     });
+    FilterMIME()
 }
 var setCheckbox = function() {
     ListMimes.forEach(e => {
         if(d3.select('#'+e.split("/")[0]).property('checked')){
             d3.select("#"+e.replace(/[/.]/g,"_")).property('checked',"true")
+            
         }
         else{
             document.getElementById(e.replace(/[/.]/g,"_")).checked = false;  
         }
     });
+    FilterMIME()
 }

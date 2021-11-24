@@ -6,12 +6,9 @@ function DrawHeatmap(data){
     
     // append the svg object to the body of the page
     d3.select("#violin_div").selectAll("*").remove()
+    d3.select("#violin_div").style("border-style","ridge")
 
-    function changeScore(text){
-        SCORE_TYPE = text
-        heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
-        DrawHeatmap(heatmap_data)
-    }
+    
     d3.select("#violin_div").append("div").attr("id","div_score")
     d3.select("#div_score").append("button").text("exploitability_score").attr("id","btn_es").on("click",function(d){changeScore(d3.select(this).text())})
     d3.select("#div_score").append("button").text("impact_score").attr("id","btn_is").on("click",function(d){changeScore(d3.select(this).text())})
@@ -253,8 +250,10 @@ function DrawHeatmap(data){
       d3.select("#violin_div").append("div").attr("id","uid_list_hp").style("width","100px")
       
       d.uid_affected.forEach(uid => {
-          var r = all_REST_response[uid].data.file_object
-          var hiddd= r.meta_data.hid 
+        //   var r = all_REST_response[uid].data.file_object
+        //   var hiddd= r.meta_data.hid 
+        var r = all_REST_response[uid]
+        var hiddd = r.hid
         
         d3.select("#uid_list_hp").append("br")
         d3.select("#uid_list_hp").append("br")
@@ -262,7 +261,7 @@ function DrawHeatmap(data){
             .text(hiddd).style("word-break", "break-all").attr("id","aoporcdo")
             .on("click",function(d){g.selectAll('.node#'+hiddd.replace(/[/.]/g,"_")).select("path").dispatch('click')})
             .append("button").text("download")
-            .on("click",function(d){download(uid,r.analysis.file_type.mime)})
+            .on("click",function(d){download(uid,r.mime)})
             .append("br")
       });
 
@@ -294,7 +293,11 @@ function DrawHeatmap(data){
     }
 }
 
-
+function changeScore(text){
+    SCORE_TYPE = text
+    heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
+    DrawHeatmap(heatmap_data)
+}
 
 
 //* call nist to get CVEs
@@ -408,7 +411,7 @@ async function buildHeatmapData(cve_lookup){
             var hidd_list=[]
             //console.log(all_REST_response[uidd_list])
             for (const i of uidd_list) {
-                hidd_list.push(all_REST_response[i].data.file_object.meta_data.hid)
+                hidd_list.push(all_REST_response[i].hid)
             }
             
             var elem = {"cpe_name":key}
@@ -453,7 +456,7 @@ async function buildHeatmapData(cve_lookup){
         else{ //?<--------------FOR EACH OBJECT MANUALLY SEARCH THE CVE
             
             console.log("not found, brutally manual search of cve of "+obj.cpe_name)
-            var cve_results = all_REST_response[uidd_list[0]].data.file_object.analysis.cve_lookup.cve_results
+            var cve_results = all_REST_response[uidd_list[0]].cve_results
             for (const key_sw_name in cve_results) {
                 if (Object.hasOwnProperty.call(cve_results, key_sw_name)) {
                     const all_cves = cve_results[key_sw_name]; //

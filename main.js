@@ -92,11 +92,13 @@ function callFW() {
                 (async () => {
                     INCLUDED_FILES= data.firmware.meta_data.included_files
                     
-                    //***building tree
+                    
+
+                    // //***building tree
                     console.log("BUILDING TREE")
                     await BuildTree(data.firmware.meta_data.included_files, Tree)
                     calculateLeaves(Tree) 
-                    //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
+                    // //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
                     calculateMimes(Tree) 
                     console.log("TREE BUILT")
                     console.log(Tree)
@@ -104,17 +106,17 @@ function callFW() {
 
                     BackupTree = JSON.parse(JSON.stringify(Tree))
                     
-                    //***building heatmap
+                    // //***building heatmap
                     console.log("BUILDING HEATMAP")
                     await buildHeatmapData(data.firmware.analysis.cve_lookup)
                     DrawHeatmap(heatmap_data)
                     console.log("HEATMAP BUILT")
-                    console.log(heatmap_data)
+                    //console.log(heatmap_data)
 
 
                     BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
 
-                    //***building sunburst
+                    // //***building sunburst
                     console.log("BUILDING SUNBURST")
 
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
@@ -125,6 +127,7 @@ function callFW() {
                     DrawSunburst()
                     console.log("SUNBURST BUILT")
 
+                    //console.log(all_REST_response)
 
                     
                     

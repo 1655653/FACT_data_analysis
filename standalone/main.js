@@ -99,20 +99,18 @@ function callFW() {
                     calculateMimes(Tree) 
                     console.log("TREE BUILT")
                     console.log(Tree)
-
+                    
 
                     BackupTree = JSON.parse(JSON.stringify(Tree))
-                    
+                    console.log(BackupTree)
                     //***building heatmap
                     console.log("BUILDING HEATMAP")
                     await buildHeatmapData(data.firmware.analysis.cve_lookup)
                     DrawHeatmap(heatmap_data)
                     console.log("HEATMAP BUILT")
-                    console.log(heatmap_data)
 
 
                     BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
-
                     //***building sunburst
                     console.log("BUILDING SUNBURST")
 

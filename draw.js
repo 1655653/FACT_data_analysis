@@ -18,7 +18,6 @@ d3.select("#container").attr("height", height + margin.top + margin.bottom)
 var g = svg.append("g")
         .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 // Data strucure
-//!----------------HERE-------------------------
 var partition = d3.partition()
         
 var x = d3.scaleLinear()
@@ -26,14 +25,13 @@ var x = d3.scaleLinear()
 
 var y = d3.scaleSqrt()
 .range([0, radius]);
-//!-----------------------------------------
 
 //* --------------------SUNBURST VARS
 function DrawSunburst(){
     //reset old draw
     d3.select("#treemap_div").select("#bigsun").remove();
     d3.select("#treemap_div").select(".tooltip").remove();
-    svg = d3.select("#treemap_div")
+    svg = d3.select("#treemap_div").style("border-style","ridge")
     .append("svg")
     .attr("id","bigsun")
     .attr("width", width + margin.left + margin.right)
@@ -109,7 +107,7 @@ function DrawSunburst(){
     //* draw each node
 
 
-    console.log(Tree)
+    //console.log(Tree)
     g.selectAll('g')  // <-- 1
         .data(root.descendants())
         .enter().append('g').attr("class", "node").attr("id",function(d){return d.data.hid.replace(/[/.]/g,"_").replace(/\s/g, '')})  // <-- 2
