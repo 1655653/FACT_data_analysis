@@ -2,8 +2,9 @@
 
 var mode = "mode = highligths"
 var colormimeSupertype = d3.scaleOrdinal().domain(ListSuperMimes).range(d3.schemeAccent)
-var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes).range(d3.schemeCategory10)
+var colormimeSubtype = d3.scaleOrdinal().domain(ListMimes.reverse()).range(d3.schemeCategory10)
 function BuildMimeFilterUI(list_m){
+    //console.log(ListMimes)
     d3.select("#treemap_div").append("div").attr("id","filter_menu_type").attr("class","filter_menu")
     d3.select("#treemap_div").append("div").attr("id","filter_menu_subtype").attr("class","filter_menu")
     
@@ -16,8 +17,8 @@ function BuildMimeFilterUI(list_m){
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id",element.split("/")[0]).on("click", setCheckbox)
             d3.select("#filter_menu_type").append("text").text(element.split("/")[0]).attr("id","text"+element.split("/")[0])
                 .style("color", colormimeSupertype(element.split("/")[0]))
-                .on("mouseover", function() {highligthTheseMime(element,"super")})
-                .on("mouseleave", function() {DehighligthTheseMime(element,"super")});
+                // .on("mouseover", function() {highligthTheseMime(element,"super")})
+                // .on("mouseleave", function() {DehighligthTheseMime(element,"super")});
             d3.select("#filter_menu_type").append('input').attr('type','checkbox').attr("id","details"+element.split("/")[0]).on("click", function(){showsubType(element.split("/")[0])})
             d3.select("#filter_menu_type").append('br');
         }
@@ -29,8 +30,8 @@ function BuildMimeFilterUI(list_m){
                     return colormimeSupertype(element.split("/")[0])
                 })
                 .style("visibility", "hidden")
-                .on("mouseover", function() {highligthTheseMime(element,"sub")})
-                .on("mouseleave", function() {DehighligthTheseMime(element,"sub")});
+                // .on("mouseover", function() {highligthTheseMime(element,"sub")})
+                // .on("mouseleave", function() {DehighligthTheseMime(element,"sub")});
             d3.select("#filter_menu_subtype").append('br');
         }
     });
@@ -49,38 +50,11 @@ function BuildMimeFilterUI(list_m){
     d3.select("#filter_menu_type").append("button").text("filter").attr("id","mime_filter_start")
     d3.select("#filter_menu_type").append("button").text("reset").attr("id","mime_filter_reset")
     d3.select("#filter_menu_type").append('br');
-    DrawMiniSunburst()
+    //DrawMiniSunburst()
 
     
 }
 
-
-mime_filtered = []
-function FilterMIME(){
-    
-    ListMimes.forEach(element => {
-        if(!mime_filtered.includes(element) && d3.select('#'+element.split("/")[0]).property('checked')) mime_filtered.push(element)
-        if(!mime_filtered.includes(element) && d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')) mime_filtered.push(element)
-        if(!d3.select('#'+element.split("/")[0]).property('checked') && !d3.select('#'+element.replace(/[/.]/g,"_")).property('checked')){
-            mime_filtered = mime_filtered.filter(e => e != element)
-            Tree = JSON.parse(JSON.stringify(BackupTree))
-            LabelMimeFOFromTree(Tree,mime_filtered)
-        }
-    });
-    if(mode != "mode = highligths"){ //? checked è remove, unchecked è opacize
-        RemoveMimeFOFromTree(Tree,mime_filtered)
-        calculateLeaves(Tree)
-        calculateMimes(Tree)
-    }
-    else{
-        LabelMimeFOFromTree(Tree,mime_filtered)
-        
-    }
-    
-    console.log(mime_filtered)
-    DrawSunburst()
-    
-}
 
 //* tools
 //* if only one mime i use the same color of supertype
@@ -111,29 +85,7 @@ function DehighligthTheseMime(type,suosub) {
         
 }
 
-function showsubType(type){
-    d3.select("#filter_menu_subtype").style("display","block")
-    var color = colormimeSupertype(type)
-    var opacity = 1
-    not_checked = 0
-    ListMimes.forEach(subtype => {
-        var op = "hidden"
-        if(type == subtype.split("/")[0]){
-            if(d3.select('#details'+type).property('checked')){
-                op = "visible"
-                color = "#8e9297"
-                opacity = 0.3
-            }
-            d3.select("#"+subtype.replace(/[/.]/g,"_")).style("visibility", function(){return op})
-            d3.select("#text"+subtype.replace(/[/.]/g,"_")).style("visibility", op)
-        }
-        if(!d3.select('#details'+subtype.split("/")[0]).property('checked')) not_checked++
 
-    });
-    if(not_checked==ListMimes.length) d3.select("#filter_menu_subtype").style("display","none")
-    d3.select("#text"+type).style("color",color).style("opacity", opacity)
-    DrawSunburst()
-}
 //?coerenza ra i due div quando metto il check o lo tolgo  
 var setSubCheckbox = function() {
     ListMimes.forEach(e => {

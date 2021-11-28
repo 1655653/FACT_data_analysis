@@ -28,7 +28,8 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         //console.log(path)
                         node = {}
                         node["uid"] = response.data.request.uid
-                        node["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2)
+                        node["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2).replace(/[^\w\s]/g, '_')
+                        node["vi"] = node["vi"].replace(/[^\w\s]/g, '')
                         if(list_packed && list_packed.includes(response.data.request.uid)) node["packed"] = true
                         node["hid"] = path.substring(path.indexOf("|")).split("|").filter(d => d != "").at(-1) //uso path per avere gli alias
                         node["mime"] = response.data.file_object.analysis.file_type.mime
@@ -83,7 +84,8 @@ function managePath(fatherNode,path,node){
         if(path.length>0) {
             var folder = {}
             folder["uid"] = "folder"
-            folder["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2)
+            folder["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2).replace(/[^\w\s]/g, '_')
+            folder["vi"] = folder["vi"].replace(/[^\w\s]/g, '')
             folder["hid"] = path[0]
             folder["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
             folder["contacome"]=1 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
@@ -250,6 +252,26 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
         RemoveMimeFOFromTree(child,mime_filtered)
     });
 
+    //? rimuovo le folder vuote
+    l = [] //? riempio la lista con le posizioni degli elementi da eliminare
+    for (let i = 0; i < fatherNode.children.length; i++) {
+        const child = fatherNode.children[i];
+        if(child.uid=="folder" && child.children.length==0){ //?se non è foglia, inserisco la posizione dell'elemento
+            l.push(i)
+        }
+    }
+    //? ciclo sulla lista di index, elimino l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha index -1)
+    if(l.length>0){
+        for (let i = 0; i < l.length; i++) {
+            const pos = l[i];
+            fatherNode.children.splice(pos,1)
+            for (let j = 0; j < l.length; j++) {
+                l[j]--
+            }
+        }
+    }
+    console.log(fatherNode)
+
 }
 function LabelPackedFOFromTree(Tree,list_packed){
     Tree.children.forEach(child => {
@@ -267,9 +289,7 @@ function resetTree(){
         document.getElementById(e.replace(/[/.]/g,"_")).checked = false
         document.getElementById(e.split("/")[0]).checked = false
     });
-    DrawSunburst()
-    DrawMiniSunburst()
-    g.selectAll('.node#'+Tree.hid.replace(/[/.]/g,"_").replace(/\s/g, '')).select("path").dispatch('click')
+    DrawDirectory()
     heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
 }
 

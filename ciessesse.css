@@ -13,19 +13,20 @@ body {
     width: 100%;
 }
 #div_score{
-    align-self: center;
-    margin-top: 60px;
+    align-self: end;
+    margin-top: 10px;
 }
-#violin_div{
+#violin_div{ /* HEATMAP*/
     order:0; /*0 is for debugging, 7 is the right*/
-    width:40%;
+    /* width:40%; */
     flex-direction: column;
     display: flex;
+    padding-right: 80px; /*per bilanciare i 100 del margin left;*/
+    height: fit-content
     /* border-style: ridge; */
-
 }
-/* sunburst */
-#treemap_div {
+/* DIRECToRY*/
+#treemap_div { 
     /* width: 35%; */
     /* flex-grow: 1; */
     display: flex;
@@ -47,11 +48,13 @@ body {
     /* flex-grow: 1; */
     line-height: 3.3;
     margin-left: 20px;
+    order:2
     /* width: 10%; */
 }
 #filter_menu_subtype{
     font-size: 12px;
-    display:none
+    display:none;
+    order:3
 }
 /* -----------sunburst */
 
@@ -67,10 +70,29 @@ body {
     
 }
 
-.link {
+.link_pckd {
     fill: none;
     stroke: #979393;
     stroke-width: 2px;
 }
 /* -----------packed tree */
 
+/*directory*/
+.node rect {
+    cursor: pointer;
+    fill: #fff;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+.node text {
+    font: 10px sans-serif;
+    pointer-events: none;
+}
+
+.link_dir {
+    fill: none;
+    stroke: #f8f4f4;
+    stroke-width: 1.5px;
+}
+/*------------directory*/

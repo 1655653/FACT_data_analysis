@@ -1,0 +1,95 @@
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.4;
+    color: #fff;
+    background-color: #4f545c;
+
+  }
+#container{
+    display: flex;
+    width: 100%;
+}
+#div_score{
+    align-self: center;
+    margin-top: 60px;
+}
+#violin_div{
+    order:0; /*0 is for debugging, 7 is the right*/
+    width:40%;
+    flex-direction: column;
+    display: flex;
+    /* border-style: ridge; */
+
+}
+/* sunburst */
+#treemap_div {
+    /* width: 35%; */
+    /* flex-grow: 1; */
+    display: flex;
+    /* border-style: ridge; */
+}
+#mime_filter_start{
+    display: none;
+}
+
+.tooltip{
+    background-color: #4f545c;
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+}
+.filter_menu{
+    /* flex-grow: 1; */
+    line-height: 3.3;
+    margin-left: 20px;
+    /* width: 10%; */
+}
+#filter_menu_subtype{
+    font-size: 12px;
+    display:none
+}
+/* -----------sunburst */
+
+/* packed tree */
+.node circle {
+    fill: #fff;
+  stroke: black;
+  stroke-width: 3px;
+}
+
+.node text {
+    font: 16px sans-serif;
+    
+}
+
+.link_pckd {
+    fill: none;
+    stroke: #979393;
+    stroke-width: 2px;
+}
+/* -----------packed tree */
+
+/*directory*/
+.node rect {
+    cursor: pointer;
+    fill: #fff;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+.node text {
+    font: 10px sans-serif;
+    pointer-events: none;
+}
+
+.link_dir {
+    fill: none;
+    stroke: #9ecae1;
+    stroke-width: 1.5px;
+}
+/*------------directory*/

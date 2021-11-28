@@ -157,19 +157,19 @@ function expandpackedTree(){
             // ****************** links section ***************************
 
             // Update the links...
-            var link = svg_bc_pckd.selectAll('path.link')
+            var link_pckd = svg_bc_pckd.selectAll('path.link_pckd')
                 .data(links, function(d) { return d.id; });
 
             // Enter any new links at the parent's previous position.
-            var linkEnter = link.enter().insert('path', "g")
-                .attr("class", "link")
+            var linkEnter = link_pckd.enter().insert('path', "g")
+                .attr("class", "link_pckd")
                 .attr('d', function(d){
                 var o = {x: source.x0, y: source.y0}
                 return diagonal(o, o)
                 });
 
             // UPDATE
-            var linkUpdate = linkEnter.merge(link);
+            var linkUpdate = linkEnter.merge(link_pckd);
 
             // Transition back to the parent element position
             linkUpdate.transition()
@@ -177,7 +177,7 @@ function expandpackedTree(){
                 .attr('d', function(d){ return diagonal(d, d.parent) });
 
             // Remove any exiting links
-            var linkExit = link.exit().transition()
+            var linkExit = link_pckd.exit().transition()
                 .duration(duration)
                 .attr('d', function(d) {
                 var o = {x: source.x, y: source.y}

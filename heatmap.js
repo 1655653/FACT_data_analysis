@@ -1,8 +1,8 @@
 function DrawHeatmap(data){
     // set the dimensions and margins of the graph
-    var margin = {top: 0, right: 25, bottom: 60, left: 100},
-      width_heatmap = 600 - margin.left - margin.right,
-      height_heatmap = 530 - margin.top - margin.bottom; //470
+    var margin = {top: 0, right: 0, bottom: 40, left: 100},
+      width_heatmap = 400 - margin.left - margin.right,
+      height_heatmap = 330 - margin.top - margin.bottom; //470
     
     // append the svg object to the body of the page
     d3.select("#violin_div").selectAll("*").remove()
@@ -42,7 +42,7 @@ function DrawHeatmap(data){
         .domain(cpe_names)
         .padding(0.05)
         
-    var si = d3.scaleLinear().domain([0,20]).range([20,9]) //scala per il font size della y
+    var si = d3.scaleLinear().domain([0,20]).range([18,8]) //scala per il font size della y
       svg_heatmap.append("g")
         .attr("id", "axisG")
         .style("font-size", si(cpe_names.length))
@@ -104,7 +104,7 @@ function DrawHeatmap(data){
         .data(data, function(d){return d[SCORE_TYPE]+':'+d.cpe_name;})
         .enter()
         .append("g").attr("id",function(d) { return "G_"+accroccanomi(d)})
-        .append("rect").attr("id",function(d) { return accroccanomi(d)})
+        .append("rect").attr("id",function(d) { return accroccanomi(d)}).attr("class",".rect_heat")
         .style("fill", function(d) { return color_heatmap(cve_count(d,SCORE_TYPE).length)} )
         .attr("rx", 4) //smoothness del rettangolo
         .attr("ry", 4)
@@ -187,7 +187,7 @@ function DrawHeatmap(data){
         tooltip_big_square
             .style("opacity", 0)
             .style("visibility", "hidden")
-        d3.select(this).style("stroke","white");
+        d3.select(this).style("stroke","grey");
         //d3.select(this).style("opacity",1)
 
     }
@@ -200,10 +200,10 @@ function DrawHeatmap(data){
       var str=parseFloat(rect_selected.style("stroke-width"))
       var x_rect = parseFloat(rect_selected.attr("x"))
       var y_rect = parseFloat(rect_selected.attr("y"))
-      var w = (w_old+str) *10
-      var h = (h_old+str+2)*cpe_names.length
+      var w = w_old*10 +10+4//+ 9*str - 8
+      var h = (h_old+str-1)*cpe_names.length
       
-      d3.selectAll("rect").attr("opacity","0.1")
+      d3.selectAll(".rect_heat").attr("opacity","0.1")
     
       //*expand the rect
       group_selected.raise()
@@ -221,7 +221,7 @@ function DrawHeatmap(data){
         .attr("width",w)
         .attr("height",h)
         .attr("x", "0")
-        .attr("y", "4")
+        .attr("y", "0")
       
 
       //*generate circles
@@ -383,13 +383,13 @@ async function make_CPE_nist_call(name){
     var retry = false
     for (let i = 0; i < part.length; i++) {
         const letter = part[i];
-
+        var ve = version[0]? version[0]: ""
         var nist_url 
-        if(!retry) nist_url = "https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:"+letter+":*:"+product+":"+version[0]
-        else nist_url ="https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:"+letter+":"+product+":*:"+version[0]
+        if(!retry) nist_url = "https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:"+letter+":*:"+product+":"+ve
+        else nist_url ="https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:"+letter+":"+product+":*:"+ve
 
         //var nist_url ="https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:a:*:dnsmasq:2.52"
-        console.log("calling "+nist_url)
+        //console.log("calling "+nist_url)
         
         var nist_resp = await Promise.resolve(axios.get(nist_url))
         if(nist_resp.data.totalResults != 0) {
@@ -500,7 +500,7 @@ async function buildHeatmapData(cve_lookup){
 
     
     
-    console.log("-------------------HEATMAP DATASET BUILT")
+    //console.log("-------------------HEATMAP DATASET BUILT")
 }
 //*utility to wrap axis y text
 function wrap(text, width) {

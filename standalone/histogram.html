@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+    body {
+      font-family:"avenir next", Arial, sans-serif;
+      font-size: 12px;
+      color: #696969;
+      margin: 0;
+    }
+
+    .axis path, .axis line {
+      stroke: darkgrey;
+    }
+  
+    .hist.label {
+      font-size: 10px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="vis"></div>
+
+<script>
+var margin = {top:70, right:50, bottom:40, left:30},
+    width = 300 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom;
+
+var parseDate = d3.timeParse("%d/%m/%Y");
+var formatDateIntoYear = d3.timeFormat("%Y");
+
+// x scale for time
+var x = d3.scaleTime()
+    .range([0, width])
+    .clamp(true);
+
+// y scale for histogram
+var y = d3.scaleLinear()
+    .range([height, 0]);
+
+
+// load data
+d3.csv("./asia.csv", prepare, function(data) {
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  // set parameters for histogram
+  var histogram = d3.histogram()
+      .value(function(d) { return d.date; })
+      .domain(x.domain())
+      .thresholds(x.ticks(d3.timeYear));
+
+  // nest data by region
+  var nest = d3.nest()
+      .key(function(d) { return d.region; })
+      .entries(data);
+
+  // apply histogram generator to each region's values
+  var regions = nest.map(function(d) { 
+    return {
+      key: d.key,
+      values: histogram(d.values)  
+    }
+  });
+
+  // calculate local y-max for each region
+  var localMax = regions.map(function(d) {
+    return {
+      region: d.key,
+      max: d3.max(d.values, function(s) {
+        return s.length;
+      })
+    }
+  })
+  
+  // find global max
+  y.domain([0, d3.max(localMax, function(d) { return d.max; })])
+
+  
+  // for each region, set up a svg with axis and label
+  var svg = d3.select("#vis").selectAll("svg")
+      .data(regions)
+      .enter()
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+  svg.append("text")
+      .attr("class", "region label")
+      .attr("x", margin.left)
+      .attr("y", margin.top/2)
+      .attr("font-size", "1.2em")
+      .text(function(d) { return d.key; })
+
+  var hist = svg.append("g")
+      .attr("class", "hist")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  hist.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0" + "," + height + ")")
+      .call(d3.axisBottom(x)
+        .tickValues(x.domain())
+        .tickFormat(formatDateIntoYear)
+      );
+
+  // draw histogram bars
+  var bars = hist.selectAll(".bar")
+      .data(function(d) { return d.values; })
+      .enter()
+      .append("g")
+      .attr("class", "bar")
+      .attr("transform", function(s) {
+        return "translate(" + x(s.x0) + "," + y(s.length) + ")";
+      });
+
+  bars.append("rect")
+      .attr("class", "bar")
+      .attr("x", 1)
+      .attr("width", function(s) { return x(s.x1) - x(s.x0); })
+      .attr("height", function(s) { return height - y(s.length); })
+      .attr("fill", "#c9c9c9");
+
+  bars.append("text")
+      .attr("class", "hist label")
+      .attr("dy", ".75em")
+      .attr("y", -12)
+      .attr("x", function(s) { return (x(s.x1) - x(s.x0))/2; })
+      .attr("text-anchor", "middle")
+      .text(function(s) { 
+        if (s.length > 0) {
+          return s.length;   
+        }
+      })
+      .style("fill", "charcoal");
+});
+
+function prepare(d) {
+  d.date = parseDate(d.date);
+  return d;
+}
+
+
+</script>
+</body>

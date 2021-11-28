@@ -57,6 +57,8 @@ function callFW() {
         url = endpoint+"firmware/"+selectedValue+"?summary=true"
         d3.json(url, function(data) { //?<----- chiamata alle api
             
+            //*exploit mitigation*/
+            var exploit_data = BuildExploitData(data.firmware.analysis.exploit_mitigations.summary)
             //?----- cpu_architecture string
             var cpu_info =  []
             for (const key in data.firmware.analysis.cpu_architecture.summary) {
@@ -100,40 +102,36 @@ function callFW() {
                     calculateLeaves(Tree) 
                     // //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
                     calculateMimes(Tree) 
+                    BackupTree = JSON.parse(JSON.stringify(Tree))
                     console.log("TREE BUILT")
                     console.log(Tree)
-
-
-                    BackupTree = JSON.parse(JSON.stringify(Tree))
+                    //console.log(JSON.stringify(Tree, null, 2))
                     
+                    
+                    // //***building directory
+                    console.log("BUILDING DIRECTORY")
+                    BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
+                    DrawDirectory()
+                    // document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
+                    document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
+                    console.log("DIRECTORY BUILT")
+
+
                     // //***building heatmap
                     console.log("BUILDING HEATMAP")
                     await buildHeatmapData(data.firmware.analysis.cve_lookup)
                     DrawHeatmap(heatmap_data)
-                    console.log("HEATMAP BUILT")
-                    //console.log(heatmap_data)
-
-
                     BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
+                    console.log("HEATMAP BUILT")
+                    // //console.log(heatmap_data)
 
-                    // //***building sunburst
-                    console.log("BUILDING SUNBURST")
 
-                    BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
-                    
-                    document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
-                    document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
+                    // //***building peckedUI
+                    console.log("BUILDING PACKED UI")
                     packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
-                    DrawSunburst()
-                    console.log("SUNBURST BUILT")
+                    console.log("PACKED UI BUILT")
 
-                    //console.log(all_REST_response)
 
-                    
-                    
-                    
-                    //buildViolinData(data.firmware.analysis.cve_lookup)
-                    //DrawViolin()
 
                 })();
             } 
@@ -148,7 +146,28 @@ function callFW() {
     list_packed_hid=[]
   
 }
+function BuildExploitData(summ){
+    var d = {}
+    for (const key in summ) {
+        if (Object.hasOwnProperty.call(summ, key)) {
+            const element = summ[key];
+            var method = key.trim().replace(/[^A-Z]+/g, "");
+            var enordi = key.trim().replace(/[^a-z]+/g, " ");
+            if(!(method in d)){
+                d[method] = []
+            }
+            var entry = {
+                "eod":enordi,
+                "Value":element.length,
+                "UIDs":element
+                }
+            d[method].push(entry)
 
+        }
+    }
+    //console.log(JSON.stringify(d, null, 2))
+    return d
+}
 
 function download(uid,contentType){
     var urldw = endpoint+"binary/"+uid
