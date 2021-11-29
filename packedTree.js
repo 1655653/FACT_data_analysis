@@ -257,12 +257,13 @@ function talkAboutPackedFO(FOuid){
     var selectedFO = all_REST_response[FOuid]
     console.log(selectedFO)
     console.log(FOuid)
-    var tail = " ( MIME: "+selectedFO.mime+")"
-    var mime_check = "The file type of " + selectedFO.hid + " is not blacklisted, so it should have been unpacked" +tail
-    if(selectedFO.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.hid + ", a genericFS error arisen"+tail
-    if(UNPACK_BLACKLISTED.includes(selectedFO.mime))  mime_check= "Unpacking of " + selectedFO.hid + " skipped due to blacklisted file type"+tail
-    d3.select("#log_packed_FO").text(mime_check+"      ")
-        .append("button").text("download").attr("id","dwld")
+    var tail = " ( MIME: "+selectedFO.mime+")  "
+    var mime_check = "The file type of " + selectedFO.hid + " is not blacklisted, so it should have been unpacked" 
+    if(selectedFO.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.hid + ", a genericFS error arisen"
+    if(UNPACK_BLACKLISTED.includes(selectedFO.mime))  mime_check= "Unpacking of " + selectedFO.hid + " skipped due to blacklisted file type"
+    var descr = d3.select("#log_packed_FO").text(mime_check+"      ")
+        descr.append('tspan').text(tail).style("color",colormimeSupertype(selectedFO.mime.split("/")[0]))
+        descr.append("button").text("download").attr("id","dwld")
             .on("click",function(){download( FOuid ,selectedFO.mime)})
 }
 
@@ -270,6 +271,6 @@ function talkAboutPackedFO(FOuid){
 function zoomOnPackedFO(FOuid){
     var selectedFO = all_REST_response[FOuid]
     var hid = selectedFO.hid
-    g.selectAll('.node#'+hid.replace(/[/.]/g,"_")).select("path").dispatch('click')
+    //g.selectAll('.node#'+hid.replace(/[/.]/g,"_")).select("path").dispatch('click')
 
 }

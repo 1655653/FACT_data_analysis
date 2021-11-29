@@ -14,9 +14,10 @@ var all_NIST_REST_response={}//? collazione di tutte le chiamate api del nist , 
 var Tree = {}
 var BackupTree = {}
 
-var violin_data;
-var violin_dom;
-
+var margin = {top: 10, right: 10, bottom: 10, left: 100},
+  width = 700 - margin.left - margin.right,
+  height = 700 - margin.top - margin.bottom;
+//* heatmap
 var SCORE_TYPE = "base_score"
 var heatmap_data;
 var heatmap_dom;
@@ -69,8 +70,7 @@ function callFW() {
             }
             var plu = "  cpu architecture"
             cpu_info.length > 1 ? plu += "s: " : plu+= ": "
-
-            document.getElementById("reportOf").innerHTML = "</br>Report of "+ data.firmware.meta_data.hid + "  MIME: "+data.firmware.analysis.file_type.mime + plu +cpu_info
+            d3.select("#reportOf").html("</br>Report of "+ data.firmware.meta_data.hid + "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
             if (document.getElementById("unpackerCKBOX").checked){
                 //console.log(data)
@@ -114,6 +114,7 @@ function callFW() {
                     DrawDirectory()
                     // document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
                     document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
+                    d3.select("#reportOf").select("tspan").style("color",colormimeSupertype(data.firmware.analysis.file_type.mime.split("/")[0]))
                     console.log("DIRECTORY BUILT")
 
 
@@ -123,7 +124,7 @@ function callFW() {
                     DrawHeatmap(heatmap_data)
                     BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
                     console.log("HEATMAP BUILT")
-                    // //console.log(heatmap_data)
+                    //console.log(heatmap_data)
 
 
                     // //***building peckedUI

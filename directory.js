@@ -143,9 +143,12 @@ function update(source) {
     .attr("class", "link_dir")
     // .style("stroke",function(d){return si(d.target.data.children.length)}) 
     .style("stroke",function(d){
-        if(Tree.uid!="a472e72a2b1120a418883923706b5d6a7e3347afbef4fbf0b01f4c7703ffe3f5_5497924") //ehehe
-        return d.target.data.children.length!=0 ? d3.select("#folder_"+d.target.data.vi).style("fill"): "white"
-        else return "white"
+        try {
+            r = d.target.data.children.length!=0 ? d3.select("#folder_"+d.target.data.vi).style("fill"): "white"
+        } catch (error) {
+            console.log("style error")
+            r = "white"
+        }
     }) 
     .attr("d", function(d) {
         var o = {x: source.x0, y: source.y0};
