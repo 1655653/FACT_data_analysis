@@ -1,7 +1,7 @@
 function DrawHeatmap(data){
     // set the dimensions and margins of the graph
-    var margin = {top: 0, right: 0, bottom: 40, left: 100},
-      width_heatmap = 400 - margin.left - margin.right,
+    var margin = {top: 0, right: 0, bottom: 40, left: 180},
+      width_heatmap = 500 - margin.left - margin.right,
       height_heatmap = 330 - margin.top - margin.bottom; //470
     
     // append the svg object to the body of the page
@@ -57,7 +57,11 @@ function DrawHeatmap(data){
             var name = sp[0]
             if(sp.at(-1)=="(CRITICAL)") version =version+"⚠️"
             return name+ " " + version
-        }).on("click",function(d){heatRemove(d)}).call(wrap, 20);
+        }).on("click",function(d){heatRemove(d)})
+        // .attr("y", function(t){
+        //     console.log(d3.select(this))
+        //     return parseFloat(d3.select(this).attr("y"))-25
+        // })//.call(wrap, 20);
       
       // Build color scale
       var max = 1
@@ -124,13 +128,7 @@ function DrawHeatmap(data){
         .attr("x", function(d) { return x_heatmap(d[SCORE_TYPE])})
         .attr("y", function(d) { return y_heatmap(d.cpe_name) })
         
-        // Add title to graph
-        // svg_heatmap.append("text")
-        //     .attr("x", 0)
-        //     .attr("y", -50)
-        //     .attr("text-anchor", "left")
-        //     .style("font-size", "22px")
-        //     .text("A d3.js heatmap");
+        
     svg_heatmap.append("text")
             .attr("class", "x label")
             .attr("text-anchor", "begin")
@@ -510,20 +508,22 @@ function wrap(text, width) {
           word,
           line = [],
           lineNumber = 0,
-          lineHeight = 0.3, // ems
+          lineHeight = 0.1, // ems
           y = text.attr("y"),
           dy = parseFloat(text.attr("dy")),
           tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        var h = 25  
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", 0).attr("y", y-h).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                h-=12
+            }
         }
-      }
     });
   }
 // esempio

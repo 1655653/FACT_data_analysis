@@ -9,6 +9,7 @@
 
 <!-- Load color palettes -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="data.js"></script>
 <script>
     var SCORE_TYPE = "exploitability_score"
     // set the dimensions and margins of the graph
@@ -50,6 +51,7 @@
         .style("font-size", 15)
         .call(d3.axisLeft(y_heatmap).tickSize(0))
         .select(".domain").remove()
+
       d3.select("#axisG").selectAll("text").text(function(d){
         const regex = new RegExp('[0-9*]', 'g');
         const version = d.split(" ").filter((href) => href.match(regex));
@@ -57,7 +59,7 @@
         var name = sp[0]
         if(sp.at(-1)=="(CRITICAL)") name+="⚠️"
         return name+ " " + version
-      }).style("max-width", "5px").style("word-break", "break-all");
+      })//.style("max-width", "5px").style("word-break", "break-all");
 
       // Build color scale
       var max = 1

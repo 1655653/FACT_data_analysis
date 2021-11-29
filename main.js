@@ -17,6 +17,9 @@ var BackupTree = {}
 var margin = {top: 10, right: 10, bottom: 10, left: 100},
   width = 700 - margin.left - margin.right,
   height = 700 - margin.top - margin.bottom;
+
+//*small multiples
+var exploit_data
 //* heatmap
 var SCORE_TYPE = "base_score"
 var heatmap_data;
@@ -59,7 +62,7 @@ function callFW() {
         d3.json(url, function(data) { //?<----- chiamata alle api
             
             //*exploit mitigation*/
-            var exploit_data = BuildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+            exploit_data = BuildExploitData(data.firmware.analysis.exploit_mitigations.summary)
             //?----- cpu_architecture string
             var cpu_info =  []
             for (const key in data.firmware.analysis.cpu_architecture.summary) {
@@ -131,6 +134,11 @@ function callFW() {
                     console.log("BUILDING PACKED UI")
                     packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
                     console.log("PACKED UI BUILT")
+                    
+                    // //***building peckedUI
+                    console.log("BUILDING SMALL MULTIPLES")
+                    drawMultipleHisto()
+                    console.log("SMALL MULTIPLES BUILT")
 
 
 

@@ -8,20 +8,22 @@ body {
     background-color: #4f545c;
 
   }
+
 #container{
     display: flex;
     width: 100%;
 }
 #div_score{
-    align-self: end;
+    align-self: start;
     margin-top: 10px;
+    margin-left: 185px;
 }
 #violin_div{ /* HEATMAP*/
     order:0; /*0 is for debugging, 7 is the right*/
     /* width:40%; */
     flex-direction: column;
     display: flex;
-    padding-right: 80px; /*per bilanciare i 100 del margin left;*/
+    padding-right: 80px; /*per bilanciare i 100 del margin left; */
     height: fit-content
     /* border-style: ridge; */
 }
@@ -96,3 +98,26 @@ body {
     stroke-width: 1.5px;
 }
 /*------------directory*/
+/*small multiples*/
+#exploit_container{
+    display: flex;
+}
+.UIDs_list_{
+    background-color: beige;
+    overflow-y: auto;
+    max-height: 20%;
+    
+}
+#search_bar_exploit{
+    font-size: 13px;
+    max-height:17px;
+    resize:none
+}
+#back_btn{
+    width: fit-content;
+    margin-left: 40%;
+}
+#leftside{
+    max-width:40%
+}
+/*----------------small multiples*/
