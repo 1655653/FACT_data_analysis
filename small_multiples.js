@@ -76,12 +76,13 @@ svg_single_chart.append("g")
  .attr("opacity","0");
   
 //label method (canary,...)
-si = d3.scaleLinear().domain([0,max_str.length]).range([14,10]) //scala per il font size della x
+si = d3.scaleLinear().domain([1,max_str.length]).range([14,9]) //scala per il font size della x
   svg_single_chart.append("text")
     .text(function(d) { return method.replace("_"," ")})
-    .attr("transform", "translate(10,50)rotate(-90)")
+    .attr("transform", "translate(1,80)rotate(-90)")
     .style("text-anchor", "start")
     .style("font-size",si(method.length)+"px")
+    .style("fill","white").raise()
 
 // Bars
 var bar = svg_single_chart.selectAll("mybar")
@@ -132,11 +133,11 @@ var expandBar = function (d){
             else{
                 var size = d3.select("#exploit_container").select("#"+"UIDs_list_"+colorID.replace("#","")).selectAll("text").size()
                 var rem = d3.select("#exploit_container").select("#"+"UIDs_list_"+colorID.replace("#","")).selectAll("text").filter(function() {
-                    return !d3.select(this).attr("id").startsWith(v);  // Use a filter to select all other bars for the transition.
+                    return !d3.select(this).attr("id").startsWith(v.replace(/[/.]/g,"_"));  // Use a filter to select all other bars for the transition.
                 })
                 var br = d3.select("#exploit_container").select("#"+"UIDs_list_"+colorID.replace("#","")).selectAll("br").filter(function() {
                     if(d3.select(this).attr("id") != "testa")
-                    return !d3.select(this).attr("id").startsWith(v);  // Use a filter to select all other bars for the transition.
+                    return !d3.select(this).attr("id").startsWith(v.replace(/[/.]/g,"_"));  // Use a filter to select all other bars for the transition.
                 })
                 if(size != rem.size()) {
                     rem.remove()
@@ -151,12 +152,13 @@ var expandBar = function (d){
     //append all text with uids
     function appendText(){
         d.UIDs.forEach(uid => {
-            list.append("text").text(uid).style("font-size","14px").style("opacity",0).attr("id",uid).style("color","black").style("padding-left","20px")
+            hid = all_REST_response[uid].hid
+            list.append("text").text(hid).style("font-size","14px").style("opacity",0).attr("id",hid.replace(/[/.]/g,"_")).style("color","black").style("padding-left","20px")
             .transition()
             .duration(400)
             .delay(200)
             .style("opacity",1)
-            list.append("br").attr("id",uid)
+            list.append("br").attr("id",hid.replace(/[/.]/g,"_"))
         });
     }
 }

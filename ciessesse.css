@@ -27,6 +27,9 @@ body {
     height: fit-content
     /* border-style: ridge; */
 }
+#uid_list_hp{
+    display:flex
+}
 /* DIRECToRY*/
 #treemap_div { 
     /* width: 35%; */

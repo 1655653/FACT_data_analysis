@@ -236,7 +236,6 @@ function packedUI(unpack_list_size){
         d3.select("#reportOf").append("text").text(txt)
             .append("button").text("expand").attr("id","packed_tree_expand_btn")
                 .on("click",expandpackedTree)
-            .append('br')
         d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
         
         
@@ -249,7 +248,6 @@ function packedUI(unpack_list_size){
         txt = "FACT has been able to unpack every elements  "
         d3.select("#reportOf").append("text").text(txt)
     }
-    d3.select("#reportOf").append("br")
     d3.select("#reportOf").append("text").attr("id","log_packed_FO")
 }
 

@@ -270,14 +270,13 @@ function DrawHeatmap(data){
         var r = all_REST_response[uid]
         var hiddd = r.hid
         
-        d3.select("#uid_list_hp").append("br")
-        d3.select("#uid_list_hp").append("br")
-        d3.select("#uid_list_hp").append("text")
-            .text(hiddd).style("word-break", "break-all").attr("id","aoporcdo")
+        
+        d3.select("#uid_list_hp").append("text").style("margin-left","15px")
+            .text(hiddd)
             .on("click",function(d){g.selectAll('.node#'+hiddd.replace(/[/.]/g,"_")).select("path").dispatch('click')})
             .append("button").text("download")
             .on("click",function(d){download(uid,r.mime)})
-            .append("br")
+
       });
 
 

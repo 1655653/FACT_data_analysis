@@ -211,7 +211,12 @@ function click(d) {
         }
         
     }
-    if(d.data.children.length==0)download(d.data.uid,d.data.mime)
+    if(d.data.children.length==0){
+        if (confirm('Are you sure you want to download the file?')) {
+            // Save it!
+            download(d.data.uid,d.data.mime)
+        } 
+    }
     console.log(clicked)
     update(d);
 }
