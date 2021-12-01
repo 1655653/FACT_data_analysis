@@ -110,7 +110,6 @@ function callFW() {
                     console.log(Tree)
                     //console.log(JSON.stringify(Tree, null, 2))
                     
-                    
                     // //***building directory
                     console.log("BUILDING DIRECTORY")
                     BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
@@ -135,10 +134,19 @@ function callFW() {
                     packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
                     console.log("PACKED UI BUILT")
                     
-                    // //***building peckedUI
+                    // //***building small multiples
                     console.log("BUILDING SMALL MULTIPLES")
                     drawMultipleHisto()
                     console.log("SMALL MULTIPLES BUILT")
+                    
+                    
+                    // //***building rank
+                    console.log("BUILDING RANK")
+                    DrawRank()
+                    
+                    console.log("RANK BUILT")
+
+
 
 
 

@@ -212,10 +212,7 @@ function click(d) {
         
     }
     if(d.data.children.length==0){
-        if (confirm('Are you sure you want to download the file?')) {
-            // Save it!
-            download(d.data.uid,d.data.mime)
-        } 
+        details_I_II(d.data.uid)
     }
     console.log(clicked)
     update(d);
@@ -310,4 +307,11 @@ function showsubType(type){
     if(not_checked==ListMimes.length) d3.select("#filter_menu_subtype").style("display","none")
     d3.select("#text"+type).style("color",color).style("opacity", opacity)
     DrawDirectory()
+
+    if(type == d3.select("#mime_tspan").text().split("/")[0]){
+        var span_color  = d3.select('#details'+type.split("/")[0]).property('checked')? colormimeSubtype(d3.select("#mime_tspan").text()) : colormimeSupertype(type)
+        
+        d3.select("#mime_tspan").transition().delay(600).style("color",span_color)
+    }
+
 }

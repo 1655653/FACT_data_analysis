@@ -10,7 +10,7 @@
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<script src="https://kit.fontawesome.com/5b7f4aa5d7.js" crossorigin="anonymous"></script>
 
 <body >
     Select a firmware <select id = "allFW"></select>
@@ -32,8 +32,21 @@
           <div id="exploit_div"></div>
         </div>
       </div>
+
       <div id="treemap_div"></div>
 
+      <div id="rightside">
+        <div id="rank_div">
+          <textarea id = "bar_fo_search"></textarea>
+          <select id = "biggest_fo"></select>
+          <div id = "hot_fo">
+            <div id = "suspects_fo"></div>
+            <div id = "critical_fo"></div>
+          </div>
+          <div id = "fo_details"></div>
+          </div>
+        </div>
+      </div>
     </div>
   
 </body>
@@ -43,6 +56,7 @@
 <script src="small_multiples.js"></script>
 <script src="main.js"></script>
 <script src="UI_filterMime.js"></script>
+<script src="rank.js"></script>
 <script src="directory.js"></script>
 <script src="packedTree.js"></script>
 <script src="heatmap.js"></script>

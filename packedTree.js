@@ -207,7 +207,7 @@ function expandpackedTree(){
                 console.log(d)
                 if(d.data.leaf) {
                     talkAboutPackedFO(d.data.uid)
-                    zoomOnPackedFO(d.data.uid)
+                    details_I_II(d.data.uid)
                 }
                 if (d.children) {
                     d._children = d.children;

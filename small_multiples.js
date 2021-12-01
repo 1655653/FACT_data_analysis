@@ -153,7 +153,7 @@ var expandBar = function (d){
     function appendText(){
         d.UIDs.forEach(uid => {
             hid = all_REST_response[uid].hid
-            list.append("text").text(hid).style("font-size","14px").style("opacity",0).attr("id",hid.replace(/[/.]/g,"_")).style("color","black").style("padding-left","20px")
+            list.append("text").text(hid).style("font-size","14px").style("opacity",0).attr("id",hid.replace(/[/.]/g,"_")).style("color","black").style("padding-left","20px").on("click",function(d){details_I_II(uid)})
             .transition()
             .duration(400)
             .delay(200)

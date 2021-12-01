@@ -1,4 +1,6 @@
-
+//* rank
+var BOUND_FATTEST = 5
+var fattest_fo = []
 //* builds the tree calling all packed/unpacked FO
 
 async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
@@ -16,6 +18,15 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                     ioi_response["unpacker"]= response.data.file_object.analysis.unpacker
                     ioi_response["cve_results"]= response.data.file_object.analysis.cve_lookup.cve_results
                     ioi_response["mime"]= response.data.file_object.analysis.file_type.mime
+                    ioi_response["size"]= response.data.file_object.meta_data.size
+                    ioi_response["sw_comp"]= response.data.file_object.analysis.software_components.summary
+                    ioi_response["file_type"]= response.data.file_object.analysis.file_type.full
+                    ioi_response["ex_mitig"] = []
+                    response.data.file_object.analysis.exploit_mitigations.summary.forEach(e => {
+                        t = e.split(" ")
+                        t.pop()
+                        ioi_response["ex_mitig"].push(t.join(" "))
+                    });
 
                     all_REST_response[response.data.request.uid] = ioi_response
                     
@@ -36,6 +47,7 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         node["bytes"] = response.data.file_object.meta_data.size //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                         node["contacome"]=1 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
                         node["size"] = response.data.file_object.meta_data.size
+                        rankfattest(response.data.request.uid, response.data.file_object.meta_data.size)
                         node["leaves"]=0
                         node["children"] = []
                         path = path.substring(path.indexOf("/")).split("/").filter(d => d != "") //uso path per avere il singolo path
@@ -64,7 +76,22 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                 
             }
 }
-
+function rankfattest(uid,size){
+    var el = {"uid":uid, "size": size}
+    if(fattest_fo.length<BOUND_FATTEST) fattest_fo.push(el)
+    else{
+        fattest_fo.forEach(item => {
+            if(el.size>item.size){
+                if (!fattest_fo.filter(e => e.uid === el.uid).length > 0) {
+                    /* vendors does not contains the element we're looking for */
+                    item.size = el.size
+                    item.uid = el.uid
+                    return 
+                  }
+            }
+        });
+    }
+}
 function managePath(fatherNode,path,node){
     
     //console.log(path)
@@ -291,6 +318,13 @@ function resetTree(){
     });
     DrawDirectory()
     heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
+    
+    for (const key in exploit_data) {
+        if (Object.hasOwnProperty.call(exploit_data, key)) {
+            const element = exploit_data[key];
+            d3.select("#"+key.replace(/[^A-Z]+/g, "")).transition().duration(800).style("border-color","black")
+        }
+    }
 }
 
 //! non funziona!!!

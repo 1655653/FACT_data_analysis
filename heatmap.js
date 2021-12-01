@@ -273,9 +273,9 @@ function DrawHeatmap(data){
         
         d3.select("#uid_list_hp").append("text").style("margin-left","15px")
             .text(hiddd)
-            .on("click",function(d){g.selectAll('.node#'+hiddd.replace(/[/.]/g,"_")).select("path").dispatch('click')})
-            .append("button").text("download")
-            .on("click",function(d){download(uid,r.mime)})
+            .on("click",function(d){details_I_II(uid)})
+            // .append("button").text("download")
+            // .on("click",function(d){download(uid,r.mime)})
 
       });
 
