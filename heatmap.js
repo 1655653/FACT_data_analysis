@@ -14,7 +14,7 @@ function DrawHeatmap(data){
     d3.select("#div_score").append("button").text("impact_score").attr("id","btn_is").on("click",function(d){changeScore(d3.select(this).text())})
     d3.select("#div_score").append("button").text("base_score").attr("id","btn_bs").on("click",function(d){changeScore(d3.select(this).text())})
 
-    var svg_heatmap = d3.select("#violin_div").style("display","flex")//!!!!metti nel css
+    var svg_heatmap = d3.select("#violin_div").style("display","flex")
     .append("svg")
       .attr("width", width_heatmap + margin.left + margin.right)
       .attr("height", height_heatmap + margin.top + margin.bottom)

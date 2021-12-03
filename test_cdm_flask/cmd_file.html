@@ -13,8 +13,12 @@
 
 <script>
     
-axios.get('http://127.0.0.1:5000/api/v1/resources/fo?hid=3322ip')
+d3.select("#my_dataviz").append("button").on("click",function(d){
+  
+})
+axios.get('http://127.0.0.1:5000/api/fo?hid=3322ip')
   .then((response) => {
+    d3.select("#my_dataviz").append("text").text(response.data)
     console.log(response.data);
     console.log(response.status);
     console.log(response.statusText);

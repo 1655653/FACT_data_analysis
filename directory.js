@@ -214,7 +214,7 @@ function click(d) {
     if(d.data.children.length==0){
         details_I_II(d.data.uid)
     }
-    console.log(clicked)
+    //console.log(clicked)
     update(d);
 }
 

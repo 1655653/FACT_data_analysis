@@ -1,9 +1,11 @@
 //* rank
 var BOUND_FATTEST = 5
 var fattest_fo = []
+var red_danger_fo = []
+var yellow_danger_fo = []
 //* builds the tree calling all packed/unpacked FO
 
-async function BuildTree(included_files, fatherNode){ //input is list of included files of the father node
+async function BuildTree(included_files, fatherNode, fw){ //input is list of included files of the father node
             if( included_files.length > 0){
                 promises = [];
                 included_files.forEach(function(item) {
@@ -27,6 +29,7 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                         t.pop()
                         ioi_response["ex_mitig"].push(t.join(" "))
                     });
+                    ioi_response["danger"] = rankdanger(fw,response.data.request.uid)
 
                     all_REST_response[response.data.request.uid] = ioi_response
                     
@@ -69,12 +72,65 @@ async function BuildTree(included_files, fatherNode){ //input is list of include
                             }
                         });
                     }
-                    await BuildTree(response.data.file_object.meta_data.included_files, node);
+                    await BuildTree(response.data.file_object.meta_data.included_files, node, fw);
                     
                     
                 };
                 
             }
+}
+
+
+function rankdanger(fw,uid){
+    var el = []
+    var cripto = fw.analysis.crypto_material.summary
+    for (const key in cripto) {
+        if (Object.hasOwnProperty.call(cripto, key)) {
+            const element = cripto[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("crypto")) el.push("crypto")
+            });
+        }
+    }
+    var usr_pwd = fw.analysis.users_and_passwords.summary
+    for (const key in usr_pwd) {
+        if (Object.hasOwnProperty.call(usr_pwd, key)) {
+            const element = usr_pwd[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("uap")) el.push("uap")
+            });
+        }
+    }
+    var ex_mit = fw.analysis.exploit_mitigations.summary
+    for (const key in ex_mit) {
+        if (Object.hasOwnProperty.call(ex_mit, key)) {
+            const element = ex_mit[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("explo")) el.push("explo")
+            });
+        }
+    }
+    var cve = fw.analysis.cve_lookup.summary
+    for (const key in cve) {
+        if (Object.hasOwnProperty.call(cve, key)) {
+            const element = cve[key];
+            element.forEach(e => {
+                var is_crit = e.split(" ")[0] =="(CRITICAL)"? true:false
+                if(e==uid && !el.includes("cve_is_crit "+ is_crit)) el.push("cve_is_crit "+ is_crit)
+            });
+        }
+    }
+    var pack = fw.analysis.unpacker.summary.packed
+    if(pack){
+        pack.forEach(element => {
+            if(element == uid) el.push("packed")
+        });
+    }
+
+    if(el.includes("cve_is_crit true") || el.includes("uap") || el.includes("crypto")) red_danger_fo.push(uid)
+    else if(el.includes("cve_is_crit false") || el.includes("packed")) yellow_danger_fo.push(uid)
+    return el
+
 }
 function rankfattest(uid,size){
     var el = {"uid":uid, "size": size}
@@ -98,6 +154,7 @@ function managePath(fatherNode,path,node){
     //devo andare in fondo fin quando trovo una folder esistente
     var found = false //true se trovo una folder esistente
     fatherNode.forEach(element => {
+        
         if(element["hid"]==path[0]){ //se la cartella esiste
             found = true
             if(path.length> 0) managePath(element["children"],path.slice(1),node) //se posso continuo
@@ -105,7 +162,7 @@ function managePath(fatherNode,path,node){
                 element["children"].push(node)
             }
         }
-            
+        
     });
     if(!found ){ //non ho trovato alcuna cartella, la devo creare
         if(path.length>0) {

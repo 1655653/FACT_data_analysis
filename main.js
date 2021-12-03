@@ -63,6 +63,7 @@ function callFW() {
             
             //*exploit mitigation*/
             exploit_data = BuildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+            //console.log(exploit_data)
             //?----- cpu_architecture string
             var cpu_info =  []
             for (const key in data.firmware.analysis.cpu_architecture.summary) {
@@ -101,7 +102,7 @@ function callFW() {
 
                     // //***building tree
                     console.log("BUILDING TREE")
-                    await BuildTree(data.firmware.meta_data.included_files, Tree)
+                    await BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
                     calculateLeaves(Tree) 
                     // //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
                     calculateMimes(Tree) 
@@ -179,7 +180,12 @@ function BuildExploitData(summ){
                 "UIDs":element
                 }
             d[method].push(entry)
-
+            
+            //rankdanger
+            element.forEach(e => {
+                if(enordi == "disabled" && !red_danger_fo.includes(e) && !yellow_danger_fo.includes(e))
+                    yellow_danger_fo.push(e)
+            });
         }
     }
     //console.log(JSON.stringify(d, null, 2))
