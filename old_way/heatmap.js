@@ -15,7 +15,7 @@ function DrawHeatmap(data){
     d3.select("#div_score").append("button").text("base_score").attr("id","btn_bs").on("click",function(d){changeScore(d3.select(this).text())})
 
     var svg_heatmap = d3.select("#violin_div").style("display","flex")
-    .append("svg")
+    .append("svg").attr("id","svg_heat")
       .attr("width", width_heatmap + margin.left + margin.right)
       .attr("height", height_heatmap + margin.top + margin.bottom)
     .append("g")
@@ -70,7 +70,7 @@ function DrawHeatmap(data){
       });
       var color_heatmap = d3.scaleLinear()
             .range(["white", "#880000"])
-            .domain([-5,max])
+            .domain([0,max])
     
       // create a tooltip
       var tooltip_heatmap = d3.select("#violin_div")
@@ -135,16 +135,7 @@ function DrawHeatmap(data){
             .attr("x", width_heatmap/2.5)
             .attr("y", height_heatmap+30)
             .text(SCORE_TYPE);
-    // // Add subtitle to graph
-    // svg_heatmap.append("text")
-    //         .attr("x", 0)
-    //         .attr("y", -20)
-    //         .attr("text-anchor", "left")
-    //         .style("font-size", "14px")
-    //         .style("fill", "grey")
-    //         .style("max-width", 400)
-    //         .text("A short description of the take-away message of this chart.");
-    
+
     
     function cve_count(d,type){
         switch (type) {
@@ -156,126 +147,87 @@ function DrawHeatmap(data){
                 return d.all_cve_objects_is
         }
     }
-    function clickSquare(d){
-    tooltip_heatmap.style("visibility", "hidden")
-    d3.selectAll("#tooltip_big_square").remove()
-    // create a tooltip
-    var tooltip_big_square = d3.select("#violin_div")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip").attr("id","tooltip_big_square").style("max-width","300px").style("word-break","break-all")
-    var mouseover = function(d) {
-        tooltip_big_square
-            .style("opacity", 1)
-            .style("visibility", "visible")
-        d3.select(this).raise().style("stroke","black");
-    }
-    var mousemove = function(d) {
-        var tail = "<br> "
-        if(d.attackComplexity)tail+="attack complexity: "+d.attackComplexity + "<br>"
-        if(d.attackVector)tail+="attack vector: "+d.attackVector+ "<br>"
-        if(d.baseSeverity)tail+="base severity: "+d.baseSeverity+ "<br>"
-        tooltip_big_square
-            .html("cve_code:"+d.cve_code+ "<br>score:" + d[SCORE_TYPE] + tail+ "<br>description:"+d.description)
-            .style('left', (d3.event.pageX + 10) + 'px')
-            .style('top', (d3.event.pageY + 10) + 'px')
-        console.log(d)
-    }
-    var mouseleave = function(d) {
-        tooltip_big_square
-            .style("opacity", 0)
-            .style("visibility", "hidden")
-        d3.select(this).style("stroke","grey");
-        //d3.select(this).style("opacity",1)
+function clickSquare(d){
 
-    }
 
-      console.log(d)
       var rect_selected = d3.select("#"+accroccanomi(d))
-      var group_selected = d3.select("#G_"+accroccanomi(d))
+    //   var group_selected = d3.select("#G_"+accroccanomi(d))
       var w_old = parseFloat(rect_selected.attr("width"))
       var h_old = parseFloat(rect_selected.attr("height"))
       var str=parseFloat(rect_selected.style("stroke-width"))
       var x_rect = parseFloat(rect_selected.attr("x"))
       var y_rect = parseFloat(rect_selected.attr("y"))
-      var w = w_old*10 +10+4//+ 9*str - 8
-      var h = (h_old+str-1)*cpe_names.length
+      var w = w_old*10 +10+4 //+ 9*str - 8
+      var h = (h_old+str-1)*(cpe_names.length+0.9)
       
-      d3.selectAll(".rect_heat").attr("opacity","0.1")
-    
-      //*expand the rect
-      group_selected.raise()
-      rect_selected.raise()
-        //.style("fill", function(d) { return color_heatmap(cve_count(d,SCORE_TYPE))} )
-        .style("fill", rect_selected.style("fill") )
-        .attr("rx", 4) //smoothness del rettangolo
-        .attr("ry", 4)
-        .style("opacity", 1)
-        .on("click",function(g){reduceSquare(g,rect_selected,x_rect,y_rect,w_old,h_old)})
-        .on("mouseleave",function(d){d3.select(this).style("opacity",1)})
-        
+//*generate the rect with all CVEs
+    cve_container = d3.select("#violin_div").append("div").attr("id", "cve_container").style("background",rect_selected.style("fill"))
+    cve_container
+        .style("width","0px").style("height","0px")
+        .style("left",parseFloat(d3.select("#svg_heat").attr("width"))-(10-d[SCORE_TYPE])*w_old+"px")
+        .style("top",document.getElementById(accroccanomi(d)).getBoundingClientRect().top+"px")
+        .on("dblclick",function(g){reduceSquare(d,rect_selected,x_rect,y_rect,w_old,h_old)})
         .transition()
         .duration(1500)
-        .attr("width",w)
-        .attr("height",h)
-        .attr("x", "0")
-        .attr("y", "0")
-      
-
-      //*generate circles
-      if(cve_count(d,SCORE_TYPE).length>0){
+        .style("top",document.getElementById("btn_bs").getBoundingClientRect().top+"px")
+        .style("left",d3.select("#svg_heat").attr("width")-1+13-w+"px")
+        .style("width",w+"px").style("height",h+"px")
+    
         
-        d3.select("#G_"+accroccanomi(d)).selectAll()
-          .data(cve_count(d,SCORE_TYPE)).enter()
-          .append("circle")
-          .style("stroke", function(d){return "grey"})
-          .style("fill", "#fee8c8")
-          .attr("r", 0)
-          .attr("cx", x_rect+w_old/2)
-          .attr("cy", y_rect+h_old/2)
-          .on("click",function(u){
-              console.log(u);
-              var ur = "https://nvd.nist.gov/vuln/detail/"+u.cve_code
-              window.open(ur, '_blank').focus();
-            })
-          .on("mouseover",mouseover)
-          .on("mousemove", mousemove)
-          .on("mouseleave", mouseleave)
-          .transition()
-          .duration(1500)
-          .attr("r", 7)
-          .attr("cx", function(f){ //cerchi a caso in un raggio d'azione 
-                var angle = Math.random()*Math.PI*2;
-                var A = (Math.random() *(w/2)) * Math.cos(angle)
-                return w/2+A;
-            })
-           .attr("cy",function(f){
-                var angle = Math.random()*Math.PI*2;
-                var A = (Math.random() *(h/2)) * Math.sin(angle)
-                return h/2+A;
-            })
-          d3.selectAll("circle").raise()
-      }
-//       
+    //*generate cve name
+    cve_container.selectAll(".text_cv")
+        .data(cve_count(d,SCORE_TYPE).sort(function(a, b){
+            a = parseInt(a.cve_code.split("-")[1])
+            b = parseInt(b.cve_code.split("-")[1])
+            if(a < b) { return 1; }
+            if(a > b) { return -1; }
+            return 0;
+        })).enter()
+        .append("text").text(function(u){return u.cve_code}).attr("id","text_cve_").style("width","fit-content")
+        .on("click",function(u){
+            console.log(u)
+            console.log(d)
+            CVEdetails(u,d,w,h)
+        })
+    function CVEdetails(u,d,w){
+        d3.select("#cve_details").remove()
+        cve_details = d3.select("#violin_div").append("div").attr("id", "cve_details")
+        cve_dtls_left = d3.select("#svg_heat").attr("width") - w/1.8
 
+        var tail = "<br> "
+        if(u.attackComplexity)tail+="attack complexity: "+u.attackComplexity + "<br>"
+        if(u.attackVector)tail+="attack vector: "+u.attackVector+ "<br>"
+        if(u.baseSeverity)tail+="base severity: "+u.baseSeverity+ "<br>"
+        cve_details
+            .html("cve_code:"+u.cve_code+ "<br>score:" + d[SCORE_TYPE] + tail+ "<br>description:"+u.description)
+            .style('left', cve_dtls_left+"px") 
+            .style("top",document.getElementById("btn_bs").getBoundingClientRect().top+"px")
+            .style("width",w/2+"px")
+            .style("height", h-9+"px")
+            .on("dblclick",function(g){reduceSquare(d,rect_selected,x_rect,y_rect,w_old,h_old)})
+            .append("button").text("MORE DETAILS").attr("id","cve_btn_link_nist")
+                .on("click", function(h){
+                    var ur = "https://nvd.nist.gov/vuln/detail/"+u.cve_code
+                    window.open(ur, '_blank').focus();
+                })
+        
 
-
+        
+    }
+    
+    
       //*append the uids
       d3.select("#uid_list_hp").remove()
       d3.select("#violin_div").append("div").attr("id","uid_list_hp").style("width","100px")
       
       d.uid_affected.forEach(uid => {
-        //   var r = all_REST_response[uid].data.file_object
-        //   var hiddd= r.meta_data.hid 
         var r = all_REST_response[uid]
         var hiddd = r.hid
-        
         
         d3.select("#uid_list_hp").append("text").style("margin-left","15px")
             .text(hiddd)
             .on("click",function(d){details_I_II(uid)})
-            // .append("button").text("download")
-            // .on("click",function(d){download(uid,r.mime)})
+
 
       });
 
@@ -285,15 +237,17 @@ function DrawHeatmap(data){
 
 
     function reduceSquare(d,rect,old_x,old_y,old_w,old_h){
+        d3.select("#cve_details").remove()
         d3.selectAll(".tooltip").style("visibility", "hidden")
         tooltip_heatmap.style("visibility", "visible")
       d3.select("#uid_list_hp").remove()
-      d3.select("#G_"+accroccanomi(d)).selectAll("circle")
+      d3.select("#cve_container")
         .transition()
         .duration(1500)
-        .attr("r", 0)
-        .attr("cx", old_x+old_w/2)
-        .attr("cy", old_y+old_h/2)
+        .style("height","0px")
+        .style("width","0px")
+        .style("left",parseFloat(d3.select("#svg_heat").attr("width"))-(10-d[SCORE_TYPE])*old_w+"px")
+        .style("top",document.getElementById(accroccanomi(d)).getBoundingClientRect().top+"px")
         .remove()
       rect
         .on("click",function(o){clickSquare(o)})
@@ -309,8 +263,8 @@ function DrawHeatmap(data){
 
 function changeScore(text){
     SCORE_TYPE = text
-    heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
-    DrawHeatmap(heatmap_data)
+    sw_comp_cve = JSON.parse(JSON.stringify(BackupHeatMap))
+    DrawHeatmap(sw_comp_cve)
 }
 
 
@@ -405,16 +359,16 @@ async function make_CPE_nist_call(name){
 }
   
 function heatRemove(n){
-    heatmap_data = heatmap_data.filter(function( obj ) {
+    sw_comp_cve = sw_comp_cve.filter(function( obj ) {
         return obj.cpe_name !== n;
     });
-    DrawHeatmap(heatmap_data)
+    DrawHeatmap(sw_comp_cve)
 }
 
 //* building the dataset for the heatmap
 async function buildHeatmapData(cve_lookup){
     
-    heatmap_data=[]
+    sw_comp_cve=[]
     heatmap_dom=[]
     var checklist = [] //segna quali cpe ha correttamente trovato
     
@@ -449,7 +403,7 @@ async function buildHeatmapData(cve_lookup){
                     "uid_affected":uidd_list,
                     "hid_affected":hidd_list
                 }
-                heatmap_data.push(el)
+                sw_comp_cve.push(el)
                 
             }
         }
@@ -459,7 +413,7 @@ async function buildHeatmapData(cve_lookup){
         if(obj.cpe){ //?<--------------GET BATCH OF CVE
             //console.log(obj.cpe_name)
             try {
-                var all_cves_of_single_cpe = await make_CVE_nist_call(obj,heatmap_data)
+                var all_cves_of_single_cpe = await make_CVE_nist_call(obj,sw_comp_cve)
                 
             } catch (error) {
                 console.log("can not call" +obj.cpe_name)
@@ -478,7 +432,7 @@ async function buildHeatmapData(cve_lookup){
                         if (Object.hasOwnProperty.call(all_cves, key_CVE)) {
                             const single_cve_obj = all_cves[key_CVE];
                             try{
-                                await make_CVE_nist_call(single_cve_obj,heatmap_data,key_CVE)
+                                await make_CVE_nist_call(single_cve_obj,sw_comp_cve,key_CVE)
 
                             }
                             catch(error){

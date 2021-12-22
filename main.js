@@ -2,17 +2,26 @@ var endpoint = "http://192.168.30.177:5000/rest/"
 var url = endpoint+"firmware"
 
 var UNPACK_BLACKLISTED = ["audio/mpeg", "image/png", "image/jpeg", "image/gif", "application/x-shockwave-flash", "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/ogg", "text/plain", "application/pdf"] //? token from https://github.com/fkie-cad/fact_extractor/blob/master/fact_extractor/config/main.cfg
-//*
-//* checkbox mngm
-document.getElementById("unpackerCKBOX").checked=true
-document.getElementById("byteCBOX").checked=true
-
+//* global data structures
 var INCLUDED_FILES //? usato per ricostruire l'albero dopo aver rimosso i filtri
-var all_REST_response={}//? collazione di tutte le chiamate api, ordinate con chiave l'UID
-var all_NIST_REST_response={}//? collazione di tutte le chiamate api del nist , ordinate con chiave la cve
-
-var Tree = {}
+var ALL_REST_RESPONSE={}//? collazione di tutte le chiamate api, ordinate con chiave l'UID
+var Tree = {} //? a differenza di ALL_REST_RESPONSE, questa contriene i figli e le folder!
 var BackupTree = {}
+
+var SW_COMP_CVE=[] //? collezione di tutte le cve
+//* danger algoritm vars
+W_CRYPTO = 30
+W_EXPLOIT = 1.5
+W_USR_N_PWD = 30
+W_CVE_CRIT = 15
+W_CVE_N_CRIT = 10
+W_KNOWN_VULN = 5
+var DANGER={"system":[],"user":[]} //?e.g system.uid=score --->system.464665=10
+var CRITICAL_FO={"system":[],"user":[]}
+var SUS_FO={"system":[],"user":[]}
+var SCORE_TYPE = "base_score"
+
+
 
 var margin = {top: 10, right: 10, bottom: 10, left: 100},
   width = 700 - margin.left - margin.right,
@@ -20,10 +29,6 @@ var margin = {top: 10, right: 10, bottom: 10, left: 100},
 
 //*small multiples
 var exploit_data
-//* heatmap
-var SCORE_TYPE = "base_score"
-var heatmap_data;
-var heatmap_dom;
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
@@ -33,8 +38,7 @@ var list_packed_uid = []
 
 ListMimes = [] //? lista con i subtypes
 ListSuperMimes = []//?lista con solo i types
-//* checkbox mngm
-document.getElementById("unpackerCKBOX").checked=true
+
 
 //* call all firmwares
 d3.json(url, function(data) {
@@ -61,10 +65,9 @@ function callFW() {
         url = endpoint+"firmware/"+selectedValue+"?summary=true"
         d3.json(url, function(data) { //?<----- chiamata alle api
             
-            //*exploit mitigation*/
-            exploit_data = BuildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+            
             //console.log(exploit_data)
-            //?----- cpu_architecture string
+            //* cpu_architecture string
             var cpu_info =  []
             for (const key in data.firmware.analysis.cpu_architecture.summary) {
                 if (Object.hasOwnProperty.call(data.firmware.analysis.cpu_architecture.summary, key)) {
@@ -76,120 +79,63 @@ function callFW() {
             cpu_info.length > 1 ? plu += "s: " : plu+= ": "
             d3.select("#reportOf").html("</br>Report of "+ data.firmware.meta_data.hid + "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
-            if (document.getElementById("unpackerCKBOX").checked){
-                //console.log(data)
-                //***build root of Tree
-                document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
-                list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
-                Tree["uid"] = data.request.uid
-                Tree["hid"] = data.firmware.meta_data.hid
-                Tree["mime"] = data.firmware.analysis.file_type.mime
-                ListMimes.push(data.firmware.analysis.file_type.mime)
-                ListSuperMimes.push(data.firmware.analysis.file_type.mime.split("/")[0])
-                Tree["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
-                Tree["contacome"]=1//? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
-                Tree["size"] = data.firmware.meta_data.size
-                Tree["leaves"] = 0
-                Tree["children"] = [];
-                if(data.firmware.meta_data.included_files.length==0) {
-                    document.getElementById("reportOf").innerHTML+= "NOT ENOUGH INFO TO GIVE A VISUALIZATION"
-                    return
-                }
-                (async () => {
-                    INCLUDED_FILES= data.firmware.meta_data.included_files
-                    
-                    
+        
+            //console.log(data)
+            //***build root of Tree
+            document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
+            list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
+            Tree["uid"] = data.request.uid
+            Tree["hid"] = data.firmware.meta_data.hid
+            Tree["mime"] = data.firmware.analysis.file_type.mime
+            ListMimes.push(data.firmware.analysis.file_type.mime)
+            ListSuperMimes.push(data.firmware.analysis.file_type.mime.split("/")[0])
+            Tree["bytes"] = 0 //? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+            Tree["contacome"]=1//? servono al sunburst per calcolare l'ampiezza della circonferenza di ogni nodo
+            Tree["size"] = data.firmware.meta_data.size
+            Tree["leaves"] = 0
+            Tree["children"] = [];
+            if(data.firmware.meta_data.included_files.length==0) {
+                document.getElementById("reportOf").innerHTML+= "NOT ENOUGH INFO TO GIVE A VISUALIZATION"
+                return
+            }
+            (async () => {
+                
+                
+                // //***building tree
+                console.log("BUILDING TREE")
+                await BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
+                calculateLeaves(Tree) 
+                calculateMimes(Tree) 
+                BackupTree = JSON.parse(JSON.stringify(Tree))
+                console.log("TREE BUILT")
+                console.log(Tree)
+                //console.log(JSON.stringify(Tree, null, 2))
+                
+                
+                //*-------CVE 
+                console.log("ASKING NIST")
+                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
+                console.log("NIST RESPONDED WITH ALL CVE")
+                //console.log(SW_COMP_CVE)
 
-                    // //***building tree
-                    console.log("BUILDING TREE")
-                    await BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
-                    calculateLeaves(Tree) 
-                    // //calculateFOlderSize(Tree)//?per ora me ne sbatto della grandezza delle folder
-                    calculateMimes(Tree) 
-                    BackupTree = JSON.parse(JSON.stringify(Tree))
-                    console.log("TREE BUILT")
-                    console.log(Tree)
-                    //console.log(JSON.stringify(Tree, null, 2))
-                    
-                    // //***building directory
-                    console.log("BUILDING DIRECTORY")
-                    BuildMimeFilterUI(ListMimes)//checkboxes to filter the mime
-                    DrawDirectory()
-                    // document.getElementById("mime_filter_start").onclick = FilterMIME//? <---- chiamata quando premi bottone, FILTRO TIPO 2
-                    document.getElementById("mime_filter_reset").onclick = resetTree//? <---- chiamata quando premi bottone, FILTRO TIPO 2
-                    d3.select("#reportOf").select("tspan").style("color",colormimeSupertype(data.firmware.analysis.file_type.mime.split("/")[0]))
-                    console.log("DIRECTORY BUILT")
+                //*-------DANGER 
+                console.log("RANKING FOs")
+                rankdanger(data.firmware,SCORE_TYPE) //Riempie DANGER
+                console.log("RANK ENDED")
+                console.log(DANGER)
 
-
-                    // //***building heatmap
-                    console.log("BUILDING HEATMAP")
-                    await buildHeatmapData(data.firmware.analysis.cve_lookup)
-                    DrawHeatmap(heatmap_data)
-                    BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
-                    console.log("HEATMAP BUILT")
-                    //console.log(heatmap_data)
+                drawDanger()
 
 
-                    // //***building peckedUI
-                    console.log("BUILDING PACKED UI")
-                    packedUI(data.firmware.analysis.unpacker.number_of_unpacked_files)
-                    console.log("PACKED UI BUILT")
-                    
-                    // //***building small multiples
-                    console.log("BUILDING SMALL MULTIPLES")
-                    drawMultipleHisto()
-                    console.log("SMALL MULTIPLES BUILT")
-                    
-                    
-                    // //***building rank
-                    console.log("BUILDING RANK")
-                    DrawRank()
-                    
-                    console.log("RANK BUILT")
-
-
-
-
-
-                })();
-            } 
+            })();
+            
         })
     }
   
     //? pulisco le var
-
-    list_response_cpu_archi=[]
-    list_response_unpacker=[]
     list_packed=[]
     list_packed_hid=[]
-  
-}
-function BuildExploitData(summ){
-    var d = {}
-    for (const key in summ) {
-        if (Object.hasOwnProperty.call(summ, key)) {
-            const element = summ[key];
-            var method = key.trim().replace(/[^A-Z]+/g, "");
-            var enordi = key.trim().replace(/[^a-z]+/g, " ");
-            if(!(method in d)){
-                d[method] = []
-            }
-            var entry = {
-                "eod":enordi,
-                "Value":element.length,
-                "UIDs":element
-                }
-            d[method].push(entry)
-            
-            //rankdanger
-            element.forEach(e => {
-                if(enordi == "disabled" && !red_danger_fo.includes(e) && !yellow_danger_fo.includes(e))
-                    yellow_danger_fo.push(e)
-            });
-        }
-    }
-    //console.log(JSON.stringify(d, null, 2))
-    return d
+    list_packed_uid = []    
 }
 
 function download(uid,contentType){
@@ -230,39 +176,4 @@ function download(uid,contentType){
     })
 }
 
-
-//!unused
-function PruneTree(fatherNode){
-    // fatherNode["mime_types"]=buildMimelist(ListMimes)
-    // fatherNode["leaves"] = 0
-    //! il problema è che devo andare fino a fondo per poter sapere e la folder è vuota oppure no, qui controllo solo se il children è == 0 ma puo essere 1 che ha un children ==00 etc-...
-    l = [] //? riempio la lista con le posizioni degli elementi da eliminare
-    for (let i = 0; i < fatherNode.children.length; i++) {
-        const child = fatherNode.children[i];
-        //console.log("child")
-        //console.log(child)
-        if(child.children.length==0){ //?se è un nodo con 0 figli, lo devo eliminare
-            l.push(i)
-        }
-    }
-    //console.log(l)
-    //? ciclo sulla lista di index, elimino l'elemento dal children e aggiorno la lista di index (perchè l'elemento successivo ha  index -1)
-    if(l.length>0){
-        for (let i = 0; i < l.length; i++) {
-            const pos = l[i];
-            fatherNode.children.splice(pos,1)
-            for (let j = 0; j < l.length; j++) {
-                l[j]--
-            }
-        }
-        
-    }
-    //console.log("lenght after "+fatherNode.children.length)
-    //? chiamata ricorsiva
-    fatherNode.children.forEach(child => {
-        //console.log("calling--> " + child.hid)
-        PruneTree(child)
-    });
-
-}
 

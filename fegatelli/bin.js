@@ -1,25 +1,133 @@
-var expandBar = function (d){
-  d3.select(this).style("stroke","black")
-  bar_locked = true 
-  var div_w = d3.select("#exploit_div").style("width")
-  var div_h = d3.select("#exploit_div").style("height")
-  console.log(div_w)
-  //d3.select("#exploit_div").transition().style("opacity","0").remove()
-  var list = d3.select("#exploit_container").append("div")
-  .attr("id","UIDs_list");
-      list.transition()
-      .style("height",div_h)
-      .style("width",div_w)
-      .style("background-color",d3.select(this).attr("fill"))
-  d.UIDs.forEach(uid => {
-      list.append("text").text(uid).style("font-size","10px")
-      list.append("br")
-  });
-  console.log(d)
-}
+    // // Add subtitle to graph
+    // svg_heatmap.append("text")
+    //         .attr("x", 0)
+    //         .attr("y", -20)
+    //         .attr("text-anchor", "left")
+    //         .style("font-size", "14px")
+    //         .style("fill", "grey")
+    //         .style("max-width", 400)
+    //         .text("A short description of the take-away message of this chart.");
+    
+function clickSquare(d){
+    // tooltip_heatmap.style("visibility", "hidden")
+    // d3.selectAll("#tooltip_big_square").remove()
+    // // create a tooltip
+    // var tooltip_big_square = d3.select("#violin_div")
+    // .append("div")
+    // .style("opacity", 0)
+    // .attr("class", "tooltip").attr("id","tooltip_big_square").style("max-width","300px").style("word-break","break-all")
+    // var mouseover = function(d) {
+    //     tooltip_big_square
+    //         .style("opacity", 1)
+    //         .style("visibility", "visible")
+    //     d3.select(this).raise().style("stroke","black");
+    // }
+    // var mousemove = function(d) {
+    //     var tail = "<br> "
+    //     if(d.attackComplexity)tail+="attack complexity: "+d.attackComplexity + "<br>"
+    //     if(d.attackVector)tail+="attack vector: "+d.attackVector+ "<br>"
+    //     if(d.baseSeverity)tail+="base severity: "+d.baseSeverity+ "<br>"
+    //     tooltip_big_square
+    //         .html("cve_code:"+d.cve_code+ "<br>score:" + d[SCORE_TYPE] + tail+ "<br>description:"+d.description)
+    //         .style('left', (d3.event.pageX + 10) + 'px')
+    //         .style('top', (d3.event.pageY + 10) + 'px')
+    //     console.log(d)
+    // }
+    // var mouseleave = function(d) {
+    //     tooltip_big_square
+    //         .style("opacity", 0)
+    //         .style("visibility", "hidden")
+    //     d3.select(this).style("stroke","grey");
+    //     //d3.select(this).style("opacity",1)
+
+    // }
 
 
 
+
+
+
+
+// var expandBar = function (d){
+//   d3.select(this).style("stroke","black")
+//   bar_locked = true 
+//   var div_w = d3.select("#exploit_div").style("width")
+//   var div_h = d3.select("#exploit_div").style("height")
+//   console.log(div_w)
+//   //d3.select("#exploit_div").transition().style("opacity","0").remove()
+//   var list = d3.select("#exploit_container").append("div")
+//   .attr("id","UIDs_list");
+//       list.transition()
+//       .style("height",div_h)
+//       .style("width",div_w)
+//       .style("background-color",d3.select(this).attr("fill"))
+//   d.UIDs.forEach(uid => {
+//       list.append("text").text(uid).style("font-size","10px")
+//       list.append("br")
+//   });
+//   console.log(d)
+// }
+
+
+
+    //   //*generate circles
+    //   if(cve_count(d,SCORE_TYPE).length>0){
+        
+    //     d3.select("#G_"+accroccanomi(d)).selectAll()
+    //       .data(cve_count(d,SCORE_TYPE)).enter()
+    //       .style("stroke", function(d){return "grey"})
+    //       .style("fill", "#fee8c8")
+    //       .attr("r", 0)
+    //       .attr("cx", x_rect+w_old/2)
+    //       .attr("cy", y_rect+h_old/2)
+    //       .on("click",function(u){
+    //           console.log(u);
+    //           var ur = "https://nvd.nist.gov/vuln/detail/"+u.cve_code
+    //           window.open(ur, '_blank').focus();
+    //         })
+    //       .on("mouseover",mouseover)
+    //       .on("mousemove", mousemove)
+    //       .on("mouseleave", mouseleave)
+    //       .transition()
+    //       .duration(1500)
+    //       .attr("r", 7)
+    //       .attr("cx", function(f){ //cerchi a caso in un raggio d'azione 
+    //             var angle = Math.random()*Math.PI*2;
+    //             var A = (Math.random() *(w/2)) * Math.cos(angle)
+    //             return w/2+A;
+    //         })
+    //        .attr("cy",function(f){
+    //             var angle = Math.random()*Math.PI*2;
+    //             var A = (Math.random() *(h/2)) * Math.sin(angle)
+    //             return h/2+A;
+    //         })
+    //       d3.selectAll("#text_cve").raise()
+    //   }
+//       
+
+     
+    //   //*expand the rect
+    //   group_selected.raise()
+    //   rect_selected.raise()
+    //     //.style("fill", function(d) { return color_heatmap(cve_count(d,SCORE_TYPE))} )
+    //     .style("fill", rect_selected.style("fill") )
+    //     .attr("rx", 4) //smoothness del rettangolo
+    //     .attr("ry", 4)
+    //     .style("opacity", 1)
+    //     .on("click",function(g){reduceSquare(g,rect_selected,x_rect,y_rect,w_old,h_old)})
+    //     .on("mouseleave",function(d){d3.select(this).style("opacity",1)})
+        
+    //     .transition()
+    //     .duration(1500)
+    //     .attr("width",w)
+    //     .attr("height",h)
+    //     .attr("x", "0")
+    //     .attr("y", "0")
+      
+
+    //     rect_selected.selectAll(".text_cve")
+    //     .data(cve_count(d,SCORE_TYPE)).enter()
+    //     .append("text").text(function(u){console.log(u);return u.cve_code}).attr("id","text_cve").raise()
 
 
 

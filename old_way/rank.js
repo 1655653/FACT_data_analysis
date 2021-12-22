@@ -42,12 +42,14 @@ function DrawRank(){
     // d3.select("#critical_fo").append("text").text("orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently wi")
     d3.select("#suspects_fo").selectAll("text.suspect").data(red_danger_fo).enter()
         .append("text")
+        .style("cursor","pointer")
         .text(function(d){return all_REST_response[d].hid}).style("width","fit-content")
         .on("click",function(d){
             details_I_II(d)
         })
     d3.select("#critical_fo").selectAll("text.critical").data(yellow_danger_fo).enter()
         .append("text")
+        .style("cursor","pointer")
         .text(function(d){return all_REST_response[d].hid}).style("width","fit-content")
         .on("click",function(d){
             details_I_II(d)

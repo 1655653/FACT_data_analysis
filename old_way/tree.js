@@ -6,7 +6,6 @@ var yellow_danger_fo = []
 //* builds the tree calling all packed/unpacked FO
 
 async function BuildTree(included_files, fatherNode, fw){ //input is list of included files of the father node
-            //*rest call of every FO
             if( included_files.length > 0){
                 promises = [];
                 included_files.forEach(function(item) {
@@ -16,7 +15,6 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                 const res_File_objects = await Promise.all(promises)
                 for(let response of res_File_objects){
                     //all_REST_response[response.data.request.uid] = response
-                    //*-------build ALL_REST_RESPONSE
                     var ioi_response = {}
                     ioi_response["hid"]= response.data.file_object.meta_data.hid
                     ioi_response["unpacker"]= response.data.file_object.analysis.unpacker
@@ -25,23 +23,25 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["size"]= response.data.file_object.meta_data.size
                     ioi_response["sw_comp"]= response.data.file_object.analysis.software_components.summary
                     ioi_response["file_type"]= response.data.file_object.analysis.file_type.full
-                    ioi_response["ex_mitig"] = response.data.file_object.analysis.exploit_mitigations.summary
-                    ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
-                    
-                   
+                    ioi_response["ex_mitig"] = []
+                    response.data.file_object.analysis.exploit_mitigations.summary.forEach(e => {
+                        t = e.split(" ")
+                        t.pop()
+                        ioi_response["ex_mitig"].push(t.join(" "))
+                    });
+                    ioi_response["danger"] = rankdanger(fw,response.data.request.uid)
 
-                    //*-------mime_lists
+                    all_REST_response[response.data.request.uid] = ioi_response
+                    
                     var m = response.data.file_object.analysis.file_type.mime
                     if(! ListMimes.includes(m)) ListMimes.push(m)
                     if(!ListSuperMimes.includes(m.split("/")[0]))ListSuperMimes.push(m.split("/")[0])
-                    
-                    //*-------build TREE
+
                     var node = {}
                     response.data.file_object.meta_data.virtual_file_path.forEach(path => {
                         //console.log(path)
                         node = {}
                         node["uid"] = response.data.request.uid
-                        node["hid"] = response.data.file_object.meta_data.hid
                         node["vi"] = path[0].split('').sort(function(){return 0.5-Math.random()}).join('')+ Math.random().toString(36).substr(2).replace(/[^\w\s]/g, '_')
                         node["vi"] = node["vi"].replace(/[^\w\s]/g, '')
                         if(list_packed && list_packed.includes(response.data.request.uid)) node["packed"] = true
@@ -63,7 +63,15 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                             
                         //console.log(Tree)
                     });
-                    
+                    node["hid"] = response.data.file_object.meta_data.hid
+                    if(list_packed){
+                        list_packed.forEach(element => {
+                            if(node["uid"]==element) {
+                                list_packed_hid.push(node["hid"])
+                                list_packed_uid.push(node["uid"])
+                            }
+                        });
+                    }
                     await BuildTree(response.data.file_object.meta_data.included_files, node, fw);
                     
                     
@@ -73,6 +81,57 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
 }
 
 
+function rankdanger(fw,uid){
+    var el = []
+    var cripto = fw.analysis.crypto_material.summary
+    for (const key in cripto) {
+        if (Object.hasOwnProperty.call(cripto, key)) {
+            const element = cripto[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("crypto")) el.push("crypto")
+            });
+        }
+    }
+    var usr_pwd = fw.analysis.users_and_passwords.summary
+    for (const key in usr_pwd) {
+        if (Object.hasOwnProperty.call(usr_pwd, key)) {
+            const element = usr_pwd[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("uap")) el.push("uap")
+            });
+        }
+    }
+    var ex_mit = fw.analysis.exploit_mitigations.summary
+    for (const key in ex_mit) {
+        if (Object.hasOwnProperty.call(ex_mit, key)) {
+            const element = ex_mit[key];
+            element.forEach(e => {
+                if(e==uid && !el.includes("explo")) el.push("explo")
+            });
+        }
+    }
+    var cve = fw.analysis.cve_lookup.summary
+    for (const key in cve) {
+        if (Object.hasOwnProperty.call(cve, key)) {
+            const element = cve[key];
+            element.forEach(e => {
+                var is_crit = e.split(" ")[0] =="(CRITICAL)"? true:false
+                if(e==uid && !el.includes("cve_is_crit "+ is_crit)) el.push("cve_is_crit "+ is_crit)
+            });
+        }
+    }
+    var pack = fw.analysis.unpacker.summary.packed
+    if(pack){
+        pack.forEach(element => {
+            if(element == uid) el.push("packed")
+        });
+    }
+
+    if(el.includes("cve_is_crit true") || el.includes("uap") || el.includes("crypto")) red_danger_fo.push(uid)
+    else if(el.includes("cve_is_crit false") || el.includes("packed")) yellow_danger_fo.push(uid)
+    return el
+
+}
 function rankfattest(uid,size){
     var el = {"uid":uid, "size": size}
     if(fattest_fo.length<BOUND_FATTEST) fattest_fo.push(el)
@@ -315,7 +374,7 @@ function resetTree(){
         document.getElementById(e.split("/")[0]).checked = false
     });
     DrawDirectory()
-    SW_COMP_CVE = JSON.parse(JSON.stringify(BackupHeatMap))
+    heatmap_data = JSON.parse(JSON.stringify(BackupHeatMap))
     
     for (const key in exploit_data) {
         if (Object.hasOwnProperty.call(exploit_data, key)) {
@@ -323,4 +382,23 @@ function resetTree(){
             d3.select("#"+key.replace(/[^A-Z]+/g, "")).transition().duration(800).style("border-color","black")
         }
     }
+}
+
+//! non funziona!!!
+function calculateFOlderSize(fatherNode){ //! non funziona!!! devo inserire questa info dentro ["size"] e non ["bytes"] perchè senno draw s'incazza, 
+    //!per ora me ne sbatto della grandezza delle folder
+
+    fatherNode.children.forEach(child => { //se entra qua ha almeno un figlio e quindi non è foglia
+                    
+        if(fatherNode.uid == "folder"){
+            fatherNode.size+=calculateFOlderSize(child)
+        }
+        else{
+            calculateFOlderSize(child)
+        }
+        
+    });
+    console.log("outfromloop: "+fatherNode.hid+" with size:"+fatherNode.size)
+    return fatherNode.size
+  
 }
