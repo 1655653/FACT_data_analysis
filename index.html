@@ -31,8 +31,17 @@
         <div id="critical_div">
           <div id="FO_name_div" class="div_column"></div>
           <div id="FO_score_div" class="div_column"></div>
-          <div id="FO_squares_div" class="div_column"></div>
+
+          <div id="FO_squares_container" class="div_column">
+            <div id="FO_titles_div" ></div>
+            <div id="FO_squares_div" class="div_column"></div>
+          </div>
+
         </div>
+        <div id="summa_critical_div">
+          <button type='button'  id='summa_expand' ><i class='fas fa-caret-down' ></i></button>
+        </div>
+
         <div id="sus_div">
           
         </div>
@@ -40,12 +49,54 @@
           
         </div>
       </div>
+
+      <div id = "extra_right_side">
+
+        <button type='button'  id='parameters_expand' ><i class='fas fa-caret-right' ></i></button>
+
+        <div id = "parameters_container">
+          <!-- <div class = "param_div">
+            <text class="param_text" > param 1</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div>
+          <div class = "param_div">
+            <text class="param_text" > param 2</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div>
+          <div class = "param_div">
+            <text class="param_text" > param 3</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div>
+          <div class = "param_div">
+            <text class="param_text" > param 4</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div>
+          <div class = "param_div">
+            <text class="param_text" > param 5</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div>
+          <div class = "param_div">
+            <text class="param_text" > param 2</text>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <text class="param_text" > 50 </text>
+          </div> -->
+        </div>
+      </div>
+
     </div>
   
 </body>
   
 <!-- <script src="data_prova.js"></script> -->
+
+<script src="fake_nist.js"></script>
 <script src="tree.js"></script>
 <script src="main.js"></script>
 <script src="cve_score_extract.js"></script>
 <script src="rankdanger.js"></script>
+<script src="extradiv.js"></script>

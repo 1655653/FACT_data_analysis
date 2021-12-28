@@ -121,13 +121,13 @@ function callFW() {
                     console.log("DIRECTORY BUILT")
 
 
-                    // //***building heatmap
-                    console.log("BUILDING HEATMAP")
-                    await buildHeatmapData(data.firmware.analysis.cve_lookup)
-                    DrawHeatmap(heatmap_data)
-                    BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
-                    console.log("HEATMAP BUILT")
-                    console.log(all_REST_response)
+                    // // //***building heatmap
+                    // console.log("BUILDING HEATMAP")
+                    // await buildHeatmapData(data.firmware.analysis.cve_lookup)
+                    // DrawHeatmap(heatmap_data)
+                    // BackupHeatMap = JSON.parse(JSON.stringify(heatmap_data))
+                    // console.log("HEATMAP BUILT")
+                    // console.log(all_REST_response)
 
 
                     // //***building peckedUI
