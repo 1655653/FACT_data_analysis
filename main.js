@@ -16,10 +16,12 @@ W_CVE_N_CRIT = 0.1
 W_USR_N_PWD = 30.0
 W_EXPLOIT = 1.5
 W_KNOWN_VULN = 5.0
-var DANGER={"system":[],"user":[]} //?e.g system.uid=score --->system.464665=10
+THRESHOLD = 25
 var CRITICAL_FO={"system":[],"user":[]}
 var SUS_FO={"system":[],"user":[]}
+var NEUTRAL_FO={"system":[],"user":[]}
 var SCORE_TYPE = "base_score"
+var DANGER={"CRITICAL_FO":CRITICAL_FO,"SUS_FO":SUS_FO,"NEUTRAL_FO":NEUTRAL_FO} //?e.g system.uid=score --->system.464665=10
 
 
 
@@ -122,9 +124,13 @@ function callFW() {
                 //*-------DANGER 
                 console.log("RANKING FOs")
                 rankdanger(data.firmware,SCORE_TYPE) //Riempie DANGER
-                drawDanger(data.firmware)
+                drawDanger()
                 console.log("RANK ENDED")
                 console.log(DANGER)
+
+                //*-----PARAMETERS
+                //*extradiv con tutti gli slider
+                extraDiv(data.firmware)
 
 
             })();

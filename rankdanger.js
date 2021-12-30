@@ -10,19 +10,29 @@ AAA_FILL = "#c80003"
 EXTRA_DIV_COLOR = "#6e747e"
 BCKGROUND_COLOR = "#4f545c"
 function rankdanger(fw,score){
-    dangerous_fo = []
+    //clean
+    //DANGER={"system":[],"user":[]} //?e.g system.uid=score --->system.464665=10
+    CRITICAL_FO={"system":[],"user":[]}
+    SUS_FO={"system":[],"user":[]}
+    NEUTRAL_FO={"system":[],"user":[]}
     for (const uid in ALL_REST_RESPONSE) {
         if (Object.hasOwnProperty.call(ALL_REST_RESPONSE, uid)) {
             const element = ALL_REST_RESPONSE[uid];
-            rankdanger_single(fw,uid,score,dangerous_fo) //Riempie DANGER
+            rankdanger_single(fw,uid,score) //Riempie DANGER
         }
     }
-    dangerous_fo.sort(function(a, b) { 
+    
+    CRITICAL_FO.system.sort(function(a, b) { 
         return b.overall - a.overall;
     })
-    DANGER.system = dangerous_fo
+    NEUTRAL_FO.system.sort(function(a, b) { 
+        return b.overall - a.overall;
+    })
+    SUS_FO.system.sort(function(a, b) { 
+        return b.overall - a.overall;
+    })
 }
-function rankdanger_single(fw,uid,score,dangerous_fo){
+function rankdanger_single(fw,uid,score){
     var CRYPTO = 0
     var cripto = fw.analysis.crypto_material.summary
     for (const key in cripto) {
@@ -77,22 +87,36 @@ function rankdanger_single(fw,uid,score,dangerous_fo){
     var KNOWN_VULN = 0
     var known_vuln = fw.analysis.known_vulnerabilities.summary
     if(Object.entries(known_vuln).length != 0) KNOWN_VULN = parseFloat(W_KNOWN_VULN)
+
+    var PACK = fw.analysis.unpacker.summary.packed
+    var is_packed = false
+    if (PACK && PACK.indexOf(uid) > -1) {
+        //In the array!
+        is_packed = true
+    } 
     var overall = parseFloat((CRYPTO+CVE+USR_N_PWD+KNOWN_VULN-EXPLOIT).toFixed(1))
-    if(overall > 0){
+    el = {
+        "uid":uid,
+        "hid":ALL_REST_RESPONSE[uid].hid,
+        "CRY":CRYPTO,
+        "CVE":CVE,
+        "UPW":USR_N_PWD,
+        "EXM":EXPLOIT,
+        "KVU":KNOWN_VULN,
+        "overall": overall,
+        "packed": is_packed //il prob è quando è true
+    }
+    
+    if(overall > THRESHOLD){
         // console.log(ALL_REST_RESPONSE[uid])
         // console.log(uid+"  CRYPTO  "+CRYPTO +"  USR_N_PWD  "+USR_N_PWD +"  EXPLOIT  "+EXPLOIT +"  CVE  "+CVE )
-        el = {
-            "uid":uid,
-            "hid":ALL_REST_RESPONSE[uid].hid,
-            "CRY":CRYPTO,
-            "CVE":CVE,
-            "UPW":USR_N_PWD,
-            "EXM":EXPLOIT,
-            "KVU":KNOWN_VULN,
-            "overall": overall
-        }
-        dangerous_fo.push(el)
+        CRITICAL_FO.system.push(el)
     }
+    else if((overall>0 && overall < THRESHOLD)||is_packed) SUS_FO.system.push(el)
+    else{
+        NEUTRAL_FO.system.push(el)
+    }
+
 }
 
 //per l'istogramma
@@ -103,8 +127,19 @@ var metric_occurrences ={
     "EXM":0,
     "KVU":0,
 }
-function drawDanger(fw){
+function drawDanger(){
+    d3.select(".refresh").selectAll("*").remove()
+    d3.select("#rightside").selectAll("text").remove()
+    drawSingleDanger("c","critical")
+    drawSingleDanger("s","sus")
+    //drawDanger("n","neutral")
+
+}
+
+function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     //*clean
+    d3.select("#FO_squares_div_"+t).selectAll("svg").remove()
+
     metric_occurrences ={
         "CRY":0,
         "CVE":0,
@@ -112,14 +147,13 @@ function drawDanger(fw){
         "EXM":0,
         "KVU":0,
     }
-    d3.select("#FO_name_div_c").selectAll("*").remove()
-    d3.select("#FO_score_div_c").selectAll("*").remove()
-    d3.select("#FO_titles_div_c").selectAll("*").remove()
-    d3.select("#FO_squares_div_c").selectAll("*").remove()
-    d3.select("#summa_critical_div").selectAll("text").remove()
-    d3.select("#summa_critical_div").selectAll("svg").remove()
+    
     var rect_dim
-    DANGER.system.forEach((fo, index) => {
+    var list_fo
+    if(t=="c") list_fo = CRITICAL_FO
+    if(t=="s") list_fo = SUS_FO
+    if(t=="n") list_fo = NEUTRAL_FO_FO
+    list_fo.system.forEach((fo, index) => {
         //* tooltip
         var tooltip_rect
         // Three function that change the tooltip when user hover / move / leave a cell
@@ -151,22 +185,24 @@ function drawDanger(fw){
             d3.select(this).attr("fill",fill_square)
         }
         //*---------- tooltip
-        var fo_name = d3.select("#FO_name_div_c").append("text").text(fo.hid).attr("class","div_column")
+        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column")
         fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
-        d3.select("#FO_score_div_c").append("text").text(fo.overall).attr("class","div_column overall").style("opacity",0).transition().duration(2500).style("opacity",1)
+        total = fo.overall
+        if(fo.packed) total = "PACKED"
+        d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").style("opacity",0).transition().duration(2500).style("opacity",1)
         
         //* rect spawn
-        var svg_rect = d3.select("#FO_squares_div_c").append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
+        var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
         rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
-        d3.select("#critical_div").style("height",(11*rect_dim)+"px")
-        d3.select("#FO_titles_div_c").style("height",rect_dim+"px")
+        d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
+        d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
         //* rect loop
         var pad = 5
         var x_rect=pad
         for (let i = 0; i < Object.keys(fo).length; i++) {
             item = Object.keys(fo)[i]
-            if(item!="hid" && item != "uid" && item != "overall"){
-                if(index==0) d3.select("#FO_titles_div_c").append("text").text(item).attr("class","acronym_title")
+            if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
+                if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
                 if(fo[item] > 0) metric_occurrences[item]++
                 stroke_color = '#000000a6'
                 svg_rect.append('rect')
@@ -201,82 +237,64 @@ function drawDanger(fw){
             }
         }
     });
-    d3.select("#critical_div").style("border-style", "solid") //appears
+    d3.select("#"+type+"_div").style("border-style", "solid") //appears
 
-    d3.select("#FO_squares_div_c").style("width",d3.select("#FO_titles_div_c").style("width"))
+    d3.select("#FO_squares_div_"+t).style("width",d3.select("#FO_titles_div_"+t).style("width"))
     
     //*per far spazio ai titoli
-    d3.select("#FO_name_div_c").append("text").text("CRITICAL").style("height",d3.select("#FO_titles_div_c").style("height")).style("width",d3.select("#FO_titles_div_c").style("width")).style("color","red").style("text-align","end").lower() 
-    d3.select("#FO_score_div_c").append("text").text("placeholder").style("height",d3.select("#FO_titles_div_c").style("height")).style("width","1px").style("visibility","hidden").lower()
+
+    var name_div
+    var color
+    if(t=="c") {name_div = "CRITICAL";color = "red"}
+    if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
+    if(t=="n") {name_div = "NEUTRAL";color = "white"}
+    d3.select("#FO_name_div_"+t).append("text").text(name_div).style("height",d3.select("#FO_titles_div_"+t).style("height")).style("width",d3.select("#FO_titles_div_"+t).style("width")).style("color",color).style("text-align","end").lower() 
+    d3.select("#FO_score_div_"+t).append("text").text("placeholder").style("height",d3.select("#FO_titles_div_"+t).style("height")).style("width","1px").style("visibility","hidden").lower()
     
     //*accetta
-    d3.select("#FO_name_div_c").selectAll("text").text(function(d){
+    d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
         text = d3.select(this).text()
         wi_text = d3.select(this).style("width")
-        wi_div = d3.select("#FO_name_div_c").style("width")
+        wi_div = d3.select("#FO_name_div_"+t).style("width")
         if(text.length>15){
             text = text.substring(text.length-15,text.length)
         }
         return text
     })
-    console.log(metric_occurrences)
+    //console.log(metric_occurrences)
+    console.log(list_fo)
     
     //* draw istogramma 
-    d3.select("#summa_expand_c").style("visibility","visible")
-    summaExpand(rect_dim)
-    d3.select("#summa_expand_c").on("click",function(d){
-        summaExpand(rect_dim)
+    d3.select("#summa_expand_"+t).style("visibility","visible")
+    //summaExpand(rect_dim,t,type)
+    pad = 20 //from name
+    w = getDimFloat("FO_name_div_"+t,"width") 
+    d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
+    d3.select("#summa_expand_"+t).on("click",function(d){
+        summaExpand(rect_dim,t,type)
     })
     //* text total files
-    d3.select("#summa_critical_div").append("text").text("Found "+ DANGER.system.length +" critical files").style("position","absolute").lower()
+    d3.select("#summa_"+type+"_div").append("text").text("Found "+ list_fo.system.length +" "+ type +" files").style("position","absolute").lower()
 
-    //*extradiv con tutti gli slider
-    
-    rotateLabel("0","90",0)
-    d3.select("#parameters_expand").style("visibility","visible")
-    d3.select("#param_label").style("visibility","visible")//.attr("transform","rotate(90)")
-    d3.select("#parameters_expand").on("click",function(d){
-        var is_down = d3.select("#parameters_expand").select("i").attr("class") == "fas fa-caret-right"? true:false
-        if(is_down) {//apri tutto
-            //sarebbe carina n'animazione
-            rotateLabel("90","0",1000)
-            d3.select("#appendix").style("flex-direction","row")
-            d3.select("#parameters_container").style("display","block")
-            d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-left")
-            d3.select("#extra_right_side").style("background",EXTRA_DIV_COLOR).style("border","solid 1px")
-        }
-        else{//chiudi tutto
-            rotateLabel("0","90",1000)
-            d3.select("#appendix").style("flex-direction","column")
-            d3.select("#parameters_container").style("display","none")
-            d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-right")
-            d3.select("#extra_right_side").style("background",BCKGROUND_COLOR).style("border","none")
-        }
-    })
-    //* make extradiv interactive
-    extraDivLogic(fw)
 }
 
 //*draw histogram when expanded
-function summaExpand(rect_dim){
-    pad = 20 //from name
-    w = getDimFloat("FO_name_div_c","width") 
-    d3.select("#summa_expand_c").style("margin-left",(w+pad)+"px")
-
-    var is_down = d3.select("#summa_expand_c").select("i").attr("class") == "fas fa-caret-down"? true:false
+function summaExpand(rect_dim,t,type){
+    var is_down = d3.select("#summa_expand_"+t).select("i").attr("class") == "fas fa-caret-down"? true:false
+    console.log(is_down)
     if(is_down) {
-        drawHistogramSumma(rect_dim)
-        d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-up")
+        drawHistogramSumma(rect_dim,t,type)
+        d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-up")
     }
     else{
-        d3.select("#summa_critical_div").select("svg").remove()
-        d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-down")
+        d3.select("#summa_"+type+"_div").select("svg").remove()
+        d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-down")
     }
 }
 //*draw histogram
-function drawHistogramSumma(rect_dim){
+function drawHistogramSumma(rect_dim,t,type){
     let margin = {top: 20, right: 0, bottom: 15, left: 0};
-    let svgWidth = getDimFloat("FO_squares_div_c","width"), svgHeight = rect_dim*5;
+    let svgWidth = getDimFloat("FO_squares_div_"+t,"width"), svgHeight = rect_dim*5;
     let height = svgHeight- margin.top- margin.bottom, width = svgWidth - margin.left - margin.right;
     let sourceNames = [], sourceCount = [];
     
@@ -291,10 +309,10 @@ function drawHistogramSumma(rect_dim){
     x.domain(sourceNames);
     y.domain([0, d3.max(sourceCount, function(d) { return d; })]);
     
-    let svg_histo = d3.select("#summa_critical_div").append("svg");
+    let svg_histo = d3.select("#summa_"+type+"_div").append("svg");
     var pad  = 5 //from score
-    w = getDimFloat("FO_name_div_c","width") + getDimFloat("FO_score_div_c","width")
-    svg_histo.style("margin-left",(w+pad)+"px")
+    w = getDimFloat("FO_name_div_"+t,"width") + getDimFloat("FO_score_div_"+t,"width")
+    //svg_histo.style("margin-left",(w+pad)+"px")
     //square_bound = document.getElementById("FO_squares_div_c").getBoundingClientRect();
     //svg_histo.attr("transform", "translate("+ (square_bound.x - pad)+",0)")
 

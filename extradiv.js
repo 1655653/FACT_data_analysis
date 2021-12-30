@@ -5,10 +5,35 @@
 // W_EXPLOIT = 1.5
 // W_KNOWN_VULN = 5.0
 //SCORE_TYPE = "base_score"
-
+function extraDiv(fw){
+    rotateLabel("0","90",0)
+    d3.select("#parameters_expand").style("visibility","visible")
+    d3.select("#param_label").style("visibility","visible")//.attr("transform","rotate(90)")
+    d3.select("#parameters_expand").on("click",function(d){
+        var is_down = d3.select("#parameters_expand").select("i").attr("class") == "fas fa-caret-right"? true:false
+        if(is_down) {//apri tutto
+            //sarebbe carina n'animazione
+            rotateLabel("90","0",1000)
+            d3.select("#appendix").style("flex-direction","row")
+            d3.select("#parameters_container").style("display","block")
+            d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-left")
+            d3.select("#extra_right_side").style("background",EXTRA_DIV_COLOR).style("border","solid 1px")
+        }
+        else{//chiudi tutto
+            rotateLabel("0","90",1000)
+            d3.select("#appendix").style("flex-direction","column")
+            d3.select("#parameters_container").style("display","none")
+            d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-right")
+            d3.select("#extra_right_side").style("background",BCKGROUND_COLOR).style("border","none")
+        }
+    })
+    
+    //* make extradiv interactive
+    extraDivLogic(fw)
+}
 function extraDivLogic(fw){
-    parameters = [W_CRYPTO,W_CVE_CRIT, W_CVE_N_CRIT,SCORE_TYPE,W_USR_N_PWD,W_EXPLOIT,W_KNOWN_VULN]
-    param_str = ["W_CRYPTO","W_CVE_CRIT", "W_CVE_N_CRIT","SCORE_TYPE","W_USR_N_PWD","W_EXPLOIT","W_KNOWN_VULN"]
+    parameters = [W_CRYPTO,W_CVE_CRIT, W_CVE_N_CRIT,SCORE_TYPE,W_USR_N_PWD,W_EXPLOIT,W_KNOWN_VULN,THRESHOLD]
+    param_str = ["W_CRYPTO","W_CVE_CRIT", "W_CVE_N_CRIT","SCORE_TYPE","W_USR_N_PWD","W_EXPLOIT","W_KNOWN_VULN","THRESHOLD"]
     d3.select("#parameters_container").selectAll("div").remove("*")
     parameters.forEach((param,index) => {
         par_div = d3.select("#parameters_container").append("div").attr("class","param_div")
@@ -47,6 +72,7 @@ function extraDivLogic(fw){
             score_cont.append("button").text("exploitability").style("width","fit-content")
         }
     });
+
     bottom = d3.select("#parameters_container").append("div").attr("id","reset_start_container")
     bottom.append("button").text("reset").style("width","fit-content").style("margin-right","10px").on("click",function(d){
         W_CRYPTO = 30.0
@@ -56,9 +82,10 @@ function extraDivLogic(fw){
         W_EXPLOIT = 1.5
         W_KNOWN_VULN = 5.0
         SCORE_TYPE = "base_score"
-        extraDivLogic()
+        THRESHOLD = 25
+        extraDivLogic(fw)
         rankdanger(fw,SCORE_TYPE)
-        drawDanger(fw)
+        drawDanger()
         rotateLabel("90","0",0)
     })
     bottom.append("button").text("apply").style("width","fit-content").on("click",function(d){

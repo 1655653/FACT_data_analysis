@@ -24,6 +24,7 @@ body {
 #extra_right_side{
   margin-left: 5px;
   border-radius: 2px;
+  font-size: 15px;
 }
 #parameters_expand{
   visibility: hidden;
@@ -70,6 +71,15 @@ body {
   border-radius: 5px;
   border-width: 2px;
 }
+#sus_div{
+  display: flex;
+  overflow: auto;
+  /* border-style: solid; all'inizio non lo metto cosi è invisibile*/
+  border-color: whitesmoke;
+  border-radius: 5px;
+  border-width: 2px;
+  margin-top:5px;
+}
 
 .div_column{
   display: flex;
@@ -81,7 +91,7 @@ body {
   margin-left: 20px;
 }
 
-#FO_titles_div_c{
+.FO_titles_div{
   display: flex;
   flex-direction: row;
   width: fit-content;
@@ -93,9 +103,8 @@ body {
   margin-left: 2px;
 }
 
-#summa_expand_c{
+.summa_expand{
   visibility: hidden;
-  position: absolute;
 }
 
 .tooltip_danger{
