@@ -11,8 +11,8 @@ var BackupTree = {}
 var SW_COMP_CVE=[] //? collezione di tutte le cve
 //* danger algoritm vars
 W_CRYPTO = 30.0
-W_CVE_CRIT = 15.0
-W_CVE_N_CRIT = 10.0
+W_CVE_CRIT = 0.2
+W_CVE_N_CRIT = 0.1
 W_USR_N_PWD = 30.0
 W_EXPLOIT = 1.5
 W_KNOWN_VULN = 5.0
@@ -114,18 +114,17 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                // await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                SW_COMP_CVE = FAKE_NIST_CALL
+                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
+                //SW_COMP_CVE = FAKE_NIST_CALL
                 console.log("NIST RESPONDED WITH ALL CVE")
                 //console.log(SW_COMP_CVE)
 
                 //*-------DANGER 
                 console.log("RANKING FOs")
                 rankdanger(data.firmware,SCORE_TYPE) //Riempie DANGER
+                drawDanger(data.firmware)
                 console.log("RANK ENDED")
                 console.log(DANGER)
-
-                drawDanger()
 
 
             })();

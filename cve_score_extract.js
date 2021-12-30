@@ -78,7 +78,7 @@ async function buildSWComponentWithCVE(cve_lookup){
             }
         }
     }
-    console.log(JSON.stringify(SW_COMP_CVE, null, 2))
+    //console.log(JSON.stringify(SW_COMP_CVE, null, 2))
     //console.log(heatmap_data)
 
 

@@ -20,8 +20,24 @@ body {
   width: 20%;
 }
 /** parametri dell'algo con gli slider */
+
+#extra_right_side{
+  margin-left: 5px;
+  border-radius: 2px;
+}
 #parameters_expand{
   visibility: hidden;
+  width: fit-content;
+}
+#appendix{
+  display: flex;
+  flex-direction: column;
+}
+#param_label{
+    /* transform: rotate(90deg); */
+    visibility: hidden;
+    transform-origin: left;
+    margin-left: 10px;
 }
 #parameters_container{
   display: none;
@@ -29,6 +45,9 @@ body {
 .param_div{
   display: flex;
   flex-direction: column;
+  border: solid 1px;
+  border-radius: 2px;
+  margin: 5px;
 }
 .param_text{
   text-align: center;
@@ -38,10 +57,14 @@ body {
   flex-direction: row;
   width: fit-content;
 }
+#reset_start_container{
+  display: flex;
+  justify-content: center;
+}
 /** CRITICAL DIV */
 #critical_div{
   display: flex;
-  overflow-y: auto;
+  overflow: auto;
   /* border-style: solid; all'inizio non lo metto cosi è invisibile*/
   border-color: whitesmoke;
   border-radius: 5px;

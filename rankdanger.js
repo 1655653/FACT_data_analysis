@@ -7,6 +7,8 @@ P+Cry+CVE-E
 Tutti i packed vanno tra i suspicious*/
 EXM_FILL = "#83cd4b"
 AAA_FILL = "#c80003"
+EXTRA_DIV_COLOR = "#6e747e"
+BCKGROUND_COLOR = "#4f545c"
 function rankdanger(fw,score){
     dangerous_fo = []
     for (const uid in ALL_REST_RESPONSE) {
@@ -27,7 +29,7 @@ function rankdanger_single(fw,uid,score,dangerous_fo){
         if (Object.hasOwnProperty.call(cripto, key)) {
             const element = cripto[key];
             element.forEach(e => {
-                if(e==uid) CRYPTO +=  W_CRYPTO
+                if(e==uid) CRYPTO +=  parseFloat(W_CRYPTO)
             });
         }
     }
@@ -37,7 +39,7 @@ function rankdanger_single(fw,uid,score,dangerous_fo){
         if (Object.hasOwnProperty.call(usr_pwd, key)) {
             const element = usr_pwd[key];
             element.forEach(e => {
-                if(e==uid) USR_N_PWD += W_USR_N_PWD
+                if(e==uid) USR_N_PWD += parseFloat(W_USR_N_PWD)
             });
         }
     }
@@ -55,15 +57,17 @@ function rankdanger_single(fw,uid,score,dangerous_fo){
             });
         }
     }
-    EXPLOIT *= W_EXPLOIT
+    EXPLOIT *= W_EXPLOIT/2
 
     var CVE = 0
     var cpe = SW_COMP_CVE
+
     cpe.forEach(e => {
-        var w_cve = e.cpe_name.split(" ")[0] =="(CRITICAL)"? W_CVE_CRIT:W_CVE_N_CRIT
+        var w_cve = e.cpe_name.split(" ").at(-1) =="(CRITICAL)"? W_CVE_CRIT:W_CVE_N_CRIT
+        
         e.uid_affected.forEach(u => {
             if(u==uid) {
-                CVE+= e[score]* cve_count(e,SCORE_TYPE).length / w_cve
+                CVE+= parseFloat(e[score]* cve_count(e,SCORE_TYPE).length *w_cve)
                 //console.log(e)
             }
         });
@@ -72,7 +76,7 @@ function rankdanger_single(fw,uid,score,dangerous_fo){
 
     var KNOWN_VULN = 0
     var known_vuln = fw.analysis.known_vulnerabilities.summary
-    if(Object.entries(known_vuln).length != 0) KNOWN_VULN = W_KNOWN_VULN
+    if(Object.entries(known_vuln).length != 0) KNOWN_VULN = parseFloat(W_KNOWN_VULN)
     var overall = parseFloat((CRYPTO+CVE+USR_N_PWD+KNOWN_VULN-EXPLOIT).toFixed(1))
     if(overall > 0){
         // console.log(ALL_REST_RESPONSE[uid])
@@ -99,7 +103,21 @@ var metric_occurrences ={
     "EXM":0,
     "KVU":0,
 }
-function drawDanger(){
+function drawDanger(fw){
+    //*clean
+    metric_occurrences ={
+        "CRY":0,
+        "CVE":0,
+        "UPW":0,
+        "EXM":0,
+        "KVU":0,
+    }
+    d3.select("#FO_name_div").selectAll("*").remove()
+    d3.select("#FO_score_div").selectAll("*").remove()
+    d3.select("#FO_titles_div").selectAll("*").remove()
+    d3.select("#FO_squares_div").selectAll("*").remove()
+    d3.select("#summa_critical_div").selectAll("text").remove()
+    d3.select("#summa_critical_div").selectAll("svg").remove()
     var rect_dim
     DANGER.system.forEach((fo, index) => {
         //* tooltip
@@ -142,7 +160,7 @@ function drawDanger(){
         rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
         d3.select("#critical_div").style("height",(11*rect_dim)+"px")
         d3.select("#FO_titles_div").style("height",rect_dim+"px")
-        
+        //* rect loop
         var pad = 5
         var x_rect=pad
         for (let i = 0; i < Object.keys(fo).length; i++) {
@@ -189,7 +207,7 @@ function drawDanger(){
     
     //*per far spazio ai titoli
     d3.select("#FO_name_div").append("text").text("CRITICAL").style("height",d3.select("#FO_titles_div").style("height")).style("width",d3.select("#FO_titles_div").style("width")).style("color","red").style("text-align","end").lower() 
-    d3.select("#FO_score_div").append("text").text("placeholder").style("height",d3.select("#FO_titles_div").style("height")).style("width","1px").style("visibility","hidden").style("font-size","10px").lower()
+    d3.select("#FO_score_div").append("text").text("placeholder").style("height",d3.select("#FO_titles_div").style("height")).style("width","1px").style("visibility","hidden").lower()
     
     //*accetta
     d3.select("#FO_name_div").selectAll("text").text(function(d){
@@ -213,22 +231,32 @@ function drawDanger(){
     d3.select("#summa_critical_div").append("text").text("Found "+ DANGER.system.length +" critical files").style("position","absolute").lower()
 
     //*extradiv con tutti gli slider
+    
+    rotateLabel("0","90",0)
     d3.select("#parameters_expand").style("visibility","visible")
+    d3.select("#param_label").style("visibility","visible")//.attr("transform","rotate(90)")
     d3.select("#parameters_expand").on("click",function(d){
         var is_down = d3.select("#parameters_expand").select("i").attr("class") == "fas fa-caret-right"? true:false
-        if(is_down) {
-           //sarebbe carina n-animazione
+        if(is_down) {//apri tutto
+            //sarebbe carina n'animazione
+            rotateLabel("90","0",1000)
+            d3.select("#appendix").style("flex-direction","row")
             d3.select("#parameters_container").style("display","block")
             d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-left")
+            d3.select("#extra_right_side").style("background",EXTRA_DIV_COLOR).style("border","solid 1px")
         }
-        else{
+        else{//chiudi tutto
+            rotateLabel("0","90",1000)
+            d3.select("#appendix").style("flex-direction","column")
             d3.select("#parameters_container").style("display","none")
             d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-right")
+            d3.select("#extra_right_side").style("background",BCKGROUND_COLOR).style("border","none")
         }
     })
     //* make extradiv interactive
-    extraDivLogic()
+    extraDivLogic(fw)
 }
+
 //*draw histogram when expanded
 function summaExpand(rect_dim){
     pad = 20 //from name
@@ -331,6 +359,17 @@ function drawHistogramSumma(rect_dim){
 
 
 //*utils
+function rotateLabel(s,e,d){
+    var startTranslateState = 'rotate('+s+'deg)';
+    var endTranslateState = 'rotate('+e+'deg)';
+    var translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
+    d3.select("#param_label")
+        .transition()
+        .duration(d)
+        .styleTween('transform', function (d) {
+            return translateInterpolator;
+        });
+}
 function cve_count(d,type){
     switch (type) {
         case "base_score":
