@@ -81,7 +81,7 @@ body {
   margin-left: 20px;
 }
 
-#FO_titles_div{
+#FO_titles_div_c{
   display: flex;
   flex-direction: row;
   width: fit-content;
@@ -93,7 +93,7 @@ body {
   margin-left: 2px;
 }
 
-#summa_expand{
+#summa_expand_c{
   visibility: hidden;
   position: absolute;
 }

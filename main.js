@@ -114,8 +114,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                //SW_COMP_CVE = FAKE_NIST_CALL
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
+                SW_COMP_CVE = FAKE_NIST_CALL
                 console.log("NIST RESPONDED WITH ALL CVE")
                 //console.log(SW_COMP_CVE)
 
