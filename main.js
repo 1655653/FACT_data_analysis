@@ -117,7 +117,7 @@ function callFW() {
                 //*-------CVE 
                 console.log("ASKING NIST")
                 //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                SW_COMP_CVE = FAKE_NIST_CALL
+                SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
                 console.log("NIST RESPONDED WITH ALL CVE")
                 //console.log(SW_COMP_CVE)
 
@@ -143,6 +143,7 @@ function callFW() {
     list_packed_hid=[]
     list_packed_uid = []    
 }
+
 
 function download(uid,contentType){
     var urldw = endpoint+"binary/"+uid

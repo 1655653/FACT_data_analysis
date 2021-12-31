@@ -281,7 +281,6 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
 //*draw histogram when expanded
 function summaExpand(rect_dim,t,type){
     var is_down = d3.select("#summa_expand_"+t).select("i").attr("class") == "fas fa-caret-down"? true:false
-    console.log(is_down)
     if(is_down) {
         drawHistogramSumma(rect_dim,t,type)
         d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-up")

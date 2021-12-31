@@ -6,31 +6,48 @@
 // W_KNOWN_VULN = 5.0
 //SCORE_TYPE = "base_score"
 function extraDiv(fw){
+    var ex_w = getDimFloat("extra_right_side","width")    
+    var pad = 10
+    var rs_right = getDimFloat("extra_right_side","width") + pad
+    d3.select("#rightside").style("right",rs_right+"px")
     rotateLabel("0","90",0)
     d3.select("#parameters_expand").style("visibility","visible")
-    d3.select("#param_label").style("visibility","visible")//.attr("transform","rotate(90)")
+    d3.select("#param_label").style("visibility","visible")
     d3.select("#parameters_expand").on("click",function(d){
         var is_down = d3.select("#parameters_expand").select("i").attr("class") == "fas fa-caret-right"? true:false
         if(is_down) {//apri tutto
             //sarebbe carina n'animazione
             rotateLabel("90","0",1000)
             d3.select("#appendix").style("flex-direction","row")
-            d3.select("#parameters_container").style("display","block")
             d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-left")
+            d3.select("#parameters_container").style("visibility","visible")
+            d3.select("#parameters_container").transition().duration(1000).style("width","200px")
             d3.select("#extra_right_side").style("background",EXTRA_DIV_COLOR).style("border","solid 1px")
+            //? senza sta parte i parametri overlappano rightside
+            // rs_right = getDimFloat("extra_right_side","width") + pad
+            // d3.select("#rightside").style("right",rs_right+"px")
+            
+            
         }
         else{//chiudi tutto
             rotateLabel("0","90",1000)
             d3.select("#appendix").style("flex-direction","column")
-            d3.select("#parameters_container").style("display","none")
             d3.select("#parameters_expand").select("i").attr("class","fas fa-caret-right")
             d3.select("#extra_right_side").style("background",BCKGROUND_COLOR).style("border","none")
+            d3.select("#parameters_container").style("visibility","hidden")
+            d3.select("#parameters_container").transition().duration(1000).style("width","0px")
+            //? senza sta parte i parametri overlappano rightside  
+            // rs_right = getDimFloat("extra_right_side","width") + pad
+            // d3.select("#rightside").style("right",rs_right+"px")          
         }
     })
     
     //* make extradiv interactive
     extraDivLogic(fw)
 }
+    
+//     //* make extradiv interactive
+
 function extraDivLogic(fw){
     parameters = [W_CRYPTO,W_CVE_CRIT, W_CVE_N_CRIT,SCORE_TYPE,W_USR_N_PWD,W_EXPLOIT,W_KNOWN_VULN,THRESHOLD]
     param_str = ["W_CRYPTO","W_CVE_CRIT", "W_CVE_N_CRIT","SCORE_TYPE","W_USR_N_PWD","W_EXPLOIT","W_KNOWN_VULN","THRESHOLD"]
@@ -92,6 +109,7 @@ function extraDivLogic(fw){
         rankdanger(fw,SCORE_TYPE) //Riempie DANGER
         drawDanger(fw)
         rotateLabel("90","0",0)
+        d3.select("#parameters_expand").dispatch('click')
 
     })
 }
