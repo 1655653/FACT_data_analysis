@@ -26,7 +26,7 @@ function rankdanger(fw,score){
         return b.overall - a.overall;
     })
     NEUTRAL_FO.system.sort(function(a, b) { 
-        return b.overall - a.overall;
+        return d3.ascending(a.hid, b.hid);
     })
     SUS_FO.system.sort(function(a, b) { 
         return b.overall - a.overall;
@@ -128,18 +128,36 @@ var metric_occurrences ={
     "KVU":0,
 }
 function drawDanger(){
+    d3.select("#search_bar_FO").remove()
     d3.select(".refresh").selectAll("*").remove()
     d3.select("#rightside").selectAll("text").remove()
     drawSingleDanger("c","critical")
     drawSingleDanger("s","sus")
-    //drawDanger("n","neutral")
+    drawSingleDanger("n","neutral")
+    buildSearchBar()
+   }
 
+metric_occurrences_list = []
+function drawNeutral(t){
+    d3.select("#FO_name_div_"+t).selectAll("*").remove()
+    d3.select("#FO_name_div_"+t).append("text").text("OTHERS")
+        .style("color","black")
+        .style("margin-left","25px")
+        .lower() 
+        .attr("class","no_search")
+    NEUTRAL_FO.system.forEach((fo, index) => {
+        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/.]/g,"_"))
+        fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+    })
+    d3.select("#neutral_div").style("border-style", "solid") //appears
 }
-
 function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     //*clean
     d3.select("#FO_squares_div_"+t).selectAll("svg").remove()
-
+    if(t =="n") {
+        drawNeutral(t)
+        return
+    }
     metric_occurrences ={
         "CRY":0,
         "CVE":0,
@@ -147,12 +165,12 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         "EXM":0,
         "KVU":0,
     }
-    
+    metric_occurrences_list[tToIndex(t)] = metric_occurrences
     var rect_dim
     var list_fo
     if(t=="c") list_fo = CRITICAL_FO
     if(t=="s") list_fo = SUS_FO
-    if(t=="n") list_fo = NEUTRAL_FO_FO
+    // if(t=="n") list_fo = NEUTRAL_FO
     list_fo.system.forEach((fo, index) => {
         //* tooltip
         var tooltip_rect
@@ -185,11 +203,14 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             d3.select(this).attr("fill",fill_square)
         }
         //*---------- tooltip
-        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column")
+        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/.]/g,"_"))
         fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
         total = fo.overall
         if(fo.packed) total = "PACKED"
-        d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").style("opacity",0).transition().duration(2500).style("opacity",1)
+        d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/.]/g,"_"))
+            .style("opacity",0)
+            .transition().duration(2500)
+            .style("opacity",1)
         
         //* rect spawn
         var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
@@ -238,6 +259,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         }
     });
     d3.select("#"+type+"_div").style("border-style", "solid") //appears
+    d3.select("#rightside").style("border-style", "solid") //appears
 
     d3.select("#FO_squares_div_"+t).style("width",d3.select("#FO_titles_div_"+t).style("width"))
     
@@ -248,8 +270,19 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     if(t=="c") {name_div = "CRITICAL";color = "red"}
     if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
     if(t=="n") {name_div = "NEUTRAL";color = "white"}
-    d3.select("#FO_name_div_"+t).append("text").text(name_div).style("height",d3.select("#FO_titles_div_"+t).style("height")).style("width",d3.select("#FO_titles_div_"+t).style("width")).style("color",color).style("text-align","end").lower() 
-    d3.select("#FO_score_div_"+t).append("text").text("placeholder").style("height",d3.select("#FO_titles_div_"+t).style("height")).style("width","1px").style("visibility","hidden").lower()
+    d3.select("#FO_name_div_"+t).append("text").text(name_div)
+        .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+        .style("width",d3.select("#FO_titles_div_"+t).style("width"))
+        .style("color",color)
+        .style("text-align","end")
+        .lower() 
+        .attr("class","no_search")
+    d3.select("#FO_score_div_"+t).append("text").text("placeholder")
+        .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+        .style("width","1px")
+        .style("visibility","hidden")
+        .lower()
+        .attr("class","no_search")
     
     //*accetta
     d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
@@ -269,6 +302,10 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     //summaExpand(rect_dim,t,type)
     pad = 20 //from name
     w = getDimFloat("FO_name_div_"+t,"width") 
+    if (w == 0){
+        if(t == "s")   w = getDimFloat("FO_name_div_c","width") 
+        if(t == "c")   w = getDimFloat("FO_name_div_s","width") 
+    }
     d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
     d3.select("#summa_expand_"+t).on("click",function(d){
         summaExpand(rect_dim,t,type)
@@ -292,6 +329,8 @@ function summaExpand(rect_dim,t,type){
 }
 //*draw histogram
 function drawHistogramSumma(rect_dim,t,type){
+    console.log(metric_occurrences_list)
+    metric_occurrences = metric_occurrences_list[tToIndex(t)]
     let margin = {top: 20, right: 0, bottom: 15, left: 0};
     let svgWidth = getDimFloat("FO_squares_div_"+t,"width"), svgHeight = rect_dim*5;
     let height = svgHeight- margin.top- margin.bottom, width = svgWidth - margin.left - margin.right;
@@ -376,6 +415,18 @@ function drawHistogramSumma(rect_dim,t,type){
 
 
 //*utils
+function tToIndex(t){
+    switch (t) {
+        case "c":
+            return 0
+        case "s":
+            return 1
+        case "n":
+            return 2
+    
+      
+    }
+}
 function rotateLabel(s,e,d){
     var startTranslateState = 'rotate('+s+'deg)';
     var endTranslateState = 'rotate('+e+'deg)';

@@ -23,8 +23,9 @@ body {
   position: absolute;
   top:30px;
   margin: 5px;
-  border: solid;
-  padding: 5px
+  padding: 5px;
+  max-width: 25%;
+  
 }
 /** parametri dell'algo con gli slider */
 
@@ -92,7 +93,17 @@ body {
   border-width: 2px;
   margin-top:5px;
 }
-
+#neutral_div{
+  display: flex;
+  overflow: auto;
+  border-color: whitesmoke;
+  border-radius: 2px;
+  border-width: 2px;
+  margin-top: 5px;
+  max-height: 228.8px;
+  overflow-x: hidden;
+  /* border-style: solid; all'inizio non lo metto cosi è invisibile*/
+}
 .div_column{
   display: flex;
   flex-direction: column;
@@ -126,4 +137,11 @@ body {
   border-radius: 5px;
   padding: 5px;
   position: absolute;
+}
+#search_bar_FO{
+  margin-top: 15px;
+  font-size: 13px;
+  max-height:17px;
+  resize:none;
+  /* color: #00000029; */
 }
