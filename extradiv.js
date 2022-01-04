@@ -110,11 +110,16 @@ function extraDivLogic(fw){
         drawDanger(fw)
         rotateLabel("90","0",0)
         d3.select("#parameters_expand").dispatch('click')
-
+        
         d3.select("#summa_critical_div").select("svg").remove()
         d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-down")
         d3.select("#summa_sus_div").select("svg").remove()
         d3.select("#summa_expand_s").select("i").attr("class","fas fa-caret-down")
+        d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
+        d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
+
+
+        
         
 
     })

@@ -91,7 +91,7 @@ body {
   border-color: whitesmoke;
   border-radius: 2px;
   border-width: 2px;
-  margin-top:5px;
+  margin-top:25px;
 }
 #neutral_div{
   display: flex;
@@ -99,7 +99,7 @@ body {
   border-color: whitesmoke;
   border-radius: 2px;
   border-width: 2px;
-  margin-top: 5px;
+  margin-top: 25px;
   max-height: 228.8px;
   overflow-x: hidden;
   /* border-style: solid; all'inizio non lo metto cosi è invisibile*/
@@ -128,6 +128,7 @@ body {
 
 .summa_expand{
   visibility: hidden;
+  position: absolute;
 }
 
 .tooltip_danger{

@@ -11,6 +11,8 @@ function buildSearchBar(){
     })
     .on("keyup",function(d){ 
         var v = d3.select(this).property("value")
+        if(v.slice(-1)==".")
+            v = v.slice(0, -1) + '_EXTENSION_';
         if(v == "") {
             drawDanger()
             d3.select("#summa_sus_div").style("display","block")
@@ -45,6 +47,7 @@ function removeNotMatchedFrom(div,v,e){
     rem = d3.select(div).selectAll(el).filter(function() {
         if (e == "square") {
             id = ALL_REST_RESPONSE[d3.select(this).attr("id")].hid
+            v = v.replace("_EXTENSION_",".")
             return !id.startsWith(v);
         }
         else{

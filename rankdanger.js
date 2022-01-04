@@ -138,22 +138,10 @@ function drawDanger(){
    }
 
 metric_occurrences_list = []
-function drawNeutral(t){
-    d3.select("#FO_name_div_"+t).selectAll("*").remove()
-    d3.select("#FO_name_div_"+t).append("text").text("OTHERS")
-        .style("color","black")
-        .style("margin-left","25px")
-        .lower() 
-        .attr("class","no_search")
-    NEUTRAL_FO.system.forEach((fo, index) => {
-        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/.]/g,"_"))
-        fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
-    })
-    d3.select("#neutral_div").style("border-style", "solid") //appears
-}
+
 function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
-    //*clean
     d3.select("#FO_squares_div_"+t).selectAll("svg").remove()
+    //*draw_neutral
     if(t =="n") {
         drawNeutral(t)
         return
@@ -171,148 +159,207 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     if(t=="c") list_fo = CRITICAL_FO
     if(t=="s") list_fo = SUS_FO
     // if(t=="n") list_fo = NEUTRAL_FO
-    list_fo.system.forEach((fo, index) => {
-        //* tooltip
-        var tooltip_rect
-        // Three function that change the tooltip when user hover / move / leave a cell
-        var mouseover = function(d) {
-            tooltip_rect = d3.select("#FO_squares_div_c")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip_danger")
-            tooltip_rect.style("opacity", 1)
-            d3.select(this).style("opacity", 1)
-        }
-        var mousemove = function(d) {
-            console.log(d3.select(this).attr("id"))
-            tooltip_rect
-            .html("info_tooltip")
-            .style('left', (d3.event.pageX + 10) + 'px')
-            .style('top', (d3.event.pageY + 10) + 'px')
-        }
-        var mouseleave = function(d) {
-            tooltip_rect.style("opacity", 0)
-            d3.select(this).style("opacity", 0.8)
-            
-            d3.select(".tooltip_danger").remove()
-        }
-        var clicked = function(d) {
-            id = d3.select(this).attr("id")
-            metric = id.split("_")[0]
-            var fill_square = metric == "EXM"? fill_square = EXM_FILL : fill_square = AAA_FILL
-            d3.select(this).attr("fill",fill_square)
-        }
-        //*---------- tooltip
-        var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/.]/g,"_"))
-        fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
-        total = fo.overall
-        if(fo.packed) total = "PACKED"
-        d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/.]/g,"_"))
-            .style("opacity",0)
-            .transition().duration(2500)
-            .style("opacity",1)
-        
-        //* rect spawn
-        var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
-        rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
-        d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
-        d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
-        //* rect loop
-        var pad = 5
-        var x_rect=pad
-        for (let i = 0; i < Object.keys(fo).length; i++) {
-            item = Object.keys(fo)[i]
-            if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
-                if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
-                if(fo[item] > 0) metric_occurrences[item]++
-                stroke_color = '#000000a6'
-                svg_rect.append('rect')
-                .attr('stroke-width', '2px')
-                .attr('fill', function(d){
-                    if(fo[item] > 0 && item!="EXM") {
-                        stroke_color = AAA_FILL
-                        return stroke_color
-                    }
-                    else if(fo[item] > 0 && item=="EXM") {
-                        stroke_color = EXM_FILL
-                        return stroke_color
-                    }
-                    return "#ffffff00"
-                })
-                .attr('stroke', stroke_color )
-                .attr("id",item+"_"+fo.uid)
-                .attr("x",0)
-                .attr("y",1)
-                .attr("rx",4)
-                .style("opacity", 0.8)
-                // .on("mouseover", mouseover)
-                // .on("mousemove", mousemove)
-                // .on("mouseleave", mouseleave)
-                //.on("click",clicked)
-                .transition().duration(1500)
-                .attr("x",x_rect)
-                .attr('width', rect_dim)
-                .attr('height', rect_dim)
-                
-                x_rect+= rect_dim + pad
+    if(list_fo.system.length>0){
+        d3.select("#"+type+"_div").style("visibility","visible")
+        d3.select("#summa_"+type+"_div").style("visibility","visible")
+        d3.select("#summa_expand_"+t).style("visibility","visible")
+  
+        list_fo.system.forEach((fo, index) => {
+            //* tooltip
+            var tooltip_rect
+            // Three function that change the tooltip when user hover / move / leave a cell
+            var mouseover = function(d) {
+                tooltip_rect = d3.select("#FO_squares_div_c")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip_danger")
+                tooltip_rect.style("opacity", 1)
+                d3.select(this).style("opacity", 1)
             }
+            var mousemove = function(d) {
+                console.log(d3.select(this).attr("id"))
+                tooltip_rect
+                .html("info_tooltip")
+                .style('left', (d3.event.pageX + 10) + 'px')
+                .style('top', (d3.event.pageY + 10) + 'px')
+            }
+            var mouseleave = function(d) {
+                tooltip_rect.style("opacity", 0)
+                d3.select(this).style("opacity", 0.8)
+                
+                d3.select(".tooltip_danger").remove()
+            }
+            var clicked = function(d) {
+                id = d3.select(this).attr("id")
+                metric = id.split("_")[0]
+                var fill_square = metric == "EXM"? fill_square = EXM_FILL : fill_square = AAA_FILL
+                d3.select(this).attr("fill",fill_square)
+            }
+            //*---------- tooltip
+            var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+            fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            total = fo.overall
+            if(fo.packed) total = "PACKED"
+            d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+                .style("opacity",0)
+                .transition().duration(2500)
+                .style("opacity",1)
+            
+            //* rect spawn
+            var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
+            rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
+            d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
+            d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
+            //* rect loop
+            var pad = 5
+            var x_rect=pad
+            for (let i = 0; i < Object.keys(fo).length; i++) {
+                item = Object.keys(fo)[i]
+                if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
+                    if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
+                    if(fo[item] > 0 && item != "EXM") metric_occurrences[item]++
+                    else if( fo[item] == 0 && item == "EXM" ) metric_occurrences[item]++
+                    stroke_color = '#000000a6'
+                    svg_rect.append('rect')
+                    .attr('stroke-width', '2px')
+                    .attr('fill', function(d){
+                        if(fo[item] > 0 && item!="EXM") {
+                            stroke_color = AAA_FILL
+                            return stroke_color
+                        }
+                        else if(fo[item] == 0 && item=="EXM") {
+                            stroke_color = AAA_FILL
+                            return stroke_color
+                        }
+                        return "#ffffff00"
+                    })
+                    .attr('stroke', stroke_color )
+                    .attr("id",item+"_"+fo.uid)
+                    .attr("x",0)
+                    .attr("y",1)
+                    .attr("rx",4)
+                    .style("opacity", 0.8)
+                    // .on("mouseover", mouseover)
+                    // .on("mousemove", mousemove)
+                    // .on("mouseleave", mouseleave)
+                    //.on("click",clicked)
+                    .transition().duration(1500)
+                    .attr("x",x_rect)
+                    .attr('width', rect_dim)
+                    .attr('height', rect_dim)
+                    
+                    x_rect+= rect_dim + pad
+                }
+            }
+        });
+        d3.select("#"+type+"_div").style("border-style", "solid") //appears
+        d3.select("#rightside").style("border-style", "solid") //appears
+
+        d3.select("#FO_squares_div_"+t).style("width",d3.select("#FO_titles_div_"+t).style("width"))
+        
+        //*per far spazio ai titoli
+
+        var name_div
+        var color
+        if(t=="c") {name_div = "CRITICAL";color = "red"}
+        if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
+        if(t=="n") {name_div = "NEUTRAL";color = "white"}
+        d3.select("#FO_name_div_"+t).append("text").text(name_div)
+            .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+            .style("width",d3.select("#FO_titles_div_"+t).style("width"))
+            .style("color",color)
+            .style("text-align","end")
+            .lower() 
+            .attr("class","no_search")
+        d3.select("#FO_score_div_"+t).append("text").text("placeholder")
+            .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+            .style("width","1px")
+            .style("visibility","hidden")
+            .lower()
+            .attr("class","no_search")
+        
+        //*accetta
+        d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
+            text = d3.select(this).text()
+            wi_text = d3.select(this).style("width")
+            wi_div = d3.select("#FO_name_div_"+t).style("width")
+            if(text.length>15){
+                text = text.substring(text.length-15,text.length)
+            }
+            return text
+        })
+        // .on("mouseover",function(d){
+        //     hid = d3.select(this).attr("id").replace("_EXTENSION_",".").replace(/[_]/g,"/")
+        //     console.log(hid)
+        //     bound = 5
+        //     i = 0
+        //     while( i < hid.length-bound) {
+        //         g = hid.substring(i,bound+i)
+        //         d3.select(this).transition(1500).duration(1500).text(g)
+        //         i++
+        //         if(i==hid.length-bound) i = 0
+        //     }
+        // })
+        //console.log(metric_occurrences)
+        console.log(list_fo)
+        
+        //* draw istogramma 
+        d3.select("#summa_expand_"+t).style("visibility","visible")
+        //summaExpand(rect_dim,t,type)
+        pad = 20 //from name
+        w = getDimFloat("FO_name_div_"+t,"width") 
+        if (w == 0){
+            if(t == "s")   w = getDimFloat("FO_name_div_c","width") 
+            if(t == "c")   w = getDimFloat("FO_name_div_s","width") 
         }
-    });
-    d3.select("#"+type+"_div").style("border-style", "solid") //appears
-    d3.select("#rightside").style("border-style", "solid") //appears
-
-    d3.select("#FO_squares_div_"+t).style("width",d3.select("#FO_titles_div_"+t).style("width"))
-    
-    //*per far spazio ai titoli
-
-    var name_div
-    var color
-    if(t=="c") {name_div = "CRITICAL";color = "red"}
-    if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
-    if(t=="n") {name_div = "NEUTRAL";color = "white"}
-    d3.select("#FO_name_div_"+t).append("text").text(name_div)
-        .style("height",d3.select("#FO_titles_div_"+t).style("height"))
-        .style("width",d3.select("#FO_titles_div_"+t).style("width"))
-        .style("color",color)
-        .style("text-align","end")
+        d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
+        d3.select("#summa_expand_"+t).on("click",function(d){
+            summaExpand(rect_dim,t,type)
+        })
+        //* text total files
+        d3.select("#summa_"+type+"_div").append("text").text("Found "+ list_fo.system.length +" "+ type +" files").style("position","absolute").lower()
+    }
+        //neutral div width
+    else{
+        d3.select("#"+type+"_div").style("visibility","hidden")
+        d3.select("#summa_"+type+"_div").style("visibility","hidden")
+        d3.select("#summa_expand_"+t).style("visibility","hidden")
+    }
+    d3.select("#neutral_div").style("max-width", getDimFloat("critical_div","width")+"px") 
+}
+//*draw neutral
+function drawNeutral(t){
+    d3.select("#FO_name_div_"+t).selectAll("*").remove()
+    d3.select("#neutral_div").style("border-style", "solid") //appears
+    //drop down mngmnt
+    var others_txt_and_expand = d3.select("#FO_name_div_"+t).append("div").attr("id","others_txt_and_expand").attr("class","no_search")
+    others_txt_and_expand.html( "<button type='button'  id='others_expand' ><i class='fas fa-caret-down' ></i></button>")
+    others_txt_and_expand.append("text").text("OTHERS")
+        .style("color","black")
+        .style("margin-left","25px")
+        .style("margin-right","25px")
         .lower() 
         .attr("class","no_search")
-    d3.select("#FO_score_div_"+t).append("text").text("placeholder")
-        .style("height",d3.select("#FO_titles_div_"+t).style("height"))
-        .style("width","1px")
-        .style("visibility","hidden")
-        .lower()
-        .attr("class","no_search")
-    
-    //*accetta
-    d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
-        text = d3.select(this).text()
-        wi_text = d3.select(this).style("width")
-        wi_div = d3.select("#FO_name_div_"+t).style("width")
-        if(text.length>15){
-            text = text.substring(text.length-15,text.length)
+    d3.select("#others_expand").on("click",function(d){
+        var is_down = d3.select("#others_expand").select("i").attr("class") == "fas fa-caret-down"? true:false
+        if(is_down){
+            //fill with files
+            NEUTRAL_FO.system.forEach((fo, index) => {
+                var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+                fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            })
+            d3.select("#others_expand").select("i").attr("class","fas fa-caret-up")
+            d3.select("#neutral_div").style("overflow-y","auto")
+            d3.select("#neutral_div").style("height",getDimFloat("others_txt_and_expand","height")+"px").transition().duration(700).style("height",d3.select("#neutral_div").style("max-height"))
         }
-        return text
-    })
-    //console.log(metric_occurrences)
-    console.log(list_fo)
-    
-    //* draw istogramma 
-    d3.select("#summa_expand_"+t).style("visibility","visible")
-    //summaExpand(rect_dim,t,type)
-    pad = 20 //from name
-    w = getDimFloat("FO_name_div_"+t,"width") 
-    if (w == 0){
-        if(t == "s")   w = getDimFloat("FO_name_div_c","width") 
-        if(t == "c")   w = getDimFloat("FO_name_div_s","width") 
-    }
-    d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
-    d3.select("#summa_expand_"+t).on("click",function(d){
-        summaExpand(rect_dim,t,type)
-    })
-    //* text total files
-    d3.select("#summa_"+type+"_div").append("text").text("Found "+ list_fo.system.length +" "+ type +" files").style("position","absolute").lower()
+        else{
+            d3.select("#neutral_div").style("overflow-y","hidden")
+            d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
+            d3.select("#FO_name_div_"+t).selectAll(".div_column").style("opacity",1).transition().duration(1500).style("opacity",0).remove()
+            d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
+        }
 
+    })
 }
 
 //*draw histogram when expanded
@@ -350,7 +397,7 @@ function drawHistogramSumma(rect_dim,t,type){
     let svg_histo = d3.select("#summa_"+type+"_div").append("svg");
     var pad  = 5 //from score
     w = getDimFloat("FO_name_div_"+t,"width") + getDimFloat("FO_score_div_"+t,"width")
-    //svg_histo.style("margin-left",(w+pad)+"px")
+    svg_histo.style("margin-left",(w+pad)+"px")
     //square_bound = document.getElementById("FO_squares_div_c").getBoundingClientRect();
     //svg_histo.attr("transform", "translate("+ (square_bound.x - pad)+",0)")
 
@@ -379,7 +426,8 @@ function drawHistogramSumma(rect_dim,t,type){
     bars.append('rect')
         .attr('class', 'bar')
         .attr("x", function(d) { return x(d); })
-        .attr("fill",function(d) { return d == "EXM"? EXM_FILL:AAA_FILL})
+        .attr("fill",function(d) { return AAA_FILL})
+        // .attr("fill",function(d) { return d == "EXM"? EXM_FILL:AAA_FILL})
         .attr("opacity",0.8)
         .attr("width", x.bandwidth())
         .attr("y", svgHeight)
@@ -411,6 +459,8 @@ function drawHistogramSumma(rect_dim,t,type){
 
     svg_histo.selectAll(".axis--y").style("visibility", "hidden")  
     svg_histo.selectAll(".axis--x").selectAll("text").style("visibility", "hidden")  
+    svg_w = getDimFloat("FO_name_div_c","width") + getDimFloat("FO_score_div_c","width") 
+
 }
 
 
