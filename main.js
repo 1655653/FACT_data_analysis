@@ -8,7 +8,11 @@ var ALL_REST_RESPONSE={}//? collazione di tutte le chiamate api, ordinate con ch
 var Tree = {} //? a differenza di ALL_REST_RESPONSE, questa contriene i figli e le folder!
 var BackupTree = {}
 
+var SWC_ARRAY //?selector
 var SW_COMP_CVE=[] //? collezione di tutte le cve
+var SW_COMP_CVE_LIGHT=[] //? collezione di tutti sw components con cve
+var ALL_SWC = [] //? collezione di tutti sw components
+var SW_COMP_NO_CVE=[]//? collezione di tutti sw components senza cve
 //* danger algoritm vars
 W_CRYPTO = 30.0
 W_CVE_CRIT = 0.2
@@ -116,10 +120,10 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
+                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
+                //SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
                 console.log("NIST RESPONDED WITH ALL CVE")
-                //console.log(SW_COMP_CVE)
+                console.log(SW_COMP_CVE)
 
                 //*-------DANGER 
                 console.log("RANKING FOs")
@@ -128,11 +132,15 @@ function callFW() {
                 console.log("RANK ENDED")
                 console.log(DANGER)
 
-                //*-----PARAMETERS
-                //*extradiv con tutti gli slider
+                // //*-----PARAMETERS
+                // //*extradiv con tutti gli slider
                 extraDiv(data.firmware)
 
+                //buildEXMDataset(data.firmware.analysis.exploit_mitigations.summary)
 
+                collectSWC(data.firmware.analysis.software_components.summary)
+                console.log(ALL_SWC)
+                DrawSWComponents()
             })();
             
         })
@@ -143,8 +151,39 @@ function callFW() {
     list_packed_hid=[]
     list_packed_uid = []    
 }
+function collectSWC(sc){
+    for (const key in sc) {
+        if (Object.hasOwnProperty.call(sc, key)) {
+            const element = sc[key];
+            ALL_SWC.push(key)
+        }
+    }
+    //*sorto come voglio io
+    sc_ordered = []
+    ALL_SWC.forEach(element => {
+        for (let i = 0; i < SW_COMP_CVE.length; i+=10) {
+            const n = SW_COMP_CVE[i].cpe_name.replace("(CRITICAL)","").trim();
+            if(! SW_COMP_CVE_LIGHT.includes(n)) SW_COMP_CVE_LIGHT.push(n)
+            if(n == element && ! sc_ordered.includes(element)) sc_ordered.push(n)
+        }
+    });
+    // console.log(SW_COMP_CVE)
+    // console.log(ALL_SWC)
+    // console.log(sc_ordered)
+    
+    ALL_SWC.forEach(element => {
+        if(! sc_ordered.includes(element)) {
+            SW_COMP_NO_CVE.push(element)
+            sc_ordered.push(element)
+        }
+    });
+    ALL_SWC = sc_ordered
+    SWC_ARRAY = SW_COMP_CVE_LIGHT //starts violin with this config
 
+    // console.log(sc_ordered)
+    
 
+}
 function download(uid,contentType){
     var urldw = endpoint+"binary/"+uid
     d3.json(urldw, function(data) {

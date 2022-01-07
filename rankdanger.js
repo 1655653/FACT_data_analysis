@@ -301,7 +301,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         //     }
         // })
         //console.log(metric_occurrences)
-        console.log(list_fo)
+        //console.log(list_fo)
         
         //* draw istogramma 
         d3.select("#summa_expand_"+t).style("visibility","visible")

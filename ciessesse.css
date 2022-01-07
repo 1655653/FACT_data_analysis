@@ -18,6 +18,9 @@ body {
 }
 #leftside{
   width: 20%;
+  /* width: 600px; */
+  overflow-x: hidden;
+  max-height: 550px;
 }
 #rightside{
   position: absolute;
@@ -145,4 +148,15 @@ body {
   max-height:17px;
   resize:none;
   /* color: #00000029; */
+}
+/** LEFT SIDE DIV */
+
+#sw_comp_expand{
+  visibility: hidden;
+  display: flex;
+  justify-content: space-evenly;
+}
+#sw_comp_expand_txt{
+  visibility: hidden;
+  font-size: 13px;
 }

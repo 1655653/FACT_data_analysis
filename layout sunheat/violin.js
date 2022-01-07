@@ -163,8 +163,8 @@ function buildViolinData(cve_lookup){
             const cve = cve_lookup.summary[cve_key];
             violin_dom.push(cve_key)
             cve.forEach(element => {
-                var cve_res = all_REST_response[element].data.file_object.analysis.cve_lookup.cve_results
-                var hidd = all_REST_response[element].data.file_object.meta_data.hid
+                var cve_res = all_REST_response[element].cve_results
+                var hidd = all_REST_response[element].hid
                 for (const key in cve_res) {
                     if (Object.hasOwnProperty.call(cve_res, key)) {
                         const fo = cve_res[key];

@@ -78,6 +78,30 @@ async function buildSWComponentWithCVE(cve_lookup){
             }
         }
     }
+    //*scraping the component with no CVE
+    sc_empty = []
+
+    for (let i = 0; i < SW_COMP_CVE.length; i+=10) {
+        const element = SW_COMP_CVE[i];
+        var name = element.cpe_name
+        var empty = 0
+        SW_COMP_CVE.forEach(element_it => {
+            var name_it = element_it.cpe_name
+            if(name_it==name){
+                if(element_it.all_cve_objects_bs.length == 0 && element_it.all_cve_objects_es.length == 0 && element_it.all_cve_objects_is.length ==0){
+                    empty++
+                }
+            }
+        });
+        if(empty==10) sc_empty.push(name)
+    }
+    console.log(sc_empty)
+
+    sc_empty.forEach(sc_empty_name => {
+        SW_COMP_CVE = SW_COMP_CVE.filter(function(d){
+            return d.cpe_name!= sc_empty_name
+        })
+    });
     //console.log(JSON.stringify(SW_COMP_CVE, null, 2))
     //console.log(heatmap_data)
 

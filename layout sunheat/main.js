@@ -111,7 +111,7 @@ function callFW() {
                     // // //***building heatmap
                     console.log("BUILDING HEATMAP")
                     await buildHeatmapData(data.firmware.analysis.cve_lookup)
-                    DrawHeatmap(heatmap_data)
+                    // DrawHeatmap(heatmap_data)
                     console.log("HEATMAP BUILT")
                     //console.log(heatmap_data)
 
@@ -134,8 +134,8 @@ function callFW() {
                     
                     
                     
-                    //buildViolinData(data.firmware.analysis.cve_lookup)
-                    //DrawViolin()
+                    buildViolinData(data.firmware.analysis.cve_lookup)
+                    DrawViolin()
 
                 })();
             } 
