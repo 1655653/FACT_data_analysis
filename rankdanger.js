@@ -198,6 +198,19 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             //*---------- tooltip
             var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            /**------------------------------------------- */ //se ti vuoi avventurare
+            // var div_txt= d3.select("#FO_name_div_"+t).append("div").attr("id","div_of_"+fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+            //     .attr("class","div_column marqueeable refresh")
+            // da_non_crederci = fo.hid.replace(/[-]/g,"_")
+            // var fo_name = div_txt.append("p").text(da_non_crederci).attr("class","div_column marqueeable refresh").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+            // fo_name.style("max-width","100px")
+            // div_txt.on("mouseover",function(d){
+            //         d3.select(this).attr("class","div_column marquee refresh")
+            //     })
+            // div_txt.on("mouseout",function(d){
+            //         d3.select(this).attr("class","div_column marqueeable refresh")
+            //     })
+            /**------------------------------------------- */
             total = fo.overall
             if(fo.packed) total = "PACKED"
             d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
@@ -278,7 +291,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .lower()
             .attr("class","no_search")
         
-        //*accetta
+        // //*accetta
         d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
             text = d3.select(this).text()
             wi_text = d3.select(this).style("width")

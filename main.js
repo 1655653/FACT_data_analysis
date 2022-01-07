@@ -13,6 +13,7 @@ var SW_COMP_CVE=[] //? collezione di tutte le cve
 var SW_COMP_CVE_LIGHT=[] //? collezione di tutti sw components con cve
 var ALL_SWC = [] //? collezione di tutti sw components
 var SW_COMP_NO_CVE=[]//? collezione di tutti sw components senza cve
+var SW_COMP_HIDE =[]//? swcomp che l'utente non vuole
 //* danger algoritm vars
 W_CRYPTO = 30.0
 W_CVE_CRIT = 0.2
@@ -167,10 +168,7 @@ function collectSWC(sc){
             if(n == element && ! sc_ordered.includes(element)) sc_ordered.push(n)
         }
     });
-    // console.log(SW_COMP_CVE)
-    // console.log(ALL_SWC)
-    // console.log(sc_ordered)
-    
+
     ALL_SWC.forEach(element => {
         if(! sc_ordered.includes(element)) {
             SW_COMP_NO_CVE.push(element)

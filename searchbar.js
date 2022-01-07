@@ -28,6 +28,7 @@ function buildSearchBar(){
     })
 }
 function removeNotMatched(t,v){
+    // removeNotMatchedFrom("#FO_name_div_"+t,v,"name") //se ti vuoi avventurare
     removeNotMatchedFrom("#FO_name_div_"+t,v)
     removeNotMatchedFrom("#FO_score_div_"+t,v)
     removeNotMatchedFrom("#FO_squares_div_"+t,v,"square")
@@ -43,12 +44,16 @@ function removeNotMatchedFrom(div,v,e){
     var all = d3.select(div).selectAll(el).filter(function() {
         return d3.select(this).attr("class") != "no_search" 
     })
-    
+    if(e == "name") el = "div"
     rem = d3.select(div).selectAll(el).filter(function() {
         if (e == "square") {
             id = ALL_REST_RESPONSE[d3.select(this).attr("id")].hid
             v = v.replace("_EXTENSION_",".")
             return !id.startsWith(v);
+        }
+        else if(e == "name"){
+            if(tag != "UID:")   v = v.replace(/[/.]/g,"_")
+            return d3.select(this).attr("class") != "no_search" && !d3.select(this).attr("id").startsWith("div_of_"+v);  // Use a filter to select all other bars for the transition.
         }
         else{
             if(tag != "UID:")   v = v.replace(/[/.]/g,"_")

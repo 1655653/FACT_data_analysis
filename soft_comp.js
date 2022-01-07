@@ -1,25 +1,32 @@
+
 function DrawSWComponents(){
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
     d3.select("#leftside").transition().duration(400).style("border","none")
+    d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","auto")
     //*text above
     d3.select("#sw_comp_expand").style("visibility","visible")
     d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
     d3.select("#sw_comp_expand_txt").style("visibility","visible")
     d3.select("#sw_comp_expand_btn").style("visibility","visible")
     d3.select("#sw_comp_expand_btn").on("click",function(d){
-        var is_down = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-caret-down"? true:false
-        if(is_down){
+        var is_plus = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-plus"? true:false
+        if(is_plus){
             SWC_ARRAY = ALL_SWC
-            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-caret-up")
-            d3.select("#sw_comp_expand_txt").text("See only vulnerable Software Components")
+            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-minus")
+            d3.select("#sw_comp_expand_txt").text("All Software Components")
             DrawSWComponents()
         }
         else{
             SWC_ARRAY = SW_COMP_CVE_LIGHT
-            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-caret-down")
-            d3.select("#sw_comp_expand_txt").text("See all Software Components")
+            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-plus")
+            d3.select("#sw_comp_expand_txt").text("Vulnerable Software Components")
             DrawSWComponents()
         }
+    })
+    d3.select("#reset_sc").on("click",function(d){
+        SW_COMP_HIDE = []
+        SWC_ARRAY = ALL_SWC
+        DrawSWComponents()
     })
     //*start drawing svg
     var violin_data = convertSWCtoVolin()
@@ -42,7 +49,7 @@ function DrawSWComponents(){
 
     // Build and Show the Y_viol scale
     var x_viol = d3.scaleLinear()
-    .domain([ 1,10 ])          // Note that here the Y_viol scale is set manually
+    .domain([ 0,10 ])          // Note that here the Y_viol scale is set manually
     .range([0,width_violin])        
 
     // Build and Show the Y scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x_viol.bandwidth
@@ -56,12 +63,23 @@ function DrawSWComponents(){
     var si = d3.scaleLinear().domain([4,20]).range([16,9]) //scala per il font size
     svg_violin
         .selectAll("text").text(function(d){
-            return d })
-        .attr("transform", "translate(0,-10)")
+            h = ""
+            SW_COMP_CVE.forEach(element => {
+                if( element.cpe_name.includes(d) && element.cpe_name.includes("(CRITICAL)")){
+                    h =  " ⚠️"
+                }
+            });
+            return d+h })
+        .attr("transform", "translate(10,-12)")
         .style("text-anchor", "start")
         .style("font-size", "17px")
-        // .style("font-size", (function(d){
-        //     return si(d.length) }))
+        .on("click",function(d){
+            to_hide = d3.select(this).text().replace(" ⚠️","")
+            SWC_ARRAY = SWC_ARRAY.filter(e => e !== to_hide)
+            SW_COMP_HIDE.push(to_hide)
+            d3.select("#reset_sc").style("display","block").style("opacity","0").transition().duration(1000).style("opacity","1")
+            DrawSWComponents()
+        })
 
     svg_violin.append("g")
         .attr("transform", "translate(0," + height_violin + ")")
@@ -85,14 +103,18 @@ function DrawSWComponents(){
         .entries(violin_data)
     // What is the biggest number of value in a bin? We need it cause this value will have a width of 100% of the bandwidth.
     var maxNum = 0
+    console.log(sumstat)
     for ( i in sumstat ){
-      allBins = sumstat[i].value
-      lengths = allBins.map(function(a){return a.length;})
-      longuest = d3.max(lengths)
-      if (longuest > maxNum) { maxNum = longuest }
+        allBins = sumstat[i].value
+        console.log(allBins)
+        lengths = allBins.map(function(a){return a.length;})
+        longuest = d3.max(lengths)
+        if (longuest > maxNum) { maxNum = longuest }
     }
     
-
+    var global = false
+    // var maxNum = 0
+    console.log(maxNum)
     // The maximum width of a violin must be x_viol.bandwidth = the width dedicated to a group
     var yNum = d3.scaleLinear()
       .range([0, y_viol.bandwidth()])
@@ -103,9 +125,11 @@ function DrawSWComponents(){
         .data(sumstat)
         .enter()        // So now we are working group per group
         .append("g").attr("id",function(d){
-            return d.key})
+            return "g_of_"+d.key})
             .attr("transform", function(d){return("translate(0 ," + y_viol(d.key) +"0)") } ) // Translation on the right to be at the group position
         .append("path")
+            .attr("id",function(d){
+                return "path_of_"+d.key})
             .attr("class","viol_hist")
             .datum(function(d){return(d.value)})     // So now we are working bin per bin
             .style("stroke", "black")
@@ -113,7 +137,15 @@ function DrawSWComponents(){
             .style("opacity","0")
             .attr("d", d3.area()
                 .y0( yNum(0) )
-                .y1(function(d){return(yNum(d.length)) } )
+                .y1(function(d){
+                    if(global) return(yNum(d.length))
+                    else{
+                        var yNum_local = d3.scaleLinear()
+                            .range([0, y_viol.bandwidth()])
+                            .domain([-maxNum,maxNum])
+                        return(yNum_local(d.length))
+                    }
+                } )
                 .x(function(d){return(x_viol(d.x0)) } )
                 .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
             )
@@ -135,7 +167,7 @@ function convertSWCtoVolin(){
                     "cve_name":cve.cve_code,
                     "cpe_name":element.cpe_name.replace("(CRITICAL)","").trim()
                 }
-                new_dataset.push(el)
+                if(! SW_COMP_HIDE.includes(el.cpe_name)) new_dataset.push(el)
             });
         });
 
@@ -143,3 +175,31 @@ function convertSWCtoVolin(){
     //console.log(new_dataset)
     return new_dataset
 }
+
+// function BuildArea(h,maxNum,y_viol,global,yNum,x_viol,porchetta_id,sumstat){
+//     console.log(d3.select(this))
+//     var local_max = 0
+//     for ( i in sumstat ){
+//         if(sumstat[i].key == porchetta_id){
+//             lengths = sumstat[i].value.map(function(a){return a.length;})
+//             local_max = d3.max(lengths)
+//         }
+//     }
+//     console.log(local_max)
+//     console.log(porchetta_id)
+//     var ret = d3.area()
+//     ret.y0( yNum(0) )
+//         .y1(function(d){
+//             if(global) return(yNum(d.length))
+//             else{
+//                 console.log(d)
+//                 var yNum_local = d3.scaleLinear()
+//                     .range([0, y_viol.bandwidth()])
+//                     .domain([-local_max,local_max])
+//                 return(yNum_local(d.length))
+//             }
+//         } )
+//         .x(function(d){return(x_viol(d.x0)) } )
+//         .curve(d3.curveCatmullRom)   
+//     return ret
+// }
