@@ -1,13 +1,19 @@
-
 function DrawSWComponents(){
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
-    d3.select("#leftside").transition().duration(400).style("border","none")
-    d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","auto")
+    //d3.select("#leftside").transition().duration(400).style("border","none")
+    d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
     //*text above
     d3.select("#sw_comp_expand").style("visibility","visible")
     d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
     d3.select("#sw_comp_expand_txt").style("visibility","visible")
     d3.select("#sw_comp_expand_btn").style("visibility","visible")
+    d3.select("#toggle_global_div").style("visibility","visible").on("change",function(d){
+        GLOBAL = !GLOBAL
+        d3.select(this).select("text").text(function(d){
+            return GLOBAL? "global":"local" 
+        })
+        DrawSWComponents()
+    })
     d3.select("#sw_comp_expand_btn").on("click",function(d){
         var is_plus = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-plus"? true:false
         if(is_plus){
@@ -26,15 +32,16 @@ function DrawSWComponents(){
     d3.select("#reset_sc").on("click",function(d){
         SW_COMP_HIDE = []
         SWC_ARRAY = ALL_SWC
+        d3.select(this).transition().duration(1000).style("opacity","0").style("display","none")
         DrawSWComponents()
     })
     //*start drawing svg
     var violin_data = convertSWCtoVolin()
     // set the dimensions and margins of the graph
-    var margin_violin = {top: 30, right: 40, bottom: 30, left: 40},
+    var margin_violin = {top: 0, right: 40, bottom: 30, left: 40},
     width_violin = getDimFloat("sw_comp_svg_container","width") - margin_violin.left - margin_violin.right,
     height_violin = (SWC_ARRAY.length*100) - margin_violin.top - margin_violin.bottom;
-    //console.log(getDimFloat("leftside","width"))
+    
     // append the svg_violin object to the body of the page
     var svg_violin = d3.select("#sw_comp_svg_container")
         .append("svg")
@@ -60,7 +67,7 @@ function DrawSWComponents(){
     console.log(y_viol.domain())
     svg_violin.append("g").call( d3.axisLeft(y_viol) )
 
-    var si = d3.scaleLinear().domain([4,20]).range([16,9]) //scala per il font size
+    //var si = d3.scaleLinear().domain([4,20]).range([16,9]) //scala per il font size
     svg_violin
         .selectAll("text").text(function(d){
             h = ""
@@ -103,23 +110,24 @@ function DrawSWComponents(){
         .entries(violin_data)
     // What is the biggest number of value in a bin? We need it cause this value will have a width of 100% of the bandwidth.
     var maxNum = 0
-    console.log(sumstat)
+    var local_max = [] //? salva tutti i massimi per ogni sc
+    var local_i = 0 //? iteratorore su local max che viene cambiato ogni 11 it
+    var it = 0 //? dopo 11 fa cambiare local_i
+
     for ( i in sumstat ){
         allBins = sumstat[i].value
         console.log(allBins)
         lengths = allBins.map(function(a){return a.length;})
         longuest = d3.max(lengths)
+        local_max.push(longuest)
         if (longuest > maxNum) { maxNum = longuest }
     }
-    
-    var global = false
-    // var maxNum = 0
-    console.log(maxNum)
     // The maximum width of a violin must be x_viol.bandwidth = the width dedicated to a group
     var yNum = d3.scaleLinear()
       .range([0, y_viol.bandwidth()])
       .domain([-maxNum,maxNum])
-    //console.log(sumstat)
+
+
     svg_violin
         .selectAll("myViolin")
         .data(sumstat)
@@ -138,11 +146,17 @@ function DrawSWComponents(){
             .attr("d", d3.area()
                 .y0( yNum(0) )
                 .y1(function(d){
-                    if(global) return(yNum(d.length))
+                    if(GLOBAL) return(yNum(d.length))
                     else{
+                        if(it == 11) {
+                            local_i++
+                            it = 0
+                        }
+                        max = local_max[local_i]
                         var yNum_local = d3.scaleLinear()
                             .range([0, y_viol.bandwidth()])
-                            .domain([-maxNum,maxNum])
+                            .domain([-max,max])
+                        it++
                         return(yNum_local(d.length))
                     }
                 } )
@@ -152,6 +166,8 @@ function DrawSWComponents(){
     d3.selectAll(".viol_hist").transition()
             .duration(4000)
             .style("opacity","1")
+    
+    if(height_violin > getDimFloat("leftside","max-height") ) d3.select("#leftside").style("overflow-y","auto")
 }
 
 function convertSWCtoVolin(){
@@ -175,31 +191,3 @@ function convertSWCtoVolin(){
     //console.log(new_dataset)
     return new_dataset
 }
-
-// function BuildArea(h,maxNum,y_viol,global,yNum,x_viol,porchetta_id,sumstat){
-//     console.log(d3.select(this))
-//     var local_max = 0
-//     for ( i in sumstat ){
-//         if(sumstat[i].key == porchetta_id){
-//             lengths = sumstat[i].value.map(function(a){return a.length;})
-//             local_max = d3.max(lengths)
-//         }
-//     }
-//     console.log(local_max)
-//     console.log(porchetta_id)
-//     var ret = d3.area()
-//     ret.y0( yNum(0) )
-//         .y1(function(d){
-//             if(global) return(yNum(d.length))
-//             else{
-//                 console.log(d)
-//                 var yNum_local = d3.scaleLinear()
-//                     .range([0, y_viol.bandwidth()])
-//                     .domain([-local_max,local_max])
-//                 return(yNum_local(d.length))
-//             }
-//         } )
-//         .x(function(d){return(x_viol(d.x0)) } )
-//         .curve(d3.curveCatmullRom)   
-//     return ret
-// }

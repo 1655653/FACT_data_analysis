@@ -14,6 +14,8 @@ var SW_COMP_CVE_LIGHT=[] //? collezione di tutti sw components con cve
 var ALL_SWC = [] //? collezione di tutti sw components
 var SW_COMP_NO_CVE=[]//? collezione di tutti sw components senza cve
 var SW_COMP_HIDE =[]//? swcomp che l'utente non vuole
+var GLOBAL = true //? flag visualizzazione picchi cve locali o lglobali
+
 //* danger algoritm vars
 W_CRYPTO = 30.0
 W_CVE_CRIT = 0.2
@@ -121,8 +123,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                //SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
+                SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
                 console.log("NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
