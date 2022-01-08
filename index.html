@@ -5,6 +5,7 @@
   <link rel="shortcut icon" href="#">
   <link rel="stylesheet" href="ciessesse.css">
   <link rel="stylesheet" href="toggle_global.css">
+  <link rel="stylesheet" href="radio_btn.css">
 </head>
 
 <!-- Load d3.js -->
@@ -21,22 +22,32 @@
     </br>
     
     <div id="reportOf"></div>
+    <!-- metto qua i setting container del sc per allinearlo in realta deve andare dentro leftside -->
+    <div id="sc_settings_container" style="visibility: hidden;">
+      <div id="toggle_global_div" style="visibility: hidden;">
+        <label class="switch" style="transform: scale(0.7);visibility: hidden;">
+          <input type="checkbox" checked>
+          <span class="slider round"></span>
+        </label>
+        <text style="line-height:0.3;visibility: hidden;">global</text>
+      </div>
+      <div id="toggle_all_sc_div" style="visibility: hidden;">
+        <label class="switch" style="transform: scale(0.7);visibility: hidden;">
+          <input type="checkbox" checked>
+          <span class="slider round"></span>
+        </label>
+        <text style="visibility: hidden;">Only vulnerable</text>
+      </div>
+      <div id="reset_sc_div" style="visibility: hidden;">
+        <button id="reset_sc" style="display: none; height: fit-content;" type="button">reset</button>
+      </div>
+    </div>
     
     <div class="container" id="container">
       <div id="leftside">
-        <div id="sc_menu" style="display: flex;">
-          <div id="sw_comp_expand" >
-            <button type='button' style="visibility: hidden; height: fit-content;" id='sw_comp_expand_btn' ><i class='fas fa-plus' ></i></button>
-            <text id = "sw_comp_expand_txt" >Only vulnerable Software Components</text>
-            <button id="reset_sc" style="display: none; height: fit-content;" type="button">reset</button>
-          </div>
-          <div id="toggle_global_div" style="visibility: hidden;">
-            <label class="switch" style="transform: scale(0.7)">
-              <input type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-            <text style="line-height:0.3">global</text>
-          </div>
+        <div id="sc_menu">
+          <text style="visibility: hidden; padding-left: 15px; font-size:14px">SOFTWARE COMPONENTS AND CVE</text> 
+          <button type='button' style="visibility: hidden; height: fit-content;" id='sw_comp_expand_btn' ><i class='fas fa-ellipsis-v' ></i></button>
         </div>
         <div id="sw_comp_svg_container">
         </div>

@@ -1,44 +1,13 @@
+
 function DrawSWComponents(){
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
-    //d3.select("#leftside").transition().duration(400).style("border","none")
     d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
     //*text above
-    d3.select("#sw_comp_expand").style("visibility","visible")
-    d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
-    d3.select("#sw_comp_expand_txt").style("visibility","visible")
-    d3.select("#sw_comp_expand_btn").style("visibility","visible")
-    d3.select("#toggle_global_div").style("visibility","visible").on("change",function(d){
-        GLOBAL = !GLOBAL
-        d3.select(this).select("text").text(function(d){
-            return GLOBAL? "global":"local" 
-        })
-        DrawSWComponents()
-    })
-    d3.select("#sw_comp_expand_btn").on("click",function(d){
-        var is_plus = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-plus"? true:false
-        if(is_plus){
-            SWC_ARRAY = ALL_SWC
-            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-minus")
-            d3.select("#sw_comp_expand_txt").text("All Software Components")
-            DrawSWComponents()
-        }
-        else{
-            SWC_ARRAY = SW_COMP_CVE_LIGHT
-            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-plus")
-            d3.select("#sw_comp_expand_txt").text("Vulnerable Software Components")
-            DrawSWComponents()
-        }
-    })
-    d3.select("#reset_sc").on("click",function(d){
-        SW_COMP_HIDE = []
-        SWC_ARRAY = ALL_SWC
-        d3.select(this).transition().duration(1000).style("opacity","0").style("display","none")
-        DrawSWComponents()
-    })
+    menuSWCOMP()
     //*start drawing svg
     var violin_data = convertSWCtoVolin()
     // set the dimensions and margins of the graph
-    var margin_violin = {top: 0, right: 40, bottom: 30, left: 40},
+    var margin_violin = {top: 5, right: 40, bottom: 30, left: 40},
     width_violin = getDimFloat("sw_comp_svg_container","width") - margin_violin.left - margin_violin.right,
     height_violin = (SWC_ARRAY.length*100) - margin_violin.top - margin_violin.bottom;
     
@@ -89,7 +58,7 @@ function DrawSWComponents(){
         })
 
     svg_violin.append("g")
-        .attr("transform", "translate(0," + height_violin + ")")
+        .attr("transform", "translate(0," + 0 + ")")
         .call(d3.axisBottom(x_viol))
 
     // Features of the histogram
@@ -116,7 +85,7 @@ function DrawSWComponents(){
 
     for ( i in sumstat ){
         allBins = sumstat[i].value
-        console.log(allBins)
+        //console.log(allBins)
         lengths = allBins.map(function(a){return a.length;})
         longuest = d3.max(lengths)
         local_max.push(longuest)
@@ -168,6 +137,9 @@ function DrawSWComponents(){
             .style("opacity","1")
     
     if(height_violin > getDimFloat("leftside","max-height") ) d3.select("#leftside").style("overflow-y","auto")
+    d3.selectAll(".tick").each(function(d, i) {
+        if(d=="0") console.log(d3.select(this).style("opacity","0"))
+    })
 }
 
 function convertSWCtoVolin(){
@@ -191,3 +163,104 @@ function convertSWCtoVolin(){
     //console.log(new_dataset)
     return new_dataset
 }
+
+
+var lock_width = false
+var original_width
+window.addEventListener("resize", function(event) {
+    lock_width = false
+    d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-h")
+    d3.select("#sw_comp_expand_btn").dispatch('click')
+})
+function menuSWCOMP(){
+    //*appearance
+    d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
+    d3.select("#sw_comp_expand_btn").style("visibility","visible")
+    d3.select("#sc_menu").select("text").style("visibility","visible")
+    d3.select("#sw_comp_expand_btn").on("click",function(d){
+        var is_vertical = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-ellipsis-v"? true:false
+        if(is_vertical){
+            //apri tutto
+            ls_bound = document.getElementById("leftside").getBoundingClientRect();
+            set_left = ls_bound.width + ls_bound.left
+            //container
+            d3.select("#sc_settings_container")
+                .style("left",set_left+"px")
+            if(!lock_width)
+                original_width = getDimFloat("sc_settings_container","width")
+            
+            
+            //radio-button
+            if(!lock_width){
+                var score_cont = d3.select("#sc_settings_container").append("div").attr("class","radio_toolbar_sc")
+                buildBtns(score_cont,"base","score_sc_btn","radioFruit2")
+                buildBtns(score_cont,"impact","score_sc_btn","radioFruit2")
+                buildBtns(score_cont,"exploitability","score_sc_btn","radioFruit2")
+                
+            }
+            d3.select("#sc_settings_container").select(".radio-toolbar").selectAll("*").style("visibility","visible")
+            //ancora container
+            lock_width = true
+            console.log(original_width)
+            d3.select("#sc_settings_container")
+                .style("visibility","visible")
+                .style("width","0px")
+                .transition().duration(400)
+                .style("width",original_width+"px")
+            d3.select("#sc_settings_container").selectAll("*")
+                .style("visibility","visible")
+                .style("opacity","0")
+                .transition().duration(400)
+                .style("opacity","1")
+                
+            
+            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-h")
+        }
+        else{
+            //chiudi tutto
+            d3.select("#sc_settings_container")
+                .transition().duration(400)
+                .style("width","0px")
+                .style("visibility","hidden")
+
+            d3.select("#sc_settings_container").selectAll("*")
+                .style("opacity","1")
+                .transition().duration(400)
+                .style("opacity","0")
+                .style("visibility","hidden")
+
+            d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-v")
+        }
+    })
+
+    //*logic
+    d3.select("#toggle_global_div").style("visibility","visible").on("change",function(d){
+        GLOBAL = !GLOBAL
+        d3.select(this).select("text").text(function(d){
+            return GLOBAL? "Global max":"Local max" 
+        })
+        DrawSWComponents()
+    })
+
+    d3.select("#reset_sc").on("click",function(d){
+        SW_COMP_HIDE = []
+        SWC_ARRAY = ALL_SWC
+        d3.select(this).transition().duration(1000).style("opacity","0").style("display","none")
+        DrawSWComponents()
+    })
+
+    d3.select("#toggle_all_sc_div").style("visibility","visible").on("change",function(d){
+        var text = "All"
+        if(SWC_ARRAY == ALL_SWC){
+            SWC_ARRAY = SW_COMP_CVE_LIGHT
+            text = "Only vulnerable"
+        }
+        else{
+            SWC_ARRAY = ALL_SWC
+        }
+        d3.select(this).select("text").text(text)
+        DrawSWComponents()
+    })
+}
+
+

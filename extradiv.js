@@ -83,12 +83,14 @@ function extraDivLogic(fw){
                 .text(param)
         }
         else{
-            score_cont = par_div.append("div").attr("id","score_container")
-            score_cont.append("button").text("base").style("width","fit-content")
-            score_cont.append("button").text("impact").style("width","fit-content")
-            score_cont.append("button").text("exploitability").style("width","fit-content")
+            score_cont = par_div.append("div").attr("class","radio_toolbar_extradiv")
+            buildBtns(score_cont,"base","score_param_btn","radioFruit1")
+            buildBtns(score_cont,"impact","score_param_btn","radioFruit1")
+            buildBtns(score_cont,"exploitability","score_param_btn","radioFruit1")
+            
         }
     });
+
 
     bottom = d3.select("#parameters_container").append("div").attr("id","reset_start_container")
     bottom.append("button").text("reset").style("width","fit-content").style("margin-right","10px").on("click",function(d){
@@ -123,4 +125,19 @@ function extraDivLogic(fw){
         
 
     })
+}
+
+function buildBtns(cont,id,family,name){ //shared with sc component
+    cont.append("input")
+                .attr("type","radio")   
+                .attr("id",id+family)
+                .attr("name",name)
+    cont.append("label")
+                .attr("for",id+family)
+                .text(id)
+                .on("click",function(d){
+                    SCORE_TYPE = id+"_score"
+                    if(family == "score_sc_btn") DrawSWComponents()
+                })
+    
 }

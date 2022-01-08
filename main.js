@@ -170,6 +170,7 @@ function collectSWC(sc){
             if(n == element && ! sc_ordered.includes(element)) sc_ordered.push(n)
         }
     });
+    //TODO da sortare in base al critical
 
     ALL_SWC.forEach(element => {
         if(! sc_ordered.includes(element)) {

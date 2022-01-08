@@ -44,6 +44,8 @@ body {
 #parameters_expand{
   visibility: hidden;
   width: fit-content;
+  color: white;
+  background-color: #978e8e78;
 }
 #appendix{
   display: flex;
@@ -151,7 +153,20 @@ body {
   /* color: #00000029; */
 }
 /** LEFT SIDE DIV */
+#sc_settings_container{
+  position: absolute;
+  border: solid;
+  visibility: hidden;
+  margin-left: 1px;
+  background-color: #6e747e;
+  border-width: 1px;
+  padding-right: 5px;
+}
 
+#sc_menu{
+  display: flex;
+  justify-content: space-between;
+}
 #sw_comp_expand{
   margin-top: 5px;
   visibility: hidden;
@@ -163,31 +178,28 @@ body {
   font-size: 13px;
 }
 #sw_comp_expand_btn{
-  border-color: transparent;
+  /* border-color: transparent; */
   height: fit-content;
-  background-color: transparent;
-}
-.fa-plus:before {
-  content: "\f067";
+  /* background-color: transparent; */
   color: white;
-  border: solid;
-  border-width: 1px;
-  padding: 5px;
-}
-.fa-minus:before {
-  content: "\f067";
-  color: white;
-  border: solid;
-  border-width: 1px;
-  padding: 5px;
-}
-#toggle_global_div{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: fit-content;
+  background-color: #978e8e78;
 }
 
+#toggle_global_div{
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+}
+#toggle_all_sc_div{
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+}
+
+#reset_sc_div{
+  display: flex;
+  justify-content: space-around;
+}
 /**MARQUEE*/
 .marqueeable{
   margin-top: 0px;

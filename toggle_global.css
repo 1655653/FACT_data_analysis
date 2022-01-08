@@ -11,6 +11,21 @@
     height: 0;
   }
   
+#toggle_all_sc_div > .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+#toggle_all_sc_div > .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+
+
 label >  .slider {
     position: absolute;
     cursor: pointer;
