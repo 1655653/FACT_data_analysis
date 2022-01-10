@@ -125,25 +125,26 @@ function callFW() {
                 console.log("ASKING NIST")
                 //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
                 SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
-                console.log("NIST RESPONDED WITH ALL CVE")
+                console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
-                //*-------DANGER 
+                //*-------DANGER (RIGHTSIDE) 
                 console.log("RANKING FOs")
                 rankdanger(data.firmware,SCORE_TYPE) //Riempie DANGER
                 drawDanger()
-                console.log("RANK ENDED")
-                console.log(DANGER)
-
-                // //*-----PARAMETERS
+                // //*-----parameters
                 // //*extradiv con tutti gli slider
                 extraDiv(data.firmware)
-
+                console.log("---------RANK ENDED")
+                console.log(DANGER)
+                
+                //*-------SW COMPONENTS + CVE VIEW (LEFTSIDE) 
                 //buildEXMDataset(data.firmware.analysis.exploit_mitigations.summary)
-
+                console.log("BUILDING SW COMPONENTS + CVE VIEW")
                 collectSWC(data.firmware.analysis.software_components.summary)
-                console.log(ALL_SWC)
                 DrawSWComponents()
+                console.log("---------SW COMPONENTS + CVE VIEW BUILT")
+                console.log(ALL_SWC)
             })();
             
         })
@@ -154,73 +155,16 @@ function callFW() {
     list_packed_hid=[]
     list_packed_uid = []    
 }
-function collectSWC(sc){
-    for (const key in sc) {
-        if (Object.hasOwnProperty.call(sc, key)) {
-            const element = sc[key];
-            ALL_SWC.push(key)
-        }
-    }
-    //*sorto come voglio io
-    sc_ordered = []
-    ALL_SWC.forEach(element => {
-        for (let i = 0; i < SW_COMP_CVE.length; i+=10) {
-            const n = SW_COMP_CVE[i].cpe_name.replace("(CRITICAL)","").trim();
-            if(! SW_COMP_CVE_LIGHT.includes(n)) SW_COMP_CVE_LIGHT.push(n)
-            if(n == element && ! sc_ordered.includes(element)) sc_ordered.push(n)
-        }
-    });
-    //TODO da sortare in base al critical
 
-    ALL_SWC.forEach(element => {
-        if(! sc_ordered.includes(element)) {
-            SW_COMP_NO_CVE.push(element)
-            sc_ordered.push(element)
-        }
-    });
-    ALL_SWC = sc_ordered
-    SWC_ARRAY = SW_COMP_CVE_LIGHT //starts violin with this config
-
-    // console.log(sc_ordered)
-    
-
+function drawDanger(){
+    d3.select("#search_bar_FO").remove()
+    d3.select(".refresh").selectAll("*").remove()
+    d3.select("#rightside").selectAll("text").remove()
+    drawSingleDanger("c","critical")
+    drawSingleDanger("s","sus")
+    drawSingleDanger("n","neutral")
+    buildSearchBar()
 }
-function download(uid,contentType){
-    var urldw = endpoint+"binary/"+uid
-    d3.json(urldw, function(data) {
-        //alert("download started");
-        var b64 = data.binary
-        const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-        const byteCharacters = atob(b64Data);
-        const byteArrays = [];
-    
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-    
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-            }
-    
-            const byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
-        }
-    
-        const blob = new Blob(byteArrays, {type: contentType});
-        return blob;
-        }
-        const blob = b64toBlob(b64, contentType);
-        const blobUrl = URL.createObjectURL(blob);
-    
-        //window.location = blobUrl;
-        // // Construct the <a> element
-        var link = document.createElement("a");
-        link.download = data.file_name
-        link.href = blobUrl;
-    
-        document.body.appendChild(link);
-        link.click();
-    })
-}
+
 
 

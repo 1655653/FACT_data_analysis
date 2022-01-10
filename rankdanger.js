@@ -9,6 +9,8 @@ EXM_FILL = "#83cd4b"
 AAA_FILL = "#c80003"
 EXTRA_DIV_COLOR = "#6e747e"
 BCKGROUND_COLOR = "#4f545c"
+
+
 function rankdanger(fw,score){
     //clean
     //DANGER={"system":[],"user":[]} //?e.g system.uid=score --->system.464665=10
@@ -127,15 +129,6 @@ var metric_occurrences ={
     "EXM":0,
     "KVU":0,
 }
-function drawDanger(){
-    d3.select("#search_bar_FO").remove()
-    d3.select(".refresh").selectAll("*").remove()
-    d3.select("#rightside").selectAll("text").remove()
-    drawSingleDanger("c","critical")
-    drawSingleDanger("s","sus")
-    drawSingleDanger("n","neutral")
-    buildSearchBar()
-   }
 
 metric_occurrences_list = []
 
@@ -389,7 +382,7 @@ function summaExpand(rect_dim,t,type){
 }
 //*draw histogram
 function drawHistogramSumma(rect_dim,t,type){
-    console.log(metric_occurrences_list)
+    //console.log(metric_occurrences_list)
     metric_occurrences = metric_occurrences_list[tToIndex(t)]
     let margin = {top: 20, right: 0, bottom: 15, left: 0};
     let svgWidth = getDimFloat("FO_squares_div_"+t,"width"), svgHeight = rect_dim*5;
@@ -477,48 +470,3 @@ function drawHistogramSumma(rect_dim,t,type){
 }
 
 
-//*utils
-function tToIndex(t){
-    switch (t) {
-        case "c":
-            return 0
-        case "s":
-            return 1
-        case "n":
-            return 2
-    
-      
-    }
-}
-function rotateLabel(s,e,d){
-    var startTranslateState = 'rotate('+s+'deg)';
-    var endTranslateState = 'rotate('+e+'deg)';
-    var translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
-    d3.select("#param_label")
-        .transition()
-        .duration(d)
-        .styleTween('transform', function (d) {
-            return translateInterpolator;
-        });
-}
-function cve_count(d,type){
-    switch (type) {
-        case "base_score":
-            return d.all_cve_objects_bs
-        case "exploitability_score":
-            return d.all_cve_objects_es
-        case "impact_score":
-            return d.all_cve_objects_is
-    }
-}
-function getDimFloat(id,dim){
-    var r 
-    try {
-        r = parseFloat(d3.select("#"+id).style(dim).split("px")[0])
-        if(!Number.isNaN(r))return r
-        throw new Error('getDimFloat error, NAN in '+id + " "+dim)
-    
-    } catch (error) {
-        throw error
-    }
-}

@@ -200,6 +200,14 @@ body {
   display: flex;
   justify-content: space-around;
 }
+.tooltip_sw_comp{
+  background-color: #4f545c;
+  border: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+}
 /**MARQUEE*/
 .marqueeable{
   margin-top: 0px;
