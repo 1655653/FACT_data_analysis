@@ -189,7 +189,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 d3.select(this).attr("fill",fill_square)
             }
             //*---------- tooltip
-            var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+            var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
             /**------------------------------------------- */ //se ti vuoi avventurare
             // var div_txt= d3.select("#FO_name_div_"+t).append("div").attr("id","div_of_"+fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
@@ -270,14 +270,14 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         if(t=="c") {name_div = "CRITICAL";color = "red"}
         if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
         if(t=="n") {name_div = "NEUTRAL";color = "white"}
-        d3.select("#FO_name_div_"+t).append("text").text(name_div)
+        d3.select("#FO_name_div_"+t).append("span").text(name_div)
             .style("height",d3.select("#FO_titles_div_"+t).style("height"))
             .style("width",d3.select("#FO_titles_div_"+t).style("width"))
             .style("color",color)
             .style("text-align","end")
             .lower() 
             .attr("class","no_search")
-        d3.select("#FO_score_div_"+t).append("text").text("placeholder")
+        d3.select("#FO_score_div_"+t).append("span").text("placeholder")
             .style("height",d3.select("#FO_titles_div_"+t).style("height"))
             .style("width","1px")
             .style("visibility","hidden")
@@ -285,15 +285,15 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .attr("class","no_search")
         
         // //*accetta
-        d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
-            text = d3.select(this).text()
-            wi_text = d3.select(this).style("width")
-            wi_div = d3.select("#FO_name_div_"+t).style("width")
-            if(text.length>15){
-                text = text.substring(text.length-15,text.length)
-            }
-            return text
-        })
+        // d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
+        //     text = d3.select(this).text()
+        //     wi_text = d3.select(this).style("width")
+        //     wi_div = d3.select("#FO_name_div_"+t).style("width")
+        //     if(text.length>15){
+        //         text = text.substring(text.length-15,text.length)
+        //     }
+        //     return text
+        // })
         // .on("mouseover",function(d){
         //     hid = d3.select(this).attr("id").replace("_EXTENSION_",".").replace(/[_]/g,"/")
         //     console.log(hid)
@@ -464,7 +464,7 @@ function drawHistogramSumma(rect_dim,t,type){
         .attr("text-anchor", "middle");
 
     svg_histo.selectAll(".axis--y").style("visibility", "hidden")  
-    svg_histo.selectAll(".axis--x").selectAll("text").style("visibility", "hidden")  
+    svg_histo.selectAll(".axis--x").selectAll("span").style("visibility", "hidden")  
     svg_w = getDimFloat("FO_name_div_c","width") + getDimFloat("FO_score_div_c","width") 
 
 }

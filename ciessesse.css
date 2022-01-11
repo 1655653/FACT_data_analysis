@@ -113,7 +113,8 @@ body {
 .div_column{
   display: flex;
   flex-direction: column;
-  width: fit-content;
+  
+  /* width: fit-content; */
   /* max-height: 25%; */
 }
 .overall{

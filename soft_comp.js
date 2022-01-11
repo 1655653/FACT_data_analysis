@@ -1,4 +1,5 @@
 var HISTO_RES = 20
+var PRECISION = 0.4
 function DrawSWComponents(){
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
     d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
@@ -140,10 +141,10 @@ function DrawSWComponents(){
                 curr_x = (d3.event.clientX-path_wid.left)/slice
                 console.log(curr_x.toFixed(1))
                 cpe_name_selected= d3.select(this).attr("id").replace("path_of_","").trim()
-                var precision = 0.2
+                
                 var cves_list = []
                 violin_data.forEach(element => {
-                    if(element.cpe_name==cpe_name_selected && element.score > (curr_x-precision) && element.score<(curr_x+precision))
+                    if(element.cpe_name==cpe_name_selected && element.score > (curr_x-PRECISION) && element.score<(curr_x+PRECISION))
                         cves_list.push(element)
                 });
                 vis = cves_list.length>0? "visible":"hidden"
@@ -154,24 +155,24 @@ function DrawSWComponents(){
                     .style('left', (d3.event.pageX + 1) + 'px')
                     .style('top', (d3.event.pageY + 1) + 'px')
                     // .html(cves_list.map(e => e.cve_name+"<br>Score: "+e.score+"<br>"))
-                    cves_list.forEach(e => {
-                        d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
-                        d3.select(".tooltip_sw_comp").append("br")
-                    });
+                    // cves_list.forEach(e => {
+                    //     d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
+                    //     d3.select(".tooltip_sw_comp").append("br")
+                    // });
                   
 
             })
             .on("mousemove",function(d){
+                d3.select(".tooltip_sw_comp").selectAll("*").remove()
                 // retrieve the cve the user wants
                 var path_wid=d3.select(this).node().getBoundingClientRect()
                 var slice = path_wid.width/10
                 curr_x = (d3.event.clientX-path_wid.left)/slice
                 console.log(curr_x.toFixed(1))
                 cpe_name_selected= d3.select(this).attr("id").replace("path_of_","").trim()
-                var precision = 0.1
                 var cves_list = []
                 violin_data.forEach(element => {
-                    if(element.cpe_name==cpe_name_selected && element.score > (curr_x-precision) && element.score<(curr_x+precision))
+                    if(element.cpe_name==cpe_name_selected && element.score > (curr_x-PRECISION) && element.score<(curr_x+PRECISION))
                         cves_list.push(element)
                 });
                 console.log(cves_list)
@@ -185,15 +186,12 @@ function DrawSWComponents(){
                 cves_list.forEach(e => {
                     d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
                         .on("click", function(h){
+                            console.log(e.cve_name)
                             var ur = "https://nvd.nist.gov/vuln/detail/"+e.cve_name
                             window.open(ur, '_blank').focus();
-                    })
+                        })
                     d3.select(".tooltip_sw_comp").append("br")
                 });
-                    
-                //.html(cves_list.map(e => e.cve_name+"<br>Score: "+e.score+"<br>"))
-
-                //if(cves_list.length==0) d3.selectAll(".tooltip_sw_comp").remove()
             })
             .on("click",function(d){
                 d3.selectAll(".tooltip_sw_comp").remove()

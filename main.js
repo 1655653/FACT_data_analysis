@@ -123,8 +123,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup)
-                SW_COMP_CVE = FAKE_NIST_CALL //debug reasons
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                SW_COMP_CVE = FAKE_NIST_CALL // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
