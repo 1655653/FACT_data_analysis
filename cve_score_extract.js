@@ -102,13 +102,13 @@ async function buildSWComponentWithCVE(cve_lookup){
             return d.cpe_name!= sc_empty_name
         })
     });
-    //console.log(JSON.stringify(SW_COMP_CVE, null, 2))
+    console.log(JSON.stringify(SW_COMP_CVE, null, 2))
     //console.log(heatmap_data)
 
 
     
     
-    //console.log("-------------------HEATMAP DATASET BUILT")
+    console.log("-------------------HEATMAP DATASET BUILT")
 }
 
 

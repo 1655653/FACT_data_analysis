@@ -154,6 +154,16 @@ body {
   /* color: #00000029; */
 }
 /** LEFT SIDE DIV */
+.sus_icon{
+  position: absolute;
+  color: yellow;
+
+}
+.danger_icon{
+  position: absolute;
+  color: red;
+}
+
 #sc_settings_container{
   position: absolute;
   border: solid;

@@ -1,5 +1,38 @@
 var HISTO_RES = 20
 var PRECISION = 0.4
+function BuildIconDs(violin_data){
+    violin_data.forEach(violin_el => {
+        CRITICAL_FO.system.forEach(critical_el => {
+            hid_tag = "danger_icon_of_"+critical_el.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+            cpe_tag = violin_el.cpe_name
+            // id_name = "hid_tag_"+hid_tag+"_cpe_tag_"+cpe_tag.replaceAll(" ","_SPACE_").replaceAll(/[.]/g,"_DOT_").replace("(CRITICAL)","_CRITICAL_").trim()
+            if(d3.select("#"+hid_tag).empty())
+                if(critical_el.hid == violin_el.hid) {
+                    d3.select("#leftside").append("div")
+                        .attr("id",hid_tag)
+                        .attr("name",cpe_tag)
+                        .attr("class","danger_icon")
+                        .append("i")
+                        .attr("class","danger_icon fas fa-exclamation-circle")
+                        
+                }
+        });
+        SUS_FO.system.forEach(critical_el => {
+            hid_tag = "sus_icon_of_"+critical_el.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+            cpe_tag = violin_el.cpe_name
+            if(d3.select("#"+hid_tag).empty())
+                if(critical_el.hid == violin_el.hid) {
+                    d3.select("#leftside").append("div")
+                        .attr("id",hid_tag)
+                        .attr("name",cpe_tag)
+                        .attr("class","sus_icon")
+                        .append("i")
+                        .attr("class","sus_icon fas fa-exclamation-circle")
+
+                }
+        });
+    });
+}
 function DrawSWComponents(){
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
     d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
@@ -7,6 +40,7 @@ function DrawSWComponents(){
     menuSWCOMP()
     //*start drawing svg
     var violin_data = convertSWCtoVolin()
+    BuildIconDs(violin_data)
     // set the dimensions and margins of the graph
     var margin_violin = {top: 5, right: 40, bottom: 30, left: 40},
     width_violin = getDimFloat("sw_comp_svg_container","width") - margin_violin.left - margin_violin.right,
@@ -46,7 +80,9 @@ function DrawSWComponents(){
                     h =  " ⚠️"
                 }
             });
-            return d+h })
+            
+            d3.select(this).attr("id", "text_of_"+d)
+            return d.replace("(CRITICAL)","").trim()+h })
         .attr("transform", "translate(10,-12)")
         .style("text-anchor", "start")
         .style("font-size", "17px")
@@ -57,6 +93,8 @@ function DrawSWComponents(){
             d3.select("#reset_sc").style("display","block").style("opacity","0").transition().duration(1000).style("opacity","1")
             DrawSWComponents()
         })
+    //*set icons from rankdanger
+
 
     svg_violin.append("g")
         .attr("transform", "translate(0," + 0 + ")")

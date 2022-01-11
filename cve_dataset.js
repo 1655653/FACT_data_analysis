@@ -9,7 +9,7 @@ function convertSWCtoVolin(){
                     "hid": ALL_REST_RESPONSE[uid].hid,
                     "score": cve[SCORE_TYPE],
                     "cve_name":cve.cve_code,
-                    "cpe_name":element.cpe_name.replace("(CRITICAL)","").trim()
+                    "cpe_name":element.cpe_name
                 }
                 if(! SW_COMP_HIDE.includes(el.cpe_name)) new_dataset.push(el)
             });
@@ -17,6 +17,37 @@ function convertSWCtoVolin(){
 
     });
     //console.log(new_dataset)
+
+
+    //*sorto come voglio io
+    SW_COMP_CVE_LIGHT.sort((a,b) => {
+        //rank first by max value
+        var max_a = 0
+        var max_b = 0
+        new_dataset.forEach(element => {
+            if(element.cpe_name == a && max_a < element.score) max_a = element.score
+            if(element.cpe_name == b && max_b < element.score) max_b = element.score
+        });
+        return max_a > max_b ? -1 : 1
+        
+    })
+    ALL_SWC.sort((a,b) => {
+        //rank first by max value
+        var max_a = 0
+        var max_b = 0
+        new_dataset.forEach(element => {
+            if(element.cpe_name == a && max_a < element.score) max_a = element.score
+            if(element.cpe_name == b && max_b < element.score) max_b = element.score
+        });
+        return max_a > max_b ? -1 : 1
+        // if(a.includes("(CRITICAL)") && b.includes("(CRITICAL)")) return d3.ascending(a,b)
+        // if(a.includes("(CRITICAL)")) return -1
+        // if(b.includes("(CRITICAL)")) return 1
+        // if(SW_COMP_CVE_LIGHT.includes(a)) return -1
+        // if(SW_COMP_CVE_LIGHT.includes(b)) return 1
+        // return d3.ascending(a,b)
+    })
+
     return new_dataset
 }
 function collectSWC(sc){
@@ -26,27 +57,17 @@ function collectSWC(sc){
             ALL_SWC.push(key)
         }
     }
-    //*sorto come voglio io
-    sc_ordered = []
-    ALL_SWC.forEach(element => {
-        for (let i = 0; i < SW_COMP_CVE.length; i+=10) {
-            const n = SW_COMP_CVE[i].cpe_name.replace("(CRITICAL)","").trim();
-            if(! SW_COMP_CVE_LIGHT.includes(n)) SW_COMP_CVE_LIGHT.push(n)
-            if(n == element && ! sc_ordered.includes(element)) sc_ordered.push(n)
-        }
-    });
-    //TODO da sortare in base al critical
-
-    ALL_SWC.forEach(element => {
-        if(! sc_ordered.includes(element)) {
-            SW_COMP_NO_CVE.push(element)
-            sc_ordered.push(element)
-        }
-    });
-    ALL_SWC = sc_ordered
-    SWC_ARRAY = SW_COMP_CVE_LIGHT //starts violin with this config
-
-    // console.log(sc_ordered)
     
+    for (let i = 0; i < SW_COMP_CVE.length; i+=10) {
+        const n_trimmed = SW_COMP_CVE[i].cpe_name.replace("(CRITICAL)","").trim();
+        const n = SW_COMP_CVE[i].cpe_name
+        if(! SW_COMP_CVE_LIGHT.includes(n)) SW_COMP_CVE_LIGHT.push(n)
+        if(n.includes("(CRITICAL)")) {
+            index = ALL_SWC.indexOf(n_trimmed)
+            ALL_SWC[index] += " (CRITICAL)"
+        }
+    }
+
+    SWC_ARRAY = SW_COMP_CVE_LIGHT //starts violin with this config
 
 }
