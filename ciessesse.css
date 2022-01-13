@@ -155,13 +155,19 @@ body {
 }
 /** LEFT SIDE DIV */
 .sus_icon{
-  position: absolute;
   color: yellow;
-
+  margin-right: 5px;
 }
 .danger_icon{
+  color: #c80003;
+  margin-right: 5px;
+}
+.neutral_icon{
+  color: #797979;
+  margin-right: 5px;
+}
+.sw_div_icon{
   position: absolute;
-  color: red;
 }
 
 #sc_settings_container{
@@ -177,6 +183,7 @@ body {
 #sc_menu{
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 #sw_comp_expand{
   margin-top: 5px;

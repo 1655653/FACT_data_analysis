@@ -95,14 +95,77 @@ async function buildSWComponentWithCVE(cve_lookup){
         });
         if(empty==10) sc_empty.push(name)
     }
-    console.log(sc_empty)
+    // console.log(sc_empty)
+    // console.log(SW_COMP_CVE)
 
     sc_empty.forEach(sc_empty_name => {
         SW_COMP_CVE = SW_COMP_CVE.filter(function(d){
             return d.cpe_name!= sc_empty_name
         })
     });
-    console.log(JSON.stringify(SW_COMP_CVE, null, 2))
+
+
+    //*the ones in empty must be added manually using fact summary.
+    sc_empty.forEach(element => {
+        
+        uidd_list = cve_lookup_fw[element]
+        hidd_list = []
+        uidd_list.forEach(uid => {
+            hidd_list.push(ALL_REST_RESPONSE[uid].hid)
+        });
+        for (let i = 1; i <= 10; i++) {
+            var el = {
+                "cpe_name":element,
+                "cve_count":0,
+                "base_score":i,
+                "exploitability_score":i,
+                "impact_score":i,
+                "all_cve_objects_bs":[], //here are put the cve with that score
+                "all_cve_objects_es":[],
+                "all_cve_objects_is":[],
+                "uid_affected":uidd_list,
+                "hid_affected":hidd_list
+            }
+            SW_COMP_CVE.push(el)
+        }
+        // console.log(ALL_REST_RESPONSE[uidd_list[0]].cve_results)
+        for (const key in ALL_REST_RESPONSE[uidd_list[0]].cve_results) {
+            if (Object.hasOwnProperty.call(ALL_REST_RESPONSE[uidd_list[0]].cve_results, key)) {
+                if(element.includes(key)){
+                    const cve_batch = ALL_REST_RESPONSE[uidd_list[0]].cve_results[key];
+                    for (const cve_key in cve_batch) {
+                        if (Object.hasOwnProperty.call(cve_batch, cve_key)) {
+                            const cve = cve_batch[cve_key];
+                            // console.log(cve)//{cpe_version: '3.0.5', score2: '5.4', score3: 'N/A'}
+                            // console.log(key)//Netgear Smart Wizzard 3.0
+                            var cve_obj = {}
+                            cve_obj["cve_code"]= cve_key
+                            cve_obj["version"]=cve.cpe_version
+                            var score = cve.score3=="N/A"? cve.score2:cve.score3
+                            cve_obj["base_score"]= score
+                            cve_obj["impact_score"]= "N/A" //!dubbio se mettere na o basescore
+                            cve_obj["exploitability_score"]= "N/A"
+                            SW_COMP_CVE.forEach(sw_comp_el => {
+                                if(sw_comp_el.cpe_name == element){
+                                    if(score.split(".")[0]==sw_comp_el.base_score)
+                                        sw_comp_el.all_cve_objects_bs.push(cve_obj)
+                                }
+                            });
+                        }
+                    }
+
+                }
+                
+            }
+        }
+        // for (const sc of ALL_REST_RESPONSE[uidd_list[0]].cve_results) {
+        //     console.log(sc)
+            
+        // }
+
+
+    });
+    //console.log(JSON.stringify(SW_COMP_CVE, null, 2))
     //console.log(heatmap_data)
 
 

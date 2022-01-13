@@ -1,7 +1,6 @@
 function buildSearchBar(){
     w = getDimFloat("rightside","width")
     sb = d3.select("#rightside").append('textarea').attr("id","search_bar_FO").style("width",w+"px")
-    //sb.html("porcodio")
     sb
     .on("keydown",function(d){ 
         if(d3.event.keyCode==13 && !d3.event.shiftKey) {

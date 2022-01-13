@@ -44,6 +44,7 @@ list_response_unpacker=[]
 var list_packed=[]
 var list_packed_hid=[]
 var list_packed_uid = []
+var cve_lookup_fw
 
 ListMimes = [] //? lista con i subtypes
 ListSuperMimes = []//?lista con solo i types
@@ -90,6 +91,7 @@ function callFW() {
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
         
             //console.log(data)
+            cve_lookup_fw= data.firmware.analysis.cve_lookup.summary
             //***build root of Tree
             document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
             list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
@@ -123,8 +125,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                // await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
@@ -164,7 +166,7 @@ function drawDanger(){
     drawSingleDanger("c","critical")
     drawSingleDanger("s","sus")
     drawSingleDanger("n","neutral")
-    buildSearchBar()
+    //buildSearchBar()
 }
 
 

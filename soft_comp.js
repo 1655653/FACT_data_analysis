@@ -1,46 +1,74 @@
 var HISTO_RES = 20
 var PRECISION = 0.4
-function BuildIconDs(violin_data){
-    violin_data.forEach(violin_el => {
-        CRITICAL_FO.system.forEach(critical_el => {
-            hid_tag = "danger_icon_of_"+critical_el.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
-            cpe_tag = violin_el.cpe_name
-            // id_name = "hid_tag_"+hid_tag+"_cpe_tag_"+cpe_tag.replaceAll(" ","_SPACE_").replaceAll(/[.]/g,"_DOT_").replace("(CRITICAL)","_CRITICAL_").trim()
-            if(d3.select("#"+hid_tag).empty())
-                if(critical_el.hid == violin_el.hid) {
-                    d3.select("#leftside").append("div")
-                        .attr("id",hid_tag)
-                        .attr("name",cpe_tag)
-                        .attr("class","danger_icon")
-                        .append("i")
-                        .attr("class","danger_icon fas fa-exclamation-circle")
-                        
-                }
-        });
-        SUS_FO.system.forEach(critical_el => {
-            hid_tag = "sus_icon_of_"+critical_el.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
-            cpe_tag = violin_el.cpe_name
-            if(d3.select("#"+hid_tag).empty())
-                if(critical_el.hid == violin_el.hid) {
-                    d3.select("#leftside").append("div")
-                        .attr("id",hid_tag)
-                        .attr("name",cpe_tag)
-                        .attr("class","sus_icon")
-                        .append("i")
-                        .attr("class","sus_icon fas fa-exclamation-circle")
+function BuildIconDs(){
 
-                }
-        });
-    });
+    for (const key in cve_lookup_fw) {
+        if (Object.hasOwnProperty.call(cve_lookup_fw, key)) {
+            const Fos = cve_lookup_fw[key];
+            if(SW_COMP_HIDE.filter(e => e === key).length == 0) {
+                
+                //key BusyBox 1.13.0 (CRITICAL)
+                //fos array of fo
+                txt_elem = d3.selectAll('text').filter(function(){
+                    if(d3.select(this).attr('id'))
+                        return d3.select(this).attr('id') == "text_of_"+key
+                });
+                txt_elem = txt_elem.node().getBoundingClientRect()
+                // console.log(txt_elem)
+                // console.log(key)
+                pivot = d3.select("#sc_menu").node().getBoundingClientRect()
+                // console.log(pivot)
+                d3el = d3.select("#sc_menu").append("div")
+                        .attr("class","sw_div_icon")
+                Fos.forEach(fo => {
+                    //check if fo is in critical  or in sus 
+                    CRITICAL_FO.system.forEach(crit_el => {
+                        if(fo == crit_el.uid){
+                            d3el.append("i")
+                                .attr("class","danger_icon fas fa-exclamation-circle")
+                                .attr("margin-right","2px")
+                                .on("click",function(d){console.log(crit_el)})
+                            }
+                        });
+                    SUS_FO.system.forEach(crit_el => {
+                        if(fo == crit_el.uid){
+                            d3el.append("i")
+                                .attr("class","sus_icon fas fa-exclamation-circle")
+                                .attr("margin-right","2px")
+                                .on("click",function(d){console.log(crit_el)})
+                        }
+                    });
+                    NEUTRAL_FO.system.forEach(crit_el => {
+                        if(fo == crit_el.uid){
+                            d3el.append("i")
+                                .attr("class","neutral_icon fas fa-exclamation-circle")
+                                .attr("margin-right","2px")
+                                .on("click",function(d){console.log(crit_el)})
+                        }
+                    });
+
+                });
+                // console.log("pivot.top "+pivot.top)
+                // console.log("txt_elem.top "+txt_elem.top)
+                d3el.style("left",parseFloat(txt_elem.left+txt_elem.width)+"px")
+                d3el.style("top",parseFloat(txt_elem.top-pivot.top)+"px")
+                // console.log(parseFloat(txt_elem.top-pivot.top))
+            }
+            
+        }
+    }
+
 }
+
 function DrawSWComponents(){
+    d3.selectAll(".sw_div_icon").transition().duration(400).style("opacity","0").remove()
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
     d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
     //*text above
     menuSWCOMP()
     //*start drawing svg
     var violin_data = convertSWCtoVolin()
-    BuildIconDs(violin_data)
+    
     // set the dimensions and margins of the graph
     var margin_violin = {top: 5, right: 40, bottom: 30, left: 40},
     width_violin = getDimFloat("sw_comp_svg_container","width") - margin_violin.left - margin_violin.right,
@@ -62,7 +90,7 @@ function DrawSWComponents(){
     var x_viol = d3.scaleLinear()
     .domain([ 0.0,10.0 ])          // Note that here the Y_viol scale is set manually
     .range([0,width_violin])        
-
+    console.log(SWC_ARRAY)
     // Build and Show the Y scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x_viol.bandwidth
     var y_viol = d3.scaleBand()
     .range([ 0, height_violin ])
@@ -88,8 +116,9 @@ function DrawSWComponents(){
         .style("font-size", "17px")
         .on("click",function(d){
             to_hide = d3.select(this).text().replace(" ⚠️","")
-            SWC_ARRAY = SWC_ARRAY.filter(e => e !== to_hide)
-            SW_COMP_HIDE.push(to_hide)
+            original_name = SWC_ARRAY.filter(e => e.includes(to_hide))
+            SWC_ARRAY = SWC_ARRAY.filter(e => e !== original_name[0])
+            SW_COMP_HIDE.push(original_name[0])
             d3.select("#reset_sc").style("display","block").style("opacity","0").transition().duration(1000).style("opacity","1")
             DrawSWComponents()
         })
@@ -134,7 +163,7 @@ function DrawSWComponents(){
     var yNum = d3.scaleLinear()
       .range([0, y_viol.bandwidth()])
       .domain([-maxNum,maxNum])
-
+    var toggle_tooltip = false
     svg_violin
         .selectAll("myViolin")
         .data(sumstat)
@@ -177,7 +206,6 @@ function DrawSWComponents(){
                 var path_wid=d3.select(this).node().getBoundingClientRect()
                 var slice = path_wid.width/10
                 curr_x = (d3.event.clientX-path_wid.left)/slice
-                console.log(curr_x.toFixed(1))
                 cpe_name_selected= d3.select(this).attr("id").replace("path_of_","").trim()
                 
                 var cves_list = []
@@ -190,14 +218,8 @@ function DrawSWComponents(){
                     .append("div")
                     .style("visibility", vis)
                     .attr("class", "tooltip_sw_comp")
-                    .style('left', (d3.event.pageX + 1) + 'px')
-                    .style('top', (d3.event.pageY + 1) + 'px')
-                    // .html(cves_list.map(e => e.cve_name+"<br>Score: "+e.score+"<br>"))
-                    // cves_list.forEach(e => {
-                    //     d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
-                    //     d3.select(".tooltip_sw_comp").append("br")
-                    // });
-                  
+                    .style('left', (d3.event.clientX + 1) + 'px')
+                    .style('top', (d3.event.clientY + 1) + 'px')
 
             })
             .on("mousemove",function(d){
@@ -206,14 +228,12 @@ function DrawSWComponents(){
                 var path_wid=d3.select(this).node().getBoundingClientRect()
                 var slice = path_wid.width/10
                 curr_x = (d3.event.clientX-path_wid.left)/slice
-                console.log(curr_x.toFixed(1))
                 cpe_name_selected= d3.select(this).attr("id").replace("path_of_","").trim()
                 var cves_list = []
                 violin_data.forEach(element => {
                     if(element.cpe_name==cpe_name_selected && element.score > (curr_x-PRECISION) && element.score<(curr_x+PRECISION))
                         cves_list.push(element)
                 });
-                console.log(cves_list)
                 vis = cves_list.length>0? "visible":"hidden"
 
                 d3.select(".tooltip_sw_comp")
@@ -231,8 +251,11 @@ function DrawSWComponents(){
                     d3.select(".tooltip_sw_comp").append("br")
                 });
             })
+            .on("mouseout",function(d){
+                if(! toggle_tooltip ) d3.selectAll(".tooltip_sw_comp").remove()
+            })
             .on("click",function(d){
-                d3.selectAll(".tooltip_sw_comp").remove()
+                toggle_tooltip = !toggle_tooltip
             })
     d3.selectAll(".viol_hist").transition()
             .duration(4000)
@@ -241,6 +264,9 @@ function DrawSWComponents(){
     d3.selectAll(".tick").each(function(d, i) {
         if(d=="0") d3.select(this).style("opacity","0") //fai sparire il tick zero 0
     })
+    //*icons
+    BuildIconDs()
+    
 }
 
 

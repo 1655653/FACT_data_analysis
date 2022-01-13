@@ -1,0 +1,10 @@
+{"cve_results": {
+    "Netgear Smart Wizzard 3.0": {
+        "CVE-2014-5797": {
+            "cpe_version": "3.0.5",
+            "score2": "5.4",
+            "score3": "N/A"
+        }
+    }
+  }
+}
