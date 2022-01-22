@@ -34,7 +34,8 @@ async function buildSWComponentWithCVE(cve_lookup){
                     "all_cve_objects_es":[],
                     "all_cve_objects_is":[],
                     "uid_affected":uidd_list,
-                    "hid_affected":hidd_list
+                    "hid_affected":hidd_list,
+                    "cpe_code":elem["cpe"]
                 }
                 SW_COMP_CVE.push(el)
                 
@@ -107,7 +108,7 @@ async function buildSWComponentWithCVE(cve_lookup){
 
     //*the ones in empty must be added manually using fact summary.
     sc_empty.forEach(element => {
-        
+        //create the 10 elements
         uidd_list = cve_lookup_fw[element]
         hidd_list = []
         uidd_list.forEach(uid => {
@@ -128,6 +129,7 @@ async function buildSWComponentWithCVE(cve_lookup){
             }
             SW_COMP_CVE.push(el)
         }
+        //sends the right cve to the right entry
         // console.log(ALL_REST_RESPONSE[uidd_list[0]].cve_results)
         for (const key in ALL_REST_RESPONSE[uidd_list[0]].cve_results) {
             if (Object.hasOwnProperty.call(ALL_REST_RESPONSE[uidd_list[0]].cve_results, key)) {
@@ -158,14 +160,9 @@ async function buildSWComponentWithCVE(cve_lookup){
                 
             }
         }
-        // for (const sc of ALL_REST_RESPONSE[uidd_list[0]].cve_results) {
-        //     console.log(sc)
-            
-        // }
-
 
     });
-    //console.log(JSON.stringify(SW_COMP_CVE, null, 2))
+    // console.log(JSON.stringify(SW_COMP_CVE, null, 2))
     //console.log(heatmap_data)
 
 
@@ -252,7 +249,7 @@ async function make_CPE_nist_call(name){
         var nist_resp = await Promise.resolve(axios.get(nist_url))
         if(nist_resp.data.totalResults != 0) {
             pu = nist_resp.data.result.cpes[0].cpe23Uri.split(":").slice(0,6).join(":")
-            //console.log(pu)
+            console.log(pu)
             return pu
         }
         //console.log(nist_resp)

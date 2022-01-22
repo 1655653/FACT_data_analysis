@@ -1,67 +1,8 @@
 var HISTO_RES = 20
 var PRECISION = 0.4
-function BuildIconDs(){
-
-    for (const key in cve_lookup_fw) {
-        if (Object.hasOwnProperty.call(cve_lookup_fw, key)) {
-            const Fos = cve_lookup_fw[key];
-            if(SW_COMP_HIDE.filter(e => e === key).length == 0) {
-                
-                //key BusyBox 1.13.0 (CRITICAL)
-                //fos array of fo
-                txt_elem = d3.selectAll('text').filter(function(){
-                    if(d3.select(this).attr('id'))
-                        return d3.select(this).attr('id') == "text_of_"+key
-                });
-                txt_elem = txt_elem.node().getBoundingClientRect()
-                // console.log(txt_elem)
-                // console.log(key)
-                pivot = d3.select("#sc_menu").node().getBoundingClientRect()
-                // console.log(pivot)
-                d3el = d3.select("#sc_menu").append("div")
-                        .attr("class","sw_div_icon")
-                Fos.forEach(fo => {
-                    //check if fo is in critical  or in sus 
-                    CRITICAL_FO.system.forEach(crit_el => {
-                        if(fo == crit_el.uid){
-                            d3el.append("i")
-                                .attr("class","danger_icon fas fa-exclamation-circle")
-                                .attr("margin-right","2px")
-                                .on("click",function(d){console.log(crit_el)})
-                            }
-                        });
-                    SUS_FO.system.forEach(crit_el => {
-                        if(fo == crit_el.uid){
-                            d3el.append("i")
-                                .attr("class","sus_icon fas fa-exclamation-circle")
-                                .attr("margin-right","2px")
-                                .on("click",function(d){console.log(crit_el)})
-                        }
-                    });
-                    NEUTRAL_FO.system.forEach(crit_el => {
-                        if(fo == crit_el.uid){
-                            d3el.append("i")
-                                .attr("class","neutral_icon fas fa-exclamation-circle")
-                                .attr("margin-right","2px")
-                                .on("click",function(d){console.log(crit_el)})
-                        }
-                    });
-
-                });
-                // console.log("pivot.top "+pivot.top)
-                // console.log("txt_elem.top "+txt_elem.top)
-                d3el.style("left",parseFloat(txt_elem.left+txt_elem.width)+"px")
-                d3el.style("top",parseFloat(txt_elem.top-pivot.top)+"px")
-                // console.log(parseFloat(txt_elem.top-pivot.top))
-            }
-            
-        }
-    }
-
-}
 
 function DrawSWComponents(){
-    d3.selectAll(".sw_div_icon").transition().duration(400).style("opacity","0").remove()
+   
     d3.select("#sw_comp_svg_container").selectAll("*").transition().duration(400).style("opacity","0").remove()
     d3.select("#leftside").style("overflow-x","hidden").style("overflow-y","hidden")
     //*text above
@@ -90,7 +31,7 @@ function DrawSWComponents(){
     var x_viol = d3.scaleLinear()
     .domain([ 0.0,10.0 ])          // Note that here the Y_viol scale is set manually
     .range([0,width_violin])        
-    console.log(SWC_ARRAY)
+    // console.log(SWC_ARRAY)
     // Build and Show the Y scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x_viol.bandwidth
     var y_viol = d3.scaleBand()
     .range([ 0, height_violin ])
@@ -119,8 +60,9 @@ function DrawSWComponents(){
             original_name = SWC_ARRAY.filter(e => e.includes(to_hide))
             SWC_ARRAY = SWC_ARRAY.filter(e => e !== original_name[0])
             SW_COMP_HIDE.push(original_name[0])
-            d3.select("#reset_sc").style("display","block").style("opacity","0").transition().duration(1000).style("opacity","1")
+            d3.select("#reset_sc").style("display","block").style("opacity","0").transition().duration(100).style("opacity","1")
             DrawSWComponents()
+            
         })
     //*set icons from rankdanger
 
@@ -258,14 +200,14 @@ function DrawSWComponents(){
                 toggle_tooltip = !toggle_tooltip
             })
     d3.selectAll(".viol_hist").transition()
-            .duration(4000)
+            .duration(400)
             .style("opacity","1")
     if(height_violin > getDimFloat("leftside","max-height") ) d3.select("#leftside").style("overflow-y","auto")
     d3.selectAll(".tick").each(function(d, i) {
         if(d=="0") d3.select(this).style("opacity","0") //fai sparire il tick zero 0
     })
     //*icons
-    BuildIconDs()
+    BuildIconDs([])
     
 }
 
@@ -273,11 +215,11 @@ function DrawSWComponents(){
 
 var lock_width = false
 var original_width
-window.addEventListener("resize", function(event) {
-    lock_width = false
-    d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-h")
-    d3.select("#sw_comp_expand_btn").dispatch('click')
-})
+// window.addEventListener("resize", function(event) {
+//     lock_width = false
+//     d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-h")
+//     d3.select("#sw_comp_expand_btn").dispatch('click')
+// })
 function menuSWCOMP(){
     //*appearance
     d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")

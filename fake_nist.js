@@ -4457,7 +4457,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4496,7 +4497,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4684,7 +4686,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4700,7 +4703,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4784,7 +4788,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4809,7 +4814,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4889,7 +4895,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4928,7 +4935,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -4967,7 +4975,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "BusyBox 1.7.2 (CRITICAL)",
@@ -5000,7 +5009,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/bin/busybox"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:busybox:busybox:1.7.2"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5072,7 +5082,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5224,7 +5235,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5485,7 +5497,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5530,7 +5543,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5652,7 +5666,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5694,7 +5709,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5777,7 +5793,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5833,7 +5850,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5883,7 +5901,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.37 (CRITICAL)",
@@ -5924,7 +5943,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/share/man/man8/dnsmasq.8"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.37"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -5996,7 +6016,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6112,7 +6133,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6219,7 +6241,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6247,7 +6270,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6309,7 +6333,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6325,7 +6350,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6353,7 +6379,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6392,7 +6419,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6408,7 +6436,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Dnsmasq 2.78",
@@ -6424,7 +6453,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/dnsmasq"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:thekelleys:dnsmasq:2.78"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -15039,7 +15069,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -17564,7 +17595,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -17932,6 +17964,17 @@ FAKE_NIST_CALL_long =[
       }
     ],
     "all_cve_objects_es": [
+      {
+        "cve_code": "CVE-2021-45485",
+        "base_score": "7.5",
+        "impact_score": "3.6",
+        "exploitability_score": "3.9",
+        "attackVector": "NETWORK",
+        "baseSeverity": "HIGH",
+        "attackComplexity": "LOW",
+        "version": "4.0",
+        "description": "In the IPv6 implementation in the Linux kernel before 5.13.3, net/ipv6/output_core.c has an information leak because of certain use of a hash table which, although big, doesn't properly consider that IPv6-based attackers can typically choose among many IPv6 source addresses."
+      },
       {
         "cve_code": "CVE-2021-45100",
         "base_score": "7.5",
@@ -21942,6 +21985,17 @@ FAKE_NIST_CALL_long =[
     ],
     "all_cve_objects_is": [
       {
+        "cve_code": "CVE-2021-45485",
+        "base_score": "7.5",
+        "impact_score": "3.6",
+        "exploitability_score": "3.9",
+        "attackVector": "NETWORK",
+        "baseSeverity": "HIGH",
+        "attackComplexity": "LOW",
+        "version": "4.0",
+        "description": "In the IPv6 implementation in the Linux kernel before 5.13.3, net/ipv6/output_core.c has an information leak because of certain use of a hash table which, although big, doesn't properly consider that IPv6-based attackers can typically choose among many IPv6 source addresses."
+      },
+      {
         "cve_code": "CVE-2021-45486",
         "base_score": "5.5",
         "impact_score": "3.6",
@@ -27559,7 +27613,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -31071,7 +31126,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -39500,7 +39556,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -43481,7 +43538,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -43490,6 +43548,17 @@ FAKE_NIST_CALL_long =[
     "exploitability_score": 7,
     "impact_score": 7,
     "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2021-45485",
+        "base_score": "7.5",
+        "impact_score": "3.6",
+        "exploitability_score": "3.9",
+        "attackVector": "NETWORK",
+        "baseSeverity": "HIGH",
+        "attackComplexity": "LOW",
+        "version": "4.0",
+        "description": "In the IPv6 implementation in the Linux kernel before 5.13.3, net/ipv6/output_core.c has an information leak because of certain use of a hash table which, although big, doesn't properly consider that IPv6-based attackers can typically choose among many IPv6 source addresses."
+      },
       {
         "cve_code": "CVE-2021-45100",
         "base_score": "7.5",
@@ -47941,7 +48010,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -48295,7 +48365,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -48687,7 +48758,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "Linux Kernel 2.6.36 (CRITICAL)",
@@ -49940,7 +50012,8 @@ FAKE_NIST_CALL_long =[
     "hid_affected": [
       "/22000.cpio",
       "/34b9529fa009b11ae83527bbec6869f14c6328cb46fb7b26739533299afe1676_2206580~"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:o:linux:linux_kernel:2.6.36"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -50061,7 +50134,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -50247,7 +50321,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -50751,7 +50826,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -50802,7 +50878,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51011,7 +51088,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51063,7 +51141,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51205,7 +51284,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51225,7 +51305,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51279,7 +51360,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "OpenSSL 1.0.2h (CRITICAL)",
@@ -51299,7 +51381,8 @@ FAKE_NIST_CALL_long =[
       "/usr/local/sbin/openssl",
       "/lib/libcrypto.so.1.0.0",
       "/lib/libssl.so.1.0.0"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:openssl:openssl:1.0.2h"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51315,7 +51398,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51340,7 +51424,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51376,7 +51461,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51401,7 +51487,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51429,7 +51516,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51454,7 +51542,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51487,7 +51576,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51512,7 +51602,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51540,7 +51631,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "Point-to-Point Protocol daemon 2.4.4 (CRITICAL)",
@@ -51574,7 +51666,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/sbin/pppd"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:point-to-point_protocol_project:point-to-point_protocol:2.4.4"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51590,7 +51683,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51606,7 +51700,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51656,7 +51751,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51672,7 +51768,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51722,7 +51819,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51738,7 +51836,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51754,7 +51853,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51770,7 +51870,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51820,7 +51921,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "ReadyMedia (minidlna) 1.0.26 (CRITICAL)",
@@ -51836,7 +51938,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/minidlna.exe"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:readymedia_project:readymedia:1.0.26"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -51937,7 +52040,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -52236,7 +52340,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -52557,7 +52662,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -52625,7 +52731,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -52814,7 +52921,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -52981,7 +53089,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -53103,7 +53212,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -53181,7 +53291,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -53226,7 +53337,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "Samba 4.4.3 (CRITICAL)",
@@ -53260,7 +53372,8 @@ FAKE_NIST_CALL_long =[
       "/lib/libsamba-util.so.0",
       "/lib/libkrb5-samba4.so.26",
       "/lib/libsmbd-base-samba4.so"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:samba:samba:4.4.3"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -53399,7 +53512,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -53556,7 +53670,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54048,7 +54163,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54107,7 +54223,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54459,7 +54576,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54526,7 +54644,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54683,7 +54802,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54742,7 +54862,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54902,7 +55023,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.35.0 (CRITICAL)",
@@ -54975,7 +55097,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.35.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -55120,7 +55243,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -55283,7 +55407,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -55781,7 +55906,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -55803,7 +55929,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56153,7 +56280,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56218,7 +56346,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56381,7 +56510,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56437,7 +56567,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56603,7 +56734,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "curl 7.36.0 (CRITICAL)",
@@ -56674,7 +56806,8 @@ FAKE_NIST_CALL_long =[
       "/usr/lib/libcurl.a",
       "/usr/lib/libcurl.so.4.3.0",
       "/sbin/curl"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:haxx:curl:7.36.0"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56690,7 +56823,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56706,7 +56840,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56722,7 +56857,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56738,7 +56874,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56754,7 +56891,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56779,7 +56917,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56804,7 +56943,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56820,7 +56960,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56836,7 +56977,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "iptables 1.4.12",
@@ -56861,7 +57003,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/ip6tables"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:netfilter:iptables:1.4.12"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -56922,7 +57065,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -56938,7 +57082,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57022,7 +57167,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57038,7 +57184,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57099,7 +57246,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57115,7 +57263,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57143,7 +57292,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57159,7 +57309,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57175,7 +57326,8 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
-    ]
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
   },
   {
     "cpe_name": "libpcap 1.4.0",
@@ -57191,6 +57343,445 @@ FAKE_NIST_CALL_long =[
     ],
     "hid_affected": [
       "/usr/sbin/tcpdump"
+    ],
+    "cpe_code": "cpe:2.3:a:tcpdump:libpcap:1.4.0"
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 1,
+    "exploitability_score": 1,
+    "impact_score": 1,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 2,
+    "exploitability_score": 2,
+    "impact_score": 2,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 3,
+    "exploitability_score": 3,
+    "impact_score": 3,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 4,
+    "exploitability_score": 4,
+    "impact_score": 4,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 5,
+    "exploitability_score": 5,
+    "impact_score": 5,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2014-5797",
+        "version": "3.0.5",
+        "base_score": "5.4",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 6,
+    "exploitability_score": 6,
+    "impact_score": 6,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 7,
+    "exploitability_score": 7,
+    "impact_score": 7,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 8,
+    "exploitability_score": 8,
+    "impact_score": 8,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 9,
+    "exploitability_score": 9,
+    "impact_score": 9,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "Netgear Smart Wizzard 3.0",
+    "cve_count": 0,
+    "base_score": 10,
+    "exploitability_score": 10,
+    "impact_score": 10,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "36966e0dd6a3d3af112fde6f3edecf726614d597fa942a09cecaa28939f03ed2_540644"
+    ],
+    "hid_affected": [
+      "/usr/sbin/upnpd"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 1,
+    "exploitability_score": 1,
+    "impact_score": 1,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 2,
+    "exploitability_score": 2,
+    "impact_score": 2,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 3,
+    "exploitability_score": 3,
+    "impact_score": 3,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2020-8284",
+        "version": "version ≤ 7.73.0",
+        "base_score": "3.7",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 4,
+    "exploitability_score": 4,
+    "impact_score": 4,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 5,
+    "exploitability_score": 5,
+    "impact_score": 5,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2017-9502",
+        "version": "version ≤ 7.54.0",
+        "base_score": "5.3",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 6,
+    "exploitability_score": 6,
+    "impact_score": 6,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2017-1000101",
+        "version": "7.52.1",
+        "base_score": "6.5",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2017-2629",
+        "version": "version < 7.53.0",
+        "base_score": "6.5",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 7,
+    "exploitability_score": 7,
+    "impact_score": 7,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2018-1000121",
+        "version": "7.21.0 ≤ version ≤ 7.58.0",
+        "base_score": "7.5",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 8,
+    "exploitability_score": 8,
+    "impact_score": 8,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 9,
+    "exploitability_score": 9,
+    "impact_score": 9,
+    "all_cve_objects_bs": [
+      {
+        "cve_code": "CVE-2017-8816",
+        "version": "7.36.0 < version ≤ 7.56.1",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2017-8817",
+        "version": "7.21.0 ≤ version ≤ 7.56.1",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-1000007",
+        "version": "7.1 ≤ version ≤ 7.57.0",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-1000120",
+        "version": "7.12.3 ≤ version ≤ 7.58.0",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-1000122",
+        "version": "7.20.0 ≤ version ≤ 7.58.0",
+        "base_score": "9.1",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-1000301",
+        "version": "7.20.0 ≤ version ≤ 7.59.0",
+        "base_score": "9.1",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-16839",
+        "version": "7.33.0 ≤ version ≤ 7.61.1",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2018-16842",
+        "version": "7.14.1 ≤ version ≤ 7.61.1",
+        "base_score": "9.1",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2019-5481",
+        "version": "7.52.0 ≤ version ≤ 7.65.3",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      },
+      {
+        "cve_code": "CVE-2019-5482",
+        "version": "7.19.4 ≤ version ≤ 7.65.3",
+        "base_score": "9.8",
+        "impact_score": "N/A",
+        "exploitability_score": "N/A"
+      }
+    ],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
+    ]
+  },
+  {
+    "cpe_name": "curl 7.52.2 (CRITICAL)",
+    "cve_count": 0,
+    "base_score": 10,
+    "exploitability_score": 10,
+    "impact_score": 10,
+    "all_cve_objects_bs": [],
+    "all_cve_objects_es": [],
+    "all_cve_objects_is": [],
+    "uid_affected": [
+      "5298995da6eb83a21ff14702c0f2a542c4368fcba1f0f3cb1c390782e75a5f60_1077019"
+    ],
+    "hid_affected": [
+      "/usr/sbin/ookla"
     ]
   }
 ]

@@ -38,6 +38,9 @@ var margin = {top: 10, right: 10, bottom: 10, left: 100},
 
 //*small multiples
 var exploit_data
+var color_scale
+var mitigations = []
+
 //* global vars
 list_response_cpu_archi=[]
 list_response_unpacker=[]
@@ -45,9 +48,14 @@ var list_packed=[]
 var list_packed_hid=[]
 var list_packed_uid = []
 var cve_lookup_fw
+var sw_components_fw
 
 ListMimes = [] //? lista con i subtypes
 ListSuperMimes = []//?lista con solo i types
+
+//*gestisce la dimensione del sc panel
+d3.select("#leftside").style("max-height",window.screen.height/2.6+"px")
+
 
 
 //* call all firmwares
@@ -85,15 +93,16 @@ function callFW() {
                     cpu_info.push(key)
                 }
             }
-            var plu = "  cpu architecture"
+            var plu = ", CPU architecture:"
             cpu_info.length > 1 ? plu += "s: " : plu+= ": "
-            d3.select("#reportOf").html("</br>Report of "+ data.firmware.meta_data.hid + "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
+            mb = parseFloat(data.firmware.meta_data.size)/1000000
+            d3.select("#reportOf").html("Report of "+ data.firmware.meta_data.hid +" ("+data.firmware.meta_data.total_files_in_firmware +" files, "+mb.toFixed(2)+"MB )"+ "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
             d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
         
             //console.log(data)
             cve_lookup_fw= data.firmware.analysis.cve_lookup.summary
+            sw_components_fw= data.firmware.analysis.software_components.summary
             //***build root of Tree
-            document.getElementById("reportOf").innerHTML += "</br>"+ "Over " + data.firmware.meta_data.total_files_in_firmware +" files "
             list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
             Tree["uid"] = data.request.uid
             Tree["hid"] = data.firmware.meta_data.hid
@@ -126,8 +135,8 @@ function callFW() {
                 //*-------CVE 
                 console.log("ASKING NIST")
                 await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                // SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
@@ -148,6 +157,11 @@ function callFW() {
                 DrawSWComponents()
                 console.log("---------SW COMPONENTS + CVE VIEW BUILT")
                 console.log(ALL_SWC)
+                
+                console.log("BUILDING BIPARTITE GRAPH")
+                var exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+                buildBipartiteGraph(exm_data)
+                console.log("---------BIPARTITE GRAPH BUILT")
             })();
             
         })
@@ -158,6 +172,9 @@ function callFW() {
     list_packed_hid=[]
     list_packed_uid = []    
 }
+
+
+
 
 function drawDanger(){
     d3.select("#search_bar_FO").remove()

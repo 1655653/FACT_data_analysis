@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+<style>
+.viz-biPartite-subBar{
+	shape-rendering:crispEdges;
+}
+.viz-biPartite-mainBar rect{
+  fill-opacity: 0;
+  stroke-width: 2px;
+  stroke: rgb(0, 0, 0);
+  stroke-opacity: 0;
+}
+.viz-biPartite-mainBar .perc{
+  fill:rgb(0, 0, 0);
+  text-anchor:start;
+  font-size:12px;
+  /* transform: rotate(45deg)translate(-45px, 0px); */
+  transform: translate(0px,-15px);
+  opacity: 0;
+}
+</style>
+<body>
+<svg width="960" height="700">
+<g transform="translate(250,50)"></g>
+</svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://vizjs.org/viz.v1.3.0.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="data.js"></script>
+
+<script>
+var url = "http://192.168.30.177:5000/rest/firmware/ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866?summary=true"
+var mitigations = []
+console.log(window.screen.height)
+console.log(window.screen.width)
+d3.json(url, function(data) {
+    // console.log(data.firmware.analysis.exploit_mitigations.summary)
+    var exp_miti= data.firmware.analysis.exploit_mitigations.summary
+	//*prendo tutte le mitigations 
+	for (const key in exp_miti) {
+		if (Object.hasOwnProperty.call(exp_miti, key)) {
+			//key --> CANARY disabled
+			//element array of uid
+			const element = exp_miti[key];
+			miti = ""
+			key.split(" ").forEach(k => {
+				if(k==k.toUpperCase()) miti+=k+" "
+			});
+			miti=miti.trim()
+			if(!mitigations.includes(miti)) mitigations.push(miti)
+
+		}
+	}
+	console.log(mitigations)
+	var color_scale= d3.scaleOrdinal().domain(mitigations).range(d3.schemeCategory20)
+	var legenda =d3.select("body").append("svg")
+		.attr("width", 400)
+		.attr("height",1000)
+		.selectAll(".firstrow")
+		.data(mitigations).enter()
+		
+	legenda.append("rect")
+		.attr("y", function(d,i){return 30 + i*20})
+		.attr("x", 50)
+		.attr("width", 10)
+		.attr("height", 10)
+		.attr("fill", function(d){return color_scale(d) })
+	legenda.append("text")
+		.text(d=>d)
+		.attr("y", function(d,i){return 30 + i*20})
+		.attr("x", 50)
+
+	var bP = viz.biPartite()
+		.data(exm_data)
+		.orient("horizontal")
+		// .height(200)
+		.barSize(20)
+		.pad(1)
+		.min(2)
+		.fill(function(d){
+			return color_scale(d.primary)
+		})
+    
+	var bPg = d3.select("g").call(bP)
+	
+	bPg.selectAll(".viz-biPartite-mainBar")
+	.on("mouseover",mouseover)
+	.on("mouseout",mouseout)
+	
+	
+	function mouseover(d){
+		bP.mouseover(d)
+		// console.log(d)
+		d3.select(".viz-biPartite").selectAll("g").each(function(e, i){
+			if(e.key == d.key){
+				d3.select(this)
+					.append("text")
+					.attr("class","perc")
+					.text(function(d){ return (d.key) })
+					.style("transform",function(t){
+						if(e.part == "primary") return "translate(0px,-15px)"
+						if(e.part == "secondary") return "translate(0px,25px)"
+					})
+					.transition()
+					.duration(400)
+					.style("opacity",1)
+			}
+		})	
+	}
+	
+	function mouseout(d){
+		bP.mouseout(d)
+		bPg.selectAll(".viz-biPartite-mainBar")
+			.selectAll(".perc")
+			.transition()
+			.duration(400)
+			.style("opacity",0)
+			.remove()
+	}
+	
+	// adjust the bl.ocks frame dimension. Not part of example.
+	d3.select(self.frameElement).style("height", "700px"); 
+})
+</script>

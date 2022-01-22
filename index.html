@@ -11,6 +11,7 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="http://vizjs.org/viz.v1.3.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://kit.fontawesome.com/5b7f4aa5d7.js" crossorigin="anonymous"></script>
 
@@ -20,7 +21,7 @@
     <button id="start" type="button">start</button>
     <button id="downloadFW" type="button" style="visibility: hidden;" >download fw</button>
     </br>
-    
+    <!-- <div class="loader" style="display:none"></div> -->
     <div id="reportOf"></div>
     <!-- metto qua i setting container del sc per allinearlo in realta deve andare dentro leftside -->
     <div id="sc_settings_container" style="visibility: hidden;">
@@ -49,7 +50,7 @@
           <text style="visibility: hidden; padding-left: 15px; font-size:14px">SOFTWARE COMPONENTS AND CVE</text> 
           <button type='button' style="visibility: hidden; height: fit-content;" id='sw_comp_expand_btn' ><i class='fas fa-ellipsis-v' ></i></button>
         </div>
-        <div id="sw_comp_svg_container">
+        <div id="sw_comp_svg_container"style="overflow-x:auto">
         </div>
       </div>
 
@@ -101,12 +102,19 @@
       </div>
 
     </div>
+    <div id="ex_miti_svg_container">
+      <svg id="svg_bipartite" height="320"></svg>
+      <svg id="svg_legenda" ></svg>
+    </div>
+
   
 </body>
   
 <!-- <script src="data_prova.js"></script> -->
 
 <script src="fake_nist.js"></script>
+<script src="data.js"></script>
+
 <script src="utils.js"></script>
 <script src="cve_dataset.js"></script>
 <script src="tree.js"></script>
@@ -115,5 +123,7 @@
 <script src="searchbar.js"></script>
 <script src="rankdanger.js"></script>
 <script src="extradiv.js"></script>
+<script src="build_icon_sc.js"></script>
 <script src="soft_comp.js"></script>
+<script src="bipartite.js"></script>
 
