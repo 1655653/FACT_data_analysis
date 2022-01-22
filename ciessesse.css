@@ -259,3 +259,6 @@ body {
   transform: translate(0px,-15px);
   opacity: 0;
 }
+.ex_miti_btn_container{
+  position: absolute;
+}

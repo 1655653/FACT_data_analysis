@@ -244,7 +244,7 @@ async function make_CPE_nist_call(name){
         else nist_url ="https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:"+letter+":"+product+":*:"+ve
 
         //var nist_url ="https://services.nvd.nist.gov/rest/json/cpes/1.0/?cpeMatchString=cpe:2.3:a:*:dnsmasq:2.52"
-        //console.log("calling "+nist_url)
+        console.log("calling "+nist_url)
         
         var nist_resp = await Promise.resolve(axios.get(nist_url))
         if(nist_resp.data.totalResults != 0) {

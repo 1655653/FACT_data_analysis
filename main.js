@@ -38,6 +38,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 100},
 
 //*small multiples
 var exploit_data
+var exm_data
 var color_scale
 var mitigations = []
 
@@ -134,9 +135,9 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                // SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                // await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                // SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
@@ -159,7 +160,7 @@ function callFW() {
                 console.log(ALL_SWC)
                 
                 console.log("BUILDING BIPARTITE GRAPH")
-                var exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+                exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
                 buildBipartiteGraph(exm_data)
                 console.log("---------BIPARTITE GRAPH BUILT")
             })();
