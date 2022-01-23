@@ -38,7 +38,8 @@ function buildBipartiteGraph(exm_data){
 			return color_scale(d.primary)
 		})
 		
-	var bPg = d3.select("#svg_bipartite").append("g").attr("id","g_bipartite").call(bP)
+	var bPg = d3.select("#svg_bipartite").append("g").attr("id","g_bipartite").style("opacity","0").call(bP)
+	d3.select("#g_bipartite").transition().duration(1000).style("opacity","1")
 	bPg.selectAll(".viz-biPartite-mainBar")
 		.on("mouseover",mouseover)
 		.on("mouseout",mouseout)
@@ -53,7 +54,8 @@ function buildBipartiteGraph(exm_data){
 	hovermngmt("C",exm_to_see)
 	hovermngmt("S",exm_to_see)
 	hovermngmt("O",exm_to_see)
-	
+	d3.select(".ex_miti_btn_container").style("display","block").style("opacity","0")
+		.transition().duration(1000).style("opacity","1")
 
 
 

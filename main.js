@@ -135,9 +135,9 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                // await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
-                // SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 
@@ -181,6 +181,7 @@ function drawDanger(){
     d3.select("#search_bar_FO").remove()
     d3.select(".refresh").selectAll("*").remove()
     d3.select("#rightside").selectAll("text").remove()
+    d3.select("#rightside").selectAll("span").remove()
     drawSingleDanger("c","critical")
     drawSingleDanger("s","sus")
     drawSingleDanger("n","neutral")

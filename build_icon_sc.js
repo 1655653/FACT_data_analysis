@@ -1,168 +1,109 @@
-function BuildIconDs(esentati){
-    // console.log(SW_COMP_CVE.length)
-    d3.selectAll(".sw_div_icon").transition().duration(400).style("opacity","0").remove()
-    cpe_coll = []
-    //*sc_google search icons
-    //take the code
-    for (let indec = 0; indec < SW_COMP_CVE.length; indec+=10) {
-        const key = SW_COMP_CVE[indec];
-        
-        // console.log(key)
-        el = {
-            "has_cpe23":true,
-            "key":key,
-            "cpe_name":key.cpe_name
-        }
-        cpe_coll.push(el)
-    };
-    //the ones without code still will search something
-    ALL_SWC.forEach(all_item => {
-        var already_exists = false
-        cpe_coll.forEach(cpe_coll_item => {
-            if(all_item==cpe_coll_item.cpe_name) already_exists = true
-        });
-        if(!already_exists){
-            el = {
-                "has_cpe23":false,
-                "key":null,
-                "cpe_name":all_item
-            }
-            cpe_coll.push(el)
-        }
-    });
-    //actual search
-    cpe_coll.forEach(key => {
-        txt_elem = d3.selectAll('text').filter(function(){
-            if(d3.select(this).attr('id'))
-                return d3.select(this).attr('id') == "text_of_"+key.cpe_name
-        });
-        try {
-            txt_elem = txt_elem.node().getBoundingClientRect()
-            pivot = d3.select("#sc_menu").node().getBoundingClientRect()
-            d3el = d3.select("#sc_menu").append("div")
-                .attr("class","sw_div_icon")
-            d3el.append("i")
-                .attr("class","fas fa-external-link-alt")
-                .attr("margin-right","2px")
-            
-            d3el.style("left",parseFloat(txt_elem.left-25)+"px")
-            d3el.style("transform","scale(0.6)")
-            d3el.style("top",parseFloat(txt_elem.top-pivot.top)+"px")
-            d3el.on("click",function(d){
-                var search = key.has_cpe23? key.key.cpe_code:key.cpe_name
-                window.open('http://google.com/search?q='+search);
-            })
-        } 
-        catch (error) {
-            // console.log(key+" text_of not found")
-        }
-        
-    });
+function BuildIconSC(esentati){
+    //*external link icon
+    d3.select("#sw_comp_svg_container").selectAll(".tick")
+        .each(function(e,i){
+            if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
+                d3.select(this).append("svg:image")
+                    .attr('x', -27)
+                    .attr('y', -33)
+                    .attr('width', 24)
+                    .attr('height', 24)
+                    // .attr("xlink:href", "https://img.icons8.com/windows/32/000000/external-link.png")
+                    .attr("xlink:href", "icons/external-link.png")
+                    .attr("transform","scale(0.6)").raise()
+                    .on("click",function(d){
+                        // console.log(e)
+                        // console.log(sw_components_fw)
+                        for (const sc in sw_components_fw) {
+                            if (Object.hasOwnProperty.call(sw_components_fw, sc)) {
+                                if(e.includes(sc)){
+                                    const uids = sw_components_fw[sc];
+                                    var scheda_sc = ALL_REST_RESPONSE[uids[0]].sw_comp_dtls
+                                    for (const key in scheda_sc) {
+                                        if (Object.hasOwnProperty.call(scheda_sc, key)) {
+                                            const element = scheda_sc[key];
+                                            try {
+                                                var ws= element.meta.website
+                                                window.open(element.meta.website);
+                                            } catch (error) {
+                                                
+                                            }
+                                        }
+                                    }
 
-    //*hid icons
-    console.log(ALL_SWC)
-    for (const k in sw_components_fw) {
-        if (Object.hasOwnProperty.call(sw_components_fw, k)) {
-            const Fos = sw_components_fw[k];
-            var key = k
-            ALL_SWC.forEach(swc_all_item => {
-                // console.log(swc_all_item)
-                // console.log(key)
-                if(swc_all_item.includes(key)) key = swc_all_item
-            });
-            if(SW_COMP_HIDE.filter(e => e.includes(key)).length == 0) {
-                
-                //key BusyBox 1.13.0 (CRITICAL)
-                //fos array of fo
-                txt_elem = d3.selectAll('text').filter(function(){
-                    if(d3.select(this).attr('id'))
-                        return d3.select(this).attr('id') == "text_of_"+key
-                });
-                // if(key.includes("OpenSSL")) {
-                //     console.log(txt_elem)
-                //     console.log(key)
-                //     console.log(Fos)
-                // }
-                try {
-                    txt_elem = txt_elem.node().getBoundingClientRect()
-                    // console.log(txt_elem)
-                    // console.log(key)
-                    pivot = d3.select("#sc_menu").node().getBoundingClientRect()
-                    // console.log(pivot)
-                    d3el = d3.select("#sc_menu").append("div")
-                            .attr("class","sw_div_icon")
-                    var limit = 0
-                    var bound = 3
-                    // console.log(key)
-                    Fos.forEach((fo,i) => {
-                        //check if fo is in critical  or in sus 
-                        if(i<=2 || (esentati.length>0 && esentati.includes(key))){
-                            CRITICAL_FO.system.forEach(crit_el => {
-                                if(fo == crit_el.uid && limit <bound){
-                                    d3el.append("i")
-                                        .attr("class","danger_icon fas fa-exclamation-circle")
-                                        .attr("margin-right","2px")
-                                        .on("click",function(d){console.log(crit_el)})
-                                    limit++
                                 }
-                            });
-                            SUS_FO.system.forEach(crit_el => {
-                                if(fo == crit_el.uid && limit <bound){
-                                    d3el.append("i")
-                                        .attr("class","sus_icon fas fa-exclamation-circle")
-                                        .attr("margin-right","2px")
-                                        .on("click",function(d){console.log(crit_el)})
-                                    limit++
-                                }
-                            });
-                            NEUTRAL_FO.system.forEach(crit_el => {
-                                if(fo == crit_el.uid && limit <bound){
-                                    d3el.append("i")
-                                        .attr("class","neutral_icon fas fa-exclamation-circle")
-                                        .attr("margin-right","2px")
-                                        .on("click",function(d){console.log(crit_el)})
-                                    limit++
-                                }
-                            });
+                            }
                         }
-                    });
-                    
-                    if(Fos.length>2){
-                        var clss = (esentati.length>0 && esentati.includes(key))? "plus_icon fas fa-minus":"plus_icon fas fa-plus"
-                        d3el.append("i")
-                            .attr("class",clss)
-                            .attr("margin-right","2px")
-                            .on("click",function(d){
-                                is_plus = d3.select(this).attr("class") == "plus_icon fas fa-plus"? true:false
-                                if(is_plus){
-                                    d3.select(this).attr("class","plus_icon fas fa-minus")
-                                    esentati.push(key)
-                                    BuildIconDs(esentati)
-                                    
-                                }
-                                else{
-                                    d3.select(this).attr("class","plus_icon fas fa-plus")
-                                }
-                            })
-                    }
                         
-
-                    // console.log("pivot.top "+pivot.top)
-                    // console.log("txt_elem.top "+txt_elem.top)
-                    d3el.style("left",parseFloat(txt_elem.left+txt_elem.width)+"px")
-                    d3el.style("top",parseFloat(txt_elem.top-pivot.top)+"px")
-                    // console.log(parseFloat(txt_elem.top-pivot.top))
-                } catch (error) {
-                    // console.log(key+" text_of not found")
-                }
-                
+                    })
             }
             
-        }
-    }
+        })
+    //*icon spawning
+    d3.select("#sw_comp_svg_container").selectAll(".tick")
+        .each(function(e){
+            if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
+                for (const sc in sw_components_fw) {
+                    if (Object.hasOwnProperty.call(sw_components_fw, sc)) {
+                        if(e.includes(sc)){
+                            const uids = sw_components_fw[sc];
+                            var i = 0
+                            uids.forEach(uid => {
+                                CRITICAL_FO.system.forEach(crit_fo => {
+                                    if(crit_fo.uid == uid){ //devo inserire l'icona
+                                        txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
+                                        i++
+                                        d3.select(this).append("svg:image")
+                                            .attr('x', txt_elem.width+(i*20))
+                                            .attr('y', -20)
+                                            .attr('width', 20)
+                                            .attr('height', 20)
+                                            .attr("xlink:href", "icons/alert_red.png")
+                                            .on("click",function(f){
+                                                console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                    }
+                                });
+                                SUS_FO.system.forEach(crit_fo => {
+                                    if(crit_fo.uid == uid){ //devo inserire l'icona
+                                        txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
+                                        i++
+                                        d3.select(this).append("svg:image")
+                                            .attr('x', txt_elem.width+(i*20))
+                                            .attr('y', -20)
+                                            .attr('width', 20)
+                                            .attr('height', 20)
+                                            .attr("xlink:href", "icons/alert_yell.png")
+                                            .on("click",function(f){
+                                                console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                    }
+                                });
+                                NEUTRAL_FO.system.forEach(crit_fo => {
+                                    if(crit_fo.uid == uid){ //devo inserire l'icona
+                                        txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
+                                        i++
+                                        d3.select(this).append("svg:image")
+                                            .attr('x', txt_elem.width+(i*20))
+                                            .attr('y', -20)
+                                            .attr('width', 20)
+                                            .attr('height', 20)
+                                            .attr("xlink:href", "icons/alert_grey.png")
+                                            .on("click",function(f){
+                                                console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                    }
+                                });
+                                
+                            });
+                            
 
-    
-
-
+                        }
+                    }
+                }
+               
+            }
+        })
 
 }
+

@@ -23,7 +23,8 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["cve_results"]= response.data.file_object.analysis.cve_lookup.cve_results
                     ioi_response["mime"]= response.data.file_object.analysis.file_type.mime
                     ioi_response["size"]= response.data.file_object.meta_data.size
-                    ioi_response["sw_comp"]= response.data.file_object.analysis.software_components.summary
+                    ioi_response["sw_comp"]= response.data.file_object.analysis.software_components.summary 
+                    ioi_response["sw_comp_dtls"]= response.data.file_object.analysis.software_components
                     ioi_response["file_type"]= response.data.file_object.analysis.file_type.full
                     ioi_response["ex_mitig"] = response.data.file_object.analysis.exploit_mitigations.summary
                     ALL_REST_RESPONSE[response.data.request.uid] = ioi_response

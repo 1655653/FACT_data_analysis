@@ -207,7 +207,8 @@ function DrawSWComponents(){
         if(d=="0") d3.select(this).style("opacity","0") //fai sparire il tick zero 0
     })
     //*icons
-    BuildIconDs([])
+    // BuildIconDs([])
+    BuildIconSC([])
     
 }
 
@@ -225,6 +226,7 @@ function menuSWCOMP(){
     d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
     d3.select("#sw_comp_expand_btn").style("visibility","visible")
     d3.select("#sc_menu").select("text").style("visibility","visible")
+    d3.select("#toggle_all_sc_div").style("visibility","hidden")
     d3.select("#sw_comp_expand_btn").on("click",function(d){
         var is_vertical = d3.select("#sw_comp_expand_btn").select("i").attr("class") == "fas fa-ellipsis-v"? true:false
         if(is_vertical){
@@ -263,6 +265,7 @@ function menuSWCOMP(){
                 
             
             d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-h")
+            d3.select("#toggle_all_sc_div").style("visibility","visible")
         }
         else{
             //chiudi tutto
@@ -278,6 +281,7 @@ function menuSWCOMP(){
                 .style("visibility","hidden")
 
             d3.select("#sw_comp_expand_btn").select("i").attr("class","fas fa-ellipsis-v")
+            d3.select("#toggle_all_sc_div").style("visibility","hidden")
         }
     })
 
@@ -297,7 +301,7 @@ function menuSWCOMP(){
         DrawSWComponents()
     })
 
-    d3.select("#toggle_all_sc_div").style("visibility","visible").on("change",function(d){
+    d3.select("#toggle_all_sc_div").on("change",function(d){
         var text = "All"
         if(SWC_ARRAY == ALL_SWC){
             SWC_ARRAY = SW_COMP_CVE_LIGHT

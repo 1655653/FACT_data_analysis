@@ -285,15 +285,15 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .attr("class","no_search")
         
         // //*accetta
-        d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
-            text = d3.select(this).text()
-            wi_text = d3.select(this).style("width")
-            wi_div = d3.select("#FO_name_div_"+t).style("width")
-            if(text.length>15){
-                text = text.substring(text.length-15,text.length)
-            }
-            return text
-        })
+        // d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
+        //     text = d3.select(this).text()
+        //     wi_text = d3.select(this).style("width")
+        //     wi_div = d3.select("#FO_name_div_"+t).style("width")
+        //     if(text.length>15){
+        //         text = text.substring(text.length-15,text.length)
+        //     }
+        //     return text
+        // })
         // .on("mouseover",function(d){
         //     hid = d3.select(this).attr("id").replace("_EXTENSION_",".").replace(/[_]/g,"/")
         //     console.log(hid)
