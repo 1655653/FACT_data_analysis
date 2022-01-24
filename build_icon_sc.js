@@ -1,4 +1,4 @@
-function BuildIconSC(esentati){
+function BuildIconSC(){
     //*external link icon
     d3.select("#sw_comp_svg_container").selectAll(".tick")
         .each(function(e,i){
@@ -39,7 +39,45 @@ function BuildIconSC(esentati){
             }
             
         })
-    //*icon spawning
+    //*critical icon spawning
+    d3.select("#sw_comp_svg_container").selectAll(".tick")
+    .each(function(e,i){
+        if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
+            if(e.includes("(CRITICAL)"))
+            {
+                txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
+                d3.select(this).append("svg:image")
+                    .attr('x', txt_elem.width+5)
+                    .attr('y', -20)
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr("xlink:href", "icons/critical.png")
+                    .on("mouseover",function(d){
+                        console.log(e)
+                        d3.select("#sw_comp_svg_container")
+                            .append("div").attr("id","tcd")
+                            .style("visibility", "visible")
+                            .attr("class", "tooltip_sw_comp_critical")
+                            .style('left', (d3.event.clientX -40) + 'px')
+                            .style('top',(d3.event.clientY-35)+"px")
+                            .append("span").text("CRITICAL")
+                            .style("opacity","0")
+                            .style("font-size","11px")
+                            .transition().duration(500)
+                            .style("opacity","1")
+                            
+                        })
+                    .on("mouseout",function(d){
+                        d3.selectAll("#tcd")
+                        .transition().duration(500)
+                        .style("opacity","0").remove()
+                    })
+            }
+        }
+        
+    })
+
+    //*FO icon spawning
     d3.select("#sw_comp_svg_container").selectAll(".tick")
         .each(function(e){
             if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
@@ -55,12 +93,18 @@ function BuildIconSC(esentati){
                                         i++
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
-                                            .attr('y', -20)
+                                            .attr('y', -23)
                                             .attr('width', 20)
                                             .attr('height', 20)
                                             .attr("xlink:href", "icons/alert_red.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseover",function(){
+                                                tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseout",function(){
+                                                tooltip_destroy()
                                             })
                                     }
                                 });
@@ -70,12 +114,18 @@ function BuildIconSC(esentati){
                                         i++
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
-                                            .attr('y', -20)
+                                            .attr('y', -23)
                                             .attr('width', 20)
                                             .attr('height', 20)
                                             .attr("xlink:href", "icons/alert_yell.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseover",function(){
+                                                tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseout",function(){
+                                                tooltip_destroy()
                                             })
                                     }
                                 });
@@ -85,12 +135,18 @@ function BuildIconSC(esentati){
                                         i++
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
-                                            .attr('y', -20)
+                                            .attr('y', -23)
                                             .attr('width', 20)
                                             .attr('height', 20)
                                             .attr("xlink:href", "icons/alert_grey.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseover",function(){
+                                                tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                            })
+                                            .on("mouseout",function(){
+                                                tooltip_destroy()
                                             })
                                     }
                                 });
@@ -107,3 +163,23 @@ function BuildIconSC(esentati){
 
 }
 
+function tooltip_create(e){
+    console.log(e)
+    d3.select("#sw_comp_svg_container")
+        .append("div").attr("id","tcd")
+        .style("visibility", "visible")
+        .attr("class", "tooltip_sw_comp_critical")
+        .style('left', (d3.event.clientX -40) + 'px')
+        .style('top',(d3.event.clientY-35)+"px")
+        .append("span").text(e)
+        .style("opacity","0")
+        .style("font-size","14px")
+        .transition().duration(500)
+        .style("opacity","1")
+}
+
+function tooltip_destroy(){
+    d3.selectAll("#tcd")
+    .transition().duration(500)
+    .style("opacity","0").remove()
+}

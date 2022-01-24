@@ -44,11 +44,11 @@ function DrawSWComponents(){
     svg_violin
         .selectAll("text").text(function(d){
             h = ""
-            SW_COMP_CVE.forEach(element => {
-                if( element.cpe_name.includes(d) && element.cpe_name.includes("(CRITICAL)")){
-                    h =  " ⚠️"
-                }
-            });
+            // SW_COMP_CVE.forEach(element => {
+            //     if( element.cpe_name.includes(d) && element.cpe_name.includes("(CRITICAL)")){
+            //         h =  " ⚠️"
+            //     }
+            // });
             
             d3.select(this).attr("id", "text_of_"+d)
             return d.replace("(CRITICAL)","").trim()+h })
@@ -207,8 +207,7 @@ function DrawSWComponents(){
         if(d=="0") d3.select(this).style("opacity","0") //fai sparire il tick zero 0
     })
     //*icons
-    // BuildIconDs([])
-    BuildIconSC([])
+    BuildIconSC()
     
 }
 

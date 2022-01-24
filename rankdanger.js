@@ -191,6 +191,9 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             //*---------- tooltip
             var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            fo_name.on("click",function(d){
+                console.log(d3.select(this).node())
+            })
             /**------------------------------------------- */ //se ti vuoi avventurare
             // var div_txt= d3.select("#FO_name_div_"+t).append("div").attr("id","div_of_"+fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             //     .attr("class","div_column marqueeable refresh")
@@ -285,15 +288,15 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .attr("class","no_search")
         
         // //*accetta
-        // d3.select("#FO_name_div_"+t).selectAll("text").text(function(d){
-        //     text = d3.select(this).text()
-        //     wi_text = d3.select(this).style("width")
-        //     wi_div = d3.select("#FO_name_div_"+t).style("width")
-        //     if(text.length>15){
-        //         text = text.substring(text.length-15,text.length)
-        //     }
-        //     return text
-        // })
+        d3.select("#FO_name_div_"+t).selectAll("span").text(function(d){
+            text = d3.select(this).text()
+            // wi_text = d3.select(this).style("width")
+            // wi_div = d3.select("#FO_name_div_"+t).style("width")
+            if(text.length>20){
+                text = text.substring(text.length-20,text.length)
+            }
+            return text
+        })
         // .on("mouseover",function(d){
         //     hid = d3.select(this).attr("id").replace("_EXTENSION_",".").replace(/[_]/g,"/")
         //     console.log(hid)

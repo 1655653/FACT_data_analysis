@@ -185,7 +185,7 @@ function hovermngmt(id,exm_to_see){
 				exm_to_see.push(id)
 				d3.select(this).style("background-color","#aeb3bb")//btn colorato (premuto)
 			}
-			console.log(exm_to_see)
+			// console.log(exm_to_see)
 			buildBipartiteGraph(exm_data)
 
 		})
