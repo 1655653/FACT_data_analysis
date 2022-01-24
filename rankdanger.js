@@ -191,22 +191,16 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             //*---------- tooltip
             var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            //*details for every fo
             fo_name.on("click",function(d){
-                console.log(d3.select(this).node())
+                nodes= d3.select("#FO_name_div_"+t).node().childNodes
+                for (let index = 0; index < nodes.length; index++) {
+                    const node = nodes[index];
+                    if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")){
+                        createDetailsdiv(fo,t,index)
+                    }
+                }
             })
-            /**------------------------------------------- */ //se ti vuoi avventurare
-            // var div_txt= d3.select("#FO_name_div_"+t).append("div").attr("id","div_of_"+fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
-            //     .attr("class","div_column marqueeable refresh")
-            // da_non_crederci = fo.hid.replace(/[-]/g,"_")
-            // var fo_name = div_txt.append("p").text(da_non_crederci).attr("class","div_column marqueeable refresh").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
-            // fo_name.style("max-width","100px")
-            // div_txt.on("mouseover",function(d){
-            //         d3.select(this).attr("class","div_column marquee refresh")
-            //     })
-            // div_txt.on("mouseout",function(d){
-            //         d3.select(this).attr("class","div_column marqueeable refresh")
-            //     })
-            /**------------------------------------------- */
             total = fo.overall
             if(fo.packed) total = "PACKED"
             d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
@@ -292,8 +286,8 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             text = d3.select(this).text()
             // wi_text = d3.select(this).style("width")
             // wi_div = d3.select("#FO_name_div_"+t).style("width")
-            if(text.length>20){
-                text = text.substring(text.length-20,text.length)
+            if(text.length>10){
+                text = "..."+text.substring(text.length-10,text.length)
             }
             return text
         })

@@ -164,6 +164,17 @@ body {
   resize:none;
   /* color: #00000029; */
 }
+
+#fo_details{
+  display: flex;
+  opacity: 1;
+  margin: 5px;
+  border-style: ridge;
+  overflow-x: auto;
+  word-break: break-all;
+  /* width: fit-content; */
+  /* width: 328px;  deve avere dimensione fissa!!!!! */
+}
 /** LEFT SIDE DIV */
 /**SC*/
 .sus_icon{
