@@ -340,7 +340,9 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     d3.select("#critical_div").style("max-width",original_rank_width+"px")
     d3.select("#sus_div").style("max-width",original_rank_width+"px")
     d3.select("#neutral_div").style("max-width",original_rank_width+"px")
-    d3.select("#square_div_"+t).style("margin-top","5px")
+    d3.select("#FO_name_div_"+t).style("max-width","100px")
+    
+    d3.select("#FO_squares_div_"+t).style("margin-top","2px")
     // d3.select("#neutral_div").style("max-width", getDimFloat("critical_div","width")+"px") 
 }
 //*draw neutral
@@ -369,7 +371,7 @@ function drawNeutral(t){
                     for (let index = 0; index < nodes.length; index++) {
                         const node = nodes[index];
                         if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")){
-                            createDetailsNeutraldiv(fo,t,index)
+                            createDetailsdiv(fo,t,index)
                         }
                     }
                 })

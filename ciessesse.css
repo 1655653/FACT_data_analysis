@@ -175,6 +175,10 @@ body {
   /* width: fit-content; */
   /* width: 328px;  deve avere dimensione fissa!!!!! */
 }
+#oknotok{
+  display: flex;
+  justify-content: center;
+}
 /** LEFT SIDE DIV */
 /**SC*/
 .sus_icon{

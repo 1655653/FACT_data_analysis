@@ -44,6 +44,51 @@ function clickSquare(d){
 
 
 
+    function createDetailsNeutraldiv(fo,t,index){
+        d3.select("#FO_name_div_"+t).style("overflow-x","hidden")
+        //*prepara il div
+        el = ALL_REST_RESPONSE[fo.uid]
+        // console.log(el)
+        var selector_name = "ao"+fo.uid
+    
+        br = "</br>"
+        var UID = "UID:  <tspan id = 'uid_tspan'>"+ fo.uid +"</tspan>"
+        var HID = "HID:  <tspan id = 'hid_tspan'>"+ el.hid +"</tspan>"
+        var MIME = "Mime:  <tspan id = 'mime_tspan'>"+ el.mime +"</tspan>"
+        detailsI = HID + br + UID + br +"Size: "+ el.size+" bytes"+br+ MIME
+    
+        //*NAME
+        details_width = 265
+    
+        // d3.select("#FO_name_div_"+t).style("max-width","180px")
+        var FO_name_div = d3.select("#FO_name_div_"+t).node();
+    
+        div = d3.create("div").attr("id","fo_details").attr("class",selector_name)
+            .style("width",details_width+"px")
+            .style("min-height","85px")
+        //layout cools
+        div.select("#uid_tspan").style("font-size","14px")
+        div.select("#hid_tspan").style("font-size",function(d){return el.hid.length>35? "12px": "17px"})
+        //append layout
+        div.append("div").attr("id", "details_I").append("text").html(detailsI)
+            .style("overflow-x","auto")
+            .style("opacity","0")
+            .transition().duration(400).style("opacity","1")
+        //close the div X
+        div.append("i").attr("class","fas fa-times-circle").attr("aria-hidden","true")
+            .on("click",function(){
+                d3.selectAll("."+selector_name).remove()
+                d3.select("#neutral_div").node().scrollLeft=0
+                d3.select("#FO_name_div_"+t).style("overflow-x","auto")
+            })
+    
+        FO_name_div.insertBefore(div.node(), FO_name_div.childNodes[index+1]);
+        
+        a = d3.select("#critical_div").node().getBoundingClientRect().width
+        b = d3.select("#sus_div").node().getBoundingClientRect().width
+        d3.select("#neutral_div").style("width",Math.max(a,b)+"px")
+    }
+    
 
 
 

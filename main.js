@@ -41,6 +41,7 @@ var exploit_data
 var exm_data
 var color_scale
 var mitigations = []
+var mitigations_not_present = []
 
 //* global vars
 list_response_cpu_archi=[]
@@ -135,8 +136,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)

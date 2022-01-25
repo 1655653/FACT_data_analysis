@@ -1,13 +1,20 @@
 var exm_to_see = ["C","S"]
 function buildBipartiteGraph(exm_data){
+	exm_data_filtered = filterExmData(exm_data,exm_to_see)
+	mitigations_filtered = []
+	exm_data_filtered.forEach(element => {
+		if(!mitigations_filtered.includes(element[0])) mitigations_filtered.push(element[0])
+	});
+
 	//*clean
 	d3.select("#svg_bipartite").select("g").remove()
 	d3.select("#svg_legenda").selectAll("*").remove()
 
 	//*legenda
+
     var legenda =d3.select("#svg_legenda")
 		.selectAll(".firstrow")
-		.data(mitigations).enter()
+		.data(mitigations_filtered).enter()
     
     legenda_div = legenda.append("svg")
 	legenda_div.append("rect")
@@ -19,13 +26,20 @@ function buildBipartiteGraph(exm_data){
 		.on("mouseover",mouseover_legenda)
 		.on("mouseout",mouseout_legenda)
 	legenda_div.append("text")
-		.text(d=>d)
+		.text(d=>{
+			var i = 0
+			exm_data_filtered.forEach(tupla => {
+				if(tupla[0]==d) i++
+			});
+			return d+" ("+i+")"
+		})
 		.attr("y", function(d,i){return 40 + i*20})
 		.attr("x", 22)
+		.attr("font-size","12px")
 		.on("mouseover",mouseover_legenda)
 		.on("mouseout",mouseout_legenda)
 	// console.log(exm_data)
-	exm_data_filtered = filterExmData(exm_data,exm_to_see)
+	console.log(exm_data_filtered)
 	//*Bipartite
 	var bP = viz.biPartite()
 		.data(exm_data_filtered)
@@ -152,10 +166,10 @@ function buildExploitData(exp_miti){
 				if(k==k.toUpperCase()) miti+=k+" "
 			});
 			miti=miti.trim()
-			if(!mitigations.includes(miti)) mitigations.push(miti)
             
             var enordi = key.split(" ").at(-1);
             if(enordi == "enabled" || enordi== "present") {
+				if(!mitigations.includes(miti)) mitigations.push(miti)
                 uid_array.forEach(uid => {
                     bpart_data.push([miti,ALL_REST_RESPONSE[uid].hid,1])
                 });
