@@ -118,7 +118,6 @@ body {
   border-width: 2px;
   margin-top: 25px;
   max-height: 228.8px;
-  overflow-x: hidden;
   /* border-style: solid; all'inizio non lo metto cosi è invisibile*/
 }
 .div_column{
@@ -172,6 +171,7 @@ body {
   border-style: ridge;
   overflow-x: auto;
   word-break: break-all;
+  padding-left: 5px;
   /* width: fit-content; */
   /* width: 328px;  deve avere dimensione fissa!!!!! */
 }

@@ -9,7 +9,8 @@ EXM_FILL = "#83cd4b"
 AAA_FILL = "#c80003"
 EXTRA_DIV_COLOR = "#6e747e"
 BCKGROUND_COLOR = "#4f545c"
-
+var original_rank_width
+var original_square_height
 
 function rankdanger(fw,score){
     //clean
@@ -191,6 +192,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             //*---------- tooltip
             var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            fo_name.style("height","23.8px")
             //*details for every fo
             fo_name.on("click",function(d){
                 nodes= d3.select("#FO_name_div_"+t).node().childNodes
@@ -208,9 +210,14 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 .transition().duration(2500)
                 .style("opacity",1)
             
-            //* rect spawn
+            
             var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
             rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
+            //* rect spawn
+            if(fo.hid == "/lib/libkrb5-samba4.so.26") {
+                console.log(rect_dim)
+                console.log(fo_name.style("height"))
+            }
             d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
             d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
             //* rect loop
@@ -250,6 +257,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     .attr("x",x_rect)
                     .attr('width', rect_dim)
                     .attr('height', rect_dim)
+                    .attr("max-height",original_square_height)
                     
                     x_rect+= rect_dim + pad
                 }
@@ -328,7 +336,12 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         d3.select("#summa_"+type+"_div").style("visibility","hidden")
         d3.select("#summa_expand_"+t).style("visibility","hidden")
     }
-    d3.select("#neutral_div").style("max-width", getDimFloat("critical_div","width")+"px") 
+    original_rank_width = d3.select("#critical_div").node().getBoundingClientRect().width
+    d3.select("#critical_div").style("max-width",original_rank_width+"px")
+    d3.select("#sus_div").style("max-width",original_rank_width+"px")
+    d3.select("#neutral_div").style("max-width",original_rank_width+"px")
+    d3.select("#square_div_"+t).style("margin-top","5px")
+    // d3.select("#neutral_div").style("max-width", getDimFloat("critical_div","width")+"px") 
 }
 //*draw neutral
 function drawNeutral(t){
@@ -347,9 +360,19 @@ function drawNeutral(t){
         var is_down = d3.select("#others_expand").select("i").attr("class") == "fas fa-caret-down"? true:false
         if(is_down){
             //fill with files
-            NEUTRAL_FO.system.forEach((fo, index) => {
+            NEUTRAL_FO.system.forEach(fo => {
                 var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
                 fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+                //*details for every fo
+                fo_name.on("click",function(d){
+                    nodes= d3.select("#FO_name_div_"+t).node().childNodes
+                    for (let index = 0; index < nodes.length; index++) {
+                        const node = nodes[index];
+                        if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")){
+                            createDetailsNeutraldiv(fo,t,index)
+                        }
+                    }
+                })
             })
             d3.select("#others_expand").select("i").attr("class","fas fa-caret-up")
             d3.select("#neutral_div").style("overflow-y","auto")
