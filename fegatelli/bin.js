@@ -7,7 +7,37 @@
     //         .style("fill", "grey")
     //         .style("max-width", 400)
     //         .text("A short description of the take-away message of this chart.");
-    
+    //* tooltip
+    var tooltip_rect
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function(d) {
+        tooltip_rect = d3.select("#FO_squares_div_c")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip_danger")
+        tooltip_rect.style("opacity", 1)
+        d3.select(this).style("opacity", 1)
+    }
+    var mousemove = function(d) {
+        console.log(d3.select(this).attr("id"))
+        tooltip_rect
+        .html("info_tooltip")
+        .style('left', (d3.event.pageX + 10) + 'px')
+        .style('top', (d3.event.pageY + 10) + 'px')
+    }
+    var mouseleave = function(d) {
+        tooltip_rect.style("opacity", 0)
+        d3.select(this).style("opacity", 0.8)
+        
+        d3.select(".tooltip_danger").remove()
+    }
+    var clicked = function(d) {
+        id = d3.select(this).attr("id")
+        metric = id.split("_")[0]
+        var fill_square = metric == "EXM"? fill_square = EXM_FILL : fill_square = AAA_FILL
+        d3.select(this).attr("fill",fill_square)
+    }
+    //*---------- tooltip
 function clickSquare(d){
     // tooltip_heatmap.style("visibility", "hidden")
     // d3.selectAll("#tooltip_big_square").remove()

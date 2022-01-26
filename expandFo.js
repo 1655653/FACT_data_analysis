@@ -16,7 +16,7 @@ function createDetailsdiv(fo,t,index){
     details_width = 265
     // d3.select("#FO_name_div_"+t).style("max-width","180px")
     var FO_name_div = d3.select("#FO_name_div_"+t).node();
-    if(FO_name_div.childNodes[index+1].id=="fo_details") {
+    if(FO_name_div.childNodes[index+1] != undefined &&FO_name_div.childNodes[index+1].id=="fo_details") {
         return
     }
 
@@ -45,7 +45,7 @@ function createDetailsdiv(fo,t,index){
     //*ok not ok
     var oknotok = div.select("#details_I_II").append("div").attr("id", "oknotok")
     oknotok.append("i").attr("class","fas fa-check-circle").style("color","#06e103").style("margin-right","30px") //appendi alla scheda
-        .on("click",function(){ //appendi al testo
+        .on("click",function(){ //appendi al testo approved
             id_ell = FO_name_div.childNodes[index].id
             d3.select("#"+id_ell).selectAll("i").remove()
             d3.select("#"+id_ell)
@@ -53,6 +53,8 @@ function createDetailsdiv(fo,t,index){
                 .append("i").attr("class","fas fa-check-circle")
                     .style("color","#06e103")
                     .style("transform","scale(0.6)")
+            approved_or_not[id_ell]=true //global to retrieve
+
         })
     oknotok.append("i").attr("class","fas fa-minus-circle").style("color","#dd0909")
         .on("click",function(){
@@ -63,6 +65,8 @@ function createDetailsdiv(fo,t,index){
                 .append("i").attr("class","fas fa-minus-circle")
                     .style("color","#dd0909")
                     .style("transform","scale(0.6)")
+            
+            approved_or_not[id_ell]=false //global to retrieve
         })
     //close the div X;
     div.append("i").attr("class","fas fa-times-circle").attr("aria-hidden","true")
@@ -74,9 +78,9 @@ function createDetailsdiv(fo,t,index){
     FO_name_div.insertBefore(div.node(), FO_name_div.childNodes[index+1]);
     
     if(t =="n"){ //neutral
-        a = d3.select("#critical_div").node().getBoundingClientRect().width
-        b = d3.select("#sus_div").node().getBoundingClientRect().width
-        d3.select("#neutral_div").style("width",Math.max(a,b)+"px")
+        // a = d3.select("#critical_div").node().getBoundingClientRect().width
+        // b = d3.select("#sus_div").node().getBoundingClientRect().width
+        // d3.select("#neutral_div").style("width",Math.max(a,b)+"px")
         
         d3.select("#FO_name_div_"+t).style("overflow-x","hidden")
         return
@@ -105,4 +109,29 @@ function createDetailsdiv(fo,t,index){
     FO_square_div.insertBefore(div.node(), FO_square_div.childNodes[index]);
 
 
+}
+
+
+
+function rememberOknotook(){
+    for (const id in approved_or_not) {
+        if (Object.hasOwnProperty.call(approved_or_not, id)) {
+            const tof = approved_or_not[id];
+            d3.select("#"+id).selectAll("i").remove()
+            elem = d3.select("#"+id)
+                .style("display","flex").style("flex-direction","row")
+                .append("i").style("transform","scale(0.6)")
+            if(tof){
+                elem.attr("class","fas fa-check-circle")
+                    .style("color","#06e103")
+            }
+            else{
+                elem.attr("class","fas fa-minus-circle")
+                .style("color","#dd0909")
+            }
+            
+        }
+    }
+    
+    
 }

@@ -29,7 +29,7 @@ var SUS_FO={"system":[],"user":[]}
 var NEUTRAL_FO={"system":[],"user":[]}
 var SCORE_TYPE = "base_score"
 var DANGER={"CRITICAL_FO":CRITICAL_FO,"SUS_FO":SUS_FO,"NEUTRAL_FO":NEUTRAL_FO} //?e.g system.uid=score --->system.464665=10
-
+var approved_or_not={} //{hid:yes,hid:no}
 
 
 var margin = {top: 10, right: 10, bottom: 10, left: 100},
@@ -183,11 +183,11 @@ function drawDanger(){
     d3.select(".refresh").selectAll("*").remove()
     d3.select("#rightside").selectAll("text").remove()
     d3.select("#rightside").selectAll("span").remove()
+    d3.selectAll("#fo_details").remove()
     drawSingleDanger("c","critical")
     drawSingleDanger("s","sus")
     drawSingleDanger("n","neutral")
-    //buildSearchBar()
+    buildSearchBar()
+    rememberOknotook()
 }
-
-
 
