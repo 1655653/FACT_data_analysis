@@ -66,7 +66,7 @@ function extraDivLogic(fw){
         if(index != 3){ //score_type
             par_div.append("input")
                 .attr("type","range")
-                .attr("class","slider")
+                .attr("class","slider myslider")
                 .attr("id",param_str[index]+"_slider")
                 .attr("min",0)
                 .attr("max",max)

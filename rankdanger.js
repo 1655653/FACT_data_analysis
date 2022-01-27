@@ -202,7 +202,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             var x_rect=pad
             for (let i = 0; i < Object.keys(fo).length; i++) {
                 item = Object.keys(fo)[i]
-                console.log(fo)
+                // console.log(fo)
                 if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
                     if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
                     if(fo[item] > 0 && item != "EXM") metric_occurrences[item]++
