@@ -11,6 +11,8 @@ function createDetailsdiv(fo,t,index){
     var MIME = "Mime:  <tspan id = 'mime_tspan'>"+ el.mime +"</tspan>"
     detailsI = HID + br + UID + br +"Size: "+ el.size+" bytes"+br+ MIME
     // //
+
+    
     
     //*NAME
     details_width = 265

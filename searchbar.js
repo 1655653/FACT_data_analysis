@@ -24,12 +24,14 @@ function buildSearchBar(){
         else{
             d3.select("#summa_sus_div").style("display","none")
             d3.select("#summa_critical_div").style("display","none")
-            var oknotok = 0
+            var oknotok
+            var normal_search = true
             //*SAFE OR DANGER
             if("safe".startsWith(string) ||"danger".startsWith(string)){
                 oknotok= "safe".startsWith(string)?  true:false
+                normal_search = false
             }
-            if(oknotok==true || oknotok==false){
+            if(!normal_search){
                 removeOkItem("critical_div","span",oknotok)
                 removeOkItem("critical_div","text",oknotok)
                 removeOkItem("sus_div","span",oknotok)

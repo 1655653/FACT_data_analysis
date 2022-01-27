@@ -309,9 +309,11 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     // d3.select("#neutral_div").style("max-width", getDimFloat("critical_div","width")+"px") 
 }
 //*draw neutral
+var lock_neutral = false
+var original_w
 function drawNeutral(t){
     d3.select("#FO_name_div_"+t).selectAll("*").remove()
-    d3.select("#FO_name_div_"+t).style("min-width",original_rank_width+"px")
+    // d3.select("#FO_name_div_"+t).style("min-width",original_rank_width+"px")
     d3.select("#neutral_div").style("border-style", "solid") //appears
     //drop down mngmnt
     var others_txt_and_expand = d3.select("#FO_name_div_"+t).append("div").attr("id","others_txt_and_expand").attr("class","no_search")
@@ -324,13 +326,16 @@ function drawNeutral(t){
         .attr("class","no_search")
     
     //creazione search bar
-    var original_w = getDimFloat("neutral_div","width")
-    console.log(original_w)
-    d3.select("#rightside").append('textarea').attr("id","search_bar_FO").style("width",original_w+"px")
+    if(!lock_neutral) original_w = getDimFloat("critical_div","width")
+    lock_neutral = true
+    d3.select("#rightside").append('textarea').attr("id","search_bar_FO")
+    // d3.select("#rightside").append('textarea').attr("id","search_bar_FO").style("width",original_w+"px")
+    d3.select("#search_bar_FO").style("width",original_w+"px")
 
     //expand
+    console.log(original_w)
     d3.select("#others_expand").on("click",function(d){
-        
+        console.log(original_w)
 
         var is_down = d3.select("#others_expand").select("i").attr("class") == "fas fa-caret-down"? true:false
         if(is_down){
@@ -359,8 +364,8 @@ function drawNeutral(t){
             d3.select("#neutral_div").style("overflow-y","auto")
             d3.select("#neutral_div").style("height",getDimFloat("others_txt_and_expand","height")+"px").transition().duration(700).style("height",d3.select("#neutral_div").style("max-height"))
             //dim seatrch bar
-            w = getDimFloat("neutral_div","width")
-            d3.select("#search_bar_FO").transition().duration(1000).style("width",w+"px")
+            // w = getDimFloat("neutral_div","width")
+            d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+30+"px")
         }
         else{
             d3.select("#neutral_div").style("overflow-y","hidden")
@@ -370,7 +375,7 @@ function drawNeutral(t){
             
             d3.selectAll("#fo_details").remove()
             //dim seatrch bar
-            w = getDimFloat("neutral_div","width")
+            // w = getDimFloat("neutral_div","width")
             d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+"px") 
         }
         rememberOknotook()
