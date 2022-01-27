@@ -175,6 +175,17 @@ body {
   /* width: fit-content; */
   /* width: 328px;  deve avere dimensione fissa!!!!! */
 }
+#ft_dtls{
+  font-size: 12px;
+  border: solid 1px #6e747e;
+  padding: 2px;
+}
+#unpacker_dtls{
+  font-size: 12px;
+  border: solid 1px #6e747e;
+  padding: 2px;
+}
+
 #oknotok{
   display: flex;
   justify-content: center;
@@ -284,3 +295,4 @@ body {
 .ex_miti_btn_container{
   position: absolute;
 }
+

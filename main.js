@@ -95,11 +95,17 @@ function callFW() {
                     cpu_info.push(key)
                 }
             }
-            var plu = ", CPU architecture:"
+            var plu = ", CPU architecture"
             cpu_info.length > 1 ? plu += "s: " : plu+= ": "
             mb = parseFloat(data.firmware.meta_data.size)/1000000
             d3.select("#reportOf").html("Report of "+ data.firmware.meta_data.hid +" ("+data.firmware.meta_data.total_files_in_firmware +" files, "+mb.toFixed(2)+"MB )"+ "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
-            d3.select("#downloadFW").style("visibility", "visible").on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
+            d3.select("#downloadFW").style("visibility", "visible")
+                .on("click",function(d){
+                    if (confirm('Are you sure you want to download the entire firmware?')) 
+                            // Save it!
+                            download( data.request.uid ,data.firmware.analysis.file_type.mime )
+                })
+            // .on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
         
             //console.log(data)
             cve_lookup_fw= data.firmware.analysis.cve_lookup.summary
@@ -136,8 +142,8 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)

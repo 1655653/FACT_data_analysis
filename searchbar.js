@@ -12,8 +12,8 @@ function buildSearchBar(){
         if(string == "") {
             drawDanger()
             //perchè quando cerco li setto a none e tolgo opacity
-            d3.select("#critical_div").transition().duration(1500).style("opacity","1")
-            d3.select("#sus_div").transition().duration(1500).style("opacity","1")
+            d3.select("#critical_div").transition().duration(1000).style("opacity","1")
+            d3.select("#sus_div").transition().duration(1000).style("opacity","1")
             d3.select("#summa_sus_div").style("display","block")
             d3.select("#summa_critical_div").style("display","block")
             
@@ -69,11 +69,11 @@ function buildSearchBar(){
                 d3.select("#FO_squares_div_c").selectAll("svg").filter(function(){
                     var id = d3.select(this).attr("id")
                     return !ALL_REST_RESPONSE[id].hid.startsWith(string)
-                }).transition().duration(400).style("opacity","0").remove()
+                }).transition().duration(200).style("opacity","0").remove()
                 d3.select("#FO_squares_div_s").selectAll("svg").filter(function(){
                     var id = d3.select(this).attr("id")
                     return !ALL_REST_RESPONSE[id].hid.startsWith(string)
-                }).transition().duration(1500).style("opacity","0").remove()
+                }).transition().duration(200).style("opacity","0").remove()
 
             }
 

@@ -161,7 +161,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         list_fo.system.forEach((fo, index) => {
             
             var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
-            fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+            fo_name.style("opacity",0).transition().duration(600).style("opacity",1)
             fo_name.style("height","23.8px")
             //*con click destro rimuovi approved or not
             fo_name.on("contextmenu", function(data, index) {
@@ -181,10 +181,10 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 }
             })
             total = fo.overall
-            if(fo.packed) total = "PACKED"
+            if(fo.packed) total = "PCKD"
             d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
                 .style("opacity",0)
-                .transition().duration(2500)
+                .transition().duration(600)
                 .style("opacity",1)
             
             
@@ -202,6 +202,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             var x_rect=pad
             for (let i = 0; i < Object.keys(fo).length; i++) {
                 item = Object.keys(fo)[i]
+                console.log(fo)
                 if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
                     if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
                     if(fo[item] > 0 && item != "EXM") metric_occurrences[item]++
@@ -210,11 +211,13 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     svg_rect.append('rect')
                     .attr('stroke-width', '2px')
                     .attr('fill', function(d){
+                        if(fo.packed) return "#ffffff00"
                         if(fo[item] > 0 && item!="EXM") {
                             stroke_color = AAA_FILL
                             return stroke_color
                         }
                         else if(fo[item] == 0 && item=="EXM") {
+
                             stroke_color = AAA_FILL
                             return stroke_color
                         }
@@ -230,7 +233,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     // .on("mousemove", mousemove)
                     // .on("mouseleave", mouseleave)
                     //.on("click",clicked)
-                    .transition().duration(1500)
+                    .transition().duration(600)
                     .attr("x",x_rect)
                     .attr('width', rect_dim)
                     .attr('height', rect_dim)
@@ -342,7 +345,7 @@ function drawNeutral(t){
             //fill with files
             NEUTRAL_FO.system.forEach(fo => {
                 var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
-                fo_name.style("opacity",0).transition().duration(2500).style("opacity",1)
+                fo_name.style("opacity",0).transition().duration(600).style("opacity",1)
                 //*details for every fo
                 fo_name.on("click",function(d){
                     nodes= d3.select("#FO_name_div_"+t).node().childNodes
@@ -370,7 +373,7 @@ function drawNeutral(t){
         else{
             d3.select("#neutral_div").style("overflow-y","hidden")
             d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
-            d3.select("#FO_name_div_"+t).selectAll(".div_column").style("opacity",1).transition().duration(1000).style("opacity",0).remove()
+            d3.select("#FO_name_div_"+t).selectAll(".div_column").style("opacity",1).transition().duration(600).style("opacity",0).remove()
             d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
             
             d3.selectAll("#fo_details").remove()
@@ -389,10 +392,14 @@ function summaExpand(rect_dim,t,type){
     if(is_down) {
         drawHistogramSumma(rect_dim,t,type)
         d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-up")
+        if(t =="s") d3.select("#neutral_div").style("margin-top","5px")
+        if(t =="c") d3.select("#sus_div").style("margin-top","5px")
     }
     else{
         d3.select("#summa_"+type+"_div").select("svg").remove()
         d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-down")
+        if(t =="s") d3.select("#neutral_div").style("margin-top","25px")
+        if(t =="c") d3.select("#sus_div").style("margin-top","25px")
     }
 }
 //*draw histogram
@@ -458,7 +465,7 @@ function drawHistogramSumma(rect_dim,t,type){
         .attr("height", function(d) { return height - y(0); });
     
     bars.selectAll("rect")
-        .transition().duration(1500)//on transition
+        .transition().duration(500)//on transition
         .attr("y", function(d) { return y(metric_occurrences[d]); })
         .attr("height", function(d) { return height - y(metric_occurrences[d]); })
     

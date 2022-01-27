@@ -5,14 +5,14 @@ function createDetailsdiv(fo,t,index){
     // console.log(el)
     var selector_name = "ao"+fo.uid
 
+    //refuso per i plaeholder
     br = "</br>"
     var UID = "UID:  <tspan id = 'uid_tspan'>"+ fo.uid +"</tspan>"
     var HID = "HID:  <tspan id = 'hid_tspan'>"+ el.hid +"</tspan>"
     var MIME = "Mime:  <tspan id = 'mime_tspan'>"+ el.mime +"</tspan>"
     detailsI = HID + br + UID + br +"Size: "+ el.size+" bytes"+br+ MIME
+   
     // //
-
-    
     
     //*NAME
     details_width = 265
@@ -26,24 +26,94 @@ function createDetailsdiv(fo,t,index){
         .style("width",details_width+"px")
         .style("min-height","85px")
     
-    //*layout cools
+    //***********LAYOUT SCHEDA FO
     div.select("#uid_tspan").style("font-size","14px")
     div.select("#hid_tspan").style("font-size",function(d){return el.hid.length>35? "12px": "17px"})
     
     //?append layout
-    div.append("div").attr("id", "details_I_II").append("div").attr("id", "details_I").append("text").html(detailsI)
-        .style("overflow-x","auto")
+    dettI= div.append("div").attr("id", "details_I_II").append("div").attr("id", "details_I")
+    dettI.style("overflow-x","auto")
+        .style("display","flex")
+        .style("flex-direction","column")
+        .style("font-size","14px")
         .style("opacity","0")
         .transition().duration(400).style("opacity","1")
+    var hid = dettI.append("div").style("display","flex")
+    hid.append("div").text("HID: ")
+    hid.append("div").text(el.hid).style("padding-left","5px")
+    
+    var uid = dettI.append("div").style("display","flex")
+    uid.append("div").text("UID: ").style("word-break","normal")
+    uid.append("div").text(fo.uid).style("font-size","11px").style("padding-top","3px").style("padding-left","5px")
 
-    var UNPACK = "<div> Unpacker: <tspan id = 'unpack_tspan'>"+el.unpacker.summary[0]+"</tspan> <i id='btn_unpck_dtls' class='fas fa-caret-down'></i> </div> "
-    div.select("#details_I_II").append("div").attr("id", "details_II").append("text").html(UNPACK)
-    div.select("#unpack_tspan").style("color","green")
-    //TODO COMPLETARE LA SCHEDA DEL FO
-    div.select("#btn_unpck_dtls").on("click",function(e){
-        console.log(d3.select(this).attr("class"))
-        console.log(d3.select(this))
-    })
+    var size = dettI.append("div").style("display","flex")
+    size.append("div").text("Size:")
+    size.append("div").text(el.size+"  bytes").style("padding-left","5px")
+
+    var mime = dettI.append("div").style("display","flex")
+    mime.append("div").text("MIME:")
+    mime.append("div").text(el.mime).style("padding-left","5px")
+    mime.append("i").attr("class",'fas fa-caret-down')
+        .on("click",function(){
+            var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
+            if(is_down) {
+                var n = d3.create("div").attr("id","ft_dtls")
+                    n.append("text").text(el.file_type)
+                d3.select(this).attr("class","fas fa-caret-up")
+                dettI.node().insertBefore(n.node(), dettI.select("#unpacker").node());//inserisci prima di unpacker
+            }
+            else{
+                dettI.select("#ft_dtls").remove()
+                d3.select(this).attr("class","fas fa-caret-down")
+            }
+        })
+        .style("margin-top","3px")
+        .style("margin-left","5px")
+
+    var unpacker = dettI.append("div").style("display","flex").attr("id","unpacker") //l'id serve per il insertbefore di mime
+    unpacker.append("div").text("Unpacker:")
+    unpacker.append("div").text(el.unpacker.summary[0]).style("padding-left","5px")
+        .style("color",function(){
+            return el.unpacker.summary[0]=="packed"? "red": "green"
+        })
+    unpacker.append("i").attr("class",'fas fa-caret-down')
+        .on("click",function(){
+            var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
+            if(is_down) {
+                var n = d3.create("div").attr("id","unpacker_dtls")
+                    n.append("text").text(el.unpacker.output)
+                d3.select(this).attr("class","fas fa-caret-up")
+                dettI.node().insertBefore(n.node(), dettI.select("#buttons").node());//inserisci prima di unpacker
+            }
+            else{
+                dettI.select("#unpacker_dtls").remove()
+                d3.select(this).attr("class","fas fa-caret-down")
+            }
+        })
+        .style("margin-top","3px")
+        .style("margin-left","5px")
+    var buttons = dettI.append("div").style("display","flex").attr("id","buttons") //l'id serve per il insertbefore di mime
+    buttons.append("div").text("Download:")
+    buttons.append("i").attr("class",'fas fa-download')
+        .on("click",function(d){
+            if (confirm('Are you sure you want to download the file?')) 
+                    // Save it!
+                    download(fo.uid,el.mime)
+        })
+        .style("margin-top","1px")
+        .style("margin-left","5px")
+        .style("transform","scale(0.9)")
+
+
+    // var UNPACK = "<tspan id = 'unpack_tspan'>"+el.unpacker.summary[0]+"</tspan> <i id='btn_unpck_dtls' class='fas fa-caret-down'></i>"
+    // div.select("#details_I_II").append("div").attr("id", "details_II").append("text").html(UNPACK)
+    // div.select("#unpack_tspan").style("color","green")
+    // //TODO COMPLETARE LA SCHEDA DEL FO
+    // div.select("#btn_unpck_dtls").on("click",function(e){
+    //     console.log(d3.select(this).attr("class"))
+    //     console.log(d3.select(this))
+    // })
+    //*********FINE LAYOUT SCHEDA FO */
     //*ok not ok
     var oknotok = div.select("#details_I_II").append("div").attr("id", "oknotok")
     oknotok.append("i").attr("class","fas fa-check-circle").style("color","#06e103").style("margin-right","30px") //appendi alla scheda
@@ -55,6 +125,7 @@ function createDetailsdiv(fo,t,index){
                 .append("i").attr("class","fas fa-check-circle")
                     .style("color","#06e103")
                     .style("transform","scale(0.6)")
+                    .style("margin-top","3px")
             approved_or_not[id_ell]=true //global to retrieve
 
         })
@@ -67,6 +138,7 @@ function createDetailsdiv(fo,t,index){
                 .append("i").attr("class","fas fa-minus-circle")
                     .style("color","#dd0909")
                     .style("transform","scale(0.6)")
+                    .style("margin-top","3px")
             
             approved_or_not[id_ell]=false //global to retrieve
         })
@@ -122,7 +194,7 @@ function rememberOknotook(){
             d3.select("#"+id).selectAll("i").remove()
             elem = d3.select("#"+id)
                 .style("display","flex").style("flex-direction","row")
-                .append("i").style("transform","scale(0.6)")
+                .append("i").style("transform","scale(0.6)").style("margin-top","3px")
             if(tof){
                 elem.attr("class","fas fa-check-circle")
                     .style("color","#06e103")
