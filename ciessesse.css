@@ -295,6 +295,11 @@ body {
 .ex_miti_btn_container{
   position: absolute;
 }
+#reset_bp{
+  height: fit-content;
+  border: 1px solid white;
+  border-radius: 4px;
+}
 
 /**packed tree*/
 .node circle {

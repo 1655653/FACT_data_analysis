@@ -1,20 +1,27 @@
 var exm_to_see = ["C","S"]
+var mitigations_to_hide = []
 function buildBipartiteGraph(exm_data){
-	exm_data_filtered = filterExmData(exm_data,exm_to_see)
+	exm_data_filtered = filterExmData(exm_data,exm_to_see,mitigations_to_hide)
 	mitigations_filtered = []
 	exm_data_filtered.forEach(element => {
 		if(!mitigations_filtered.includes(element[0])) mitigations_filtered.push(element[0])
 	});
-
+	//ordino in base alle mitigatons presenti
+	mitigations.sort(function(a,b){
+		if (mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return a>b
+		if (mitigations_filtered.includes(a) && !mitigations_filtered.includes(b)) return -1
+		if (!mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return 1
+		return 0
+	})
 	//*clean
 	d3.select("#svg_bipartite").select("g").remove()
 	d3.select("#svg_legenda").selectAll("*").remove()
 
+	m = mitigations.filter(e=>!mitigations_to_hide.includes(e))
 	//*legenda
-
     var legenda =d3.select("#svg_legenda")
 		.selectAll(".firstrow")
-		.data(mitigations_filtered).enter()
+		.data(m).enter()
     
     legenda_div = legenda.append("svg")
 	legenda_div.append("rect")
@@ -31,13 +38,19 @@ function buildBipartiteGraph(exm_data){
 			exm_data_filtered.forEach(tupla => {
 				if(tupla[0]==d) i++
 			});
-			return d+" ("+i+")"
+			j = 0
+			exm_data.forEach(tupla => {
+				if(tupla[0]==d) j++
+			});
+			return d+" ("+i+")"+" ("+j+")"
 		})
 		.attr("y", function(d,i){return 40 + i*20})
 		.attr("x", 22)
 		.attr("font-size","12px")
+		.attr("fill", function(d){return mitigations_filtered.includes(d)? "black": "#adadad57" })
 		.on("mouseover",mouseover_legenda)
 		.on("mouseout",mouseout_legenda)
+		.on("click",mouseclick_legenda)
 	// console.log(exm_data)
 	// console.log(exm_data_filtered)
 	//*Bipartite
@@ -122,34 +135,52 @@ function buildBipartiteGraph(exm_data){
 			}
 		})	
 	}
+	function mouseclick_legenda(d){
+		if(!mitigations_to_hide.includes(d)) mitigations_to_hide.push(d)
+		buildBipartiteGraph(exm_data)
+		if(d3.selectAll("#reset_bp").nodes().length == 0){
+			d3.select("#ex_miti_svg_container").append("button").attr("id","reset_bp")
+				.text("Reset")
+				.on("click",function(){
+					mitigations_to_hide=[]
+					buildBipartiteGraph(exm_data)
+					d3.select("#reset_bp").transition().duration(200).style("opacity","0").remove()
+				})
+		}
+	}
 }
 
 
-function filterExmData(exm_data,to_see){
+function filterExmData(exm_data,to_see,mitigations_to_hide){
 	exm_data_filtered=[]
 
 	if(to_see.includes("C")){
 		CRITICAL_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid) exm_data_filtered.push(tupla)
+				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+					exm_data_filtered.push(tupla)
 			});
 		});
 	}
 	if(to_see.includes("S")){
 		SUS_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid) exm_data_filtered.push(tupla)
+				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+					exm_data_filtered.push(tupla)
 			});
 		});
 	}
 	if(to_see.includes("O")){
 		NEUTRAL_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid) exm_data_filtered.push(tupla)
+				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+					exm_data_filtered.push(tupla)
 			});
 		});
 	}
-	// console.log(exm_data_filtered)
+	console.log(exm_data_filtered)
+
+	
 	return exm_data_filtered
 }
 
@@ -168,8 +199,8 @@ function buildExploitData(exp_miti){
 			miti=miti.trim()
             
             var enordi = key.split(" ").at(-1);
+			if(!mitigations.includes(miti)) mitigations.push(miti)
             if(enordi == "enabled" || enordi== "present") {
-				if(!mitigations.includes(miti)) mitigations.push(miti)
                 uid_array.forEach(uid => {
                     bpart_data.push([miti,ALL_REST_RESPONSE[uid].hid,1])
                 });

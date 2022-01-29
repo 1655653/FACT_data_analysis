@@ -237,9 +237,8 @@ function packedUI(unpack_list_size){
             .append("button").text("expand").attr("id","packed_tree_expand_btn")
                 .on("click",expandpackedTree)
         d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
-        
-        
     }
+    
     else if(unpack_list_size == 0){
         txt ="FACT unpacked 0 elements " 
         d3.select("#reportOf").append("text").text(txt)

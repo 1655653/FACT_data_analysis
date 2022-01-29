@@ -3,7 +3,7 @@ function packedUI(unpacker){
     var txt =""
     var packed
     
-    if(unpacker.summary.packed.length>0) packed = unpacker.summary.packed.length
+    if(unpacker.summary.packed && unpacker.summary.packed.length>0) packed = unpacker.summary.packed.length
     else if(unpacker.summary.unpacked.length==0) packed = -1
     else {
         packed=0
