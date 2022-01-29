@@ -336,7 +336,7 @@ function drawNeutral(t){
     d3.select("#search_bar_FO").style("width",original_w+"px")
 
     //expand
-    console.log(original_w)
+    // console.log(original_w)
     d3.select("#others_expand").on("click",function(d){
         console.log(original_w)
 

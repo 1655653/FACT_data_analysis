@@ -296,3 +296,20 @@ body {
   position: absolute;
 }
 
+/**packed tree*/
+.node circle {
+  fill: #fff;
+stroke: black;
+stroke-width: 3px;
+}
+
+.node text {
+  font: 14px sans-serif;
+  
+}
+
+.link_pckd {
+  fill: none;
+  stroke: #979393;
+  stroke-width: 2px;
+}

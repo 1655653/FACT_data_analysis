@@ -48,7 +48,7 @@ list_response_cpu_archi=[]
 list_response_unpacker=[]
 var list_packed=[]
 var list_packed_hid=[]
-var list_packed_uid = []
+var LIST_PACKED_UID = []
 var cve_lookup_fw
 var sw_components_fw
 
@@ -139,6 +139,10 @@ function callFW() {
                 console.log(Tree)
                 //console.log(JSON.stringify(Tree, null, 2))
                 
+                // //***building peckedUI
+                console.log("BUILDING PACKED UI")
+                packedUI(data.firmware.analysis.unpacker)
+                console.log("PACKED UI BUILT")
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
@@ -163,8 +167,8 @@ function callFW() {
                 console.log("BUILDING SW COMPONENTS + CVE VIEW")
                 collectSWC(data.firmware.analysis.software_components.summary)
                 DrawSWComponents()
-                console.log("---------SW COMPONENTS + CVE VIEW BUILT")
                 console.log(ALL_SWC)
+                console.log("---------SW COMPONENTS + CVE VIEW BUILT")
                 
                 console.log("BUILDING BIPARTITE GRAPH")
                 exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)

@@ -39,7 +39,7 @@ function buildBipartiteGraph(exm_data){
 		.on("mouseover",mouseover_legenda)
 		.on("mouseout",mouseout_legenda)
 	// console.log(exm_data)
-	console.log(exm_data_filtered)
+	// console.log(exm_data_filtered)
 	//*Bipartite
 	var bP = viz.biPartite()
 		.data(exm_data_filtered)
@@ -177,7 +177,7 @@ function buildExploitData(exp_miti){
 
 		}
 	}
-	console.log(mitigations)
+	// console.log(mitigations)
 	// console.log(JSON.stringify(bpart_data))
 
 	color_scale= d3.scaleOrdinal().domain(mitigations).range(d3.schemeCategory20)
