@@ -1,3 +1,4 @@
+var COLOR_NODE = "#2e3035"
 function packedUI(unpacker){
     var txt =""
     var packed
@@ -13,8 +14,12 @@ function packedUI(unpacker){
         d3.select("#reportOf").append("br")
         
         d3.select("#reportOf").append("text").text(txt)
-            .append("button").text("expand").attr("id","packed_tree_expand_btn")
+            .append("i").attr("id","packed_tree_expand_btn").attr("class","fas fa-caret-down")
                 .on("click",expandpackedTree)
+                // <i class="fas fa-expand-arrows-alt"></i>
+        // d3.select("#reportOf").append("text").text(txt)
+        //     .append("button").text("expand").attr("id","packed_tree_expand_btn")
+        //         .on("click",expandpackedTree)
         d3.select("#reportOf").append("div").attr("id","packed_tree_expand").style("display","none")
     }
     
@@ -28,20 +33,21 @@ function packedUI(unpacker){
 }
 
 function expandpackedTree(){
-    var expandbtn = document.getElementById("packed_tree_expand");
-    if (expandbtn.style.display === "none") {
-        d3.select("#packed_tree_expand_btn").text("collapse")
+    var expand = d3.select("#packed_tree_expand_btn").attr("class")
+    // console.log(expand)
+    if (expand=="fas fa-caret-down") {
+        d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-up")
         d3.select("#log_packed_FO").style("visibility","visible")
-        expandbtn.style.display = "block";
+        document.getElementById("packed_tree_expand").style.display = "block";
         //!------------
         var treeData = buildpackedTree(LIST_PACKED_UID)
-        console.log(treeData)
+        // console.log(treeData)
         var heightbc = height/5
         var marginbc = {top: 10, right: 90, bottom: 0, left: 150}
         var svg_bc_pckd = d3.select("#packed_tree_expand")
             .append("svg")
                 .attr("width", "100%")
-                .attr("height", heightbc + marginbc.top + marginbc.bottom)
+                .style("height", heightbc + marginbc.top + marginbc.bottom)
             .append("g")
                 .attr("transform","translate(120,0)");
                     // "translate(" + marginbc.left + "," + marginbc.top + ")");
@@ -98,7 +104,7 @@ function expandpackedTree(){
                 .attr('class', 'node')
                 .attr('r', 1e-6)
                 .style("fill", function(d) {
-                    return d._children ? "lightsteelblue" : "#fff";
+                    return d._children ? COLOR_NODE : "#fff";
                 });
 
             // Add labels for the nodes
@@ -110,7 +116,7 @@ function expandpackedTree(){
                 .attr("text-anchor", function(d) {
                     return d.children || d._children ? "end" : "start";
                 })
-                .text(function(d) { console.log(d)
+                .text(function(d) { 
                     return d.data.name; });
 
             // UPDATE
@@ -127,7 +133,7 @@ function expandpackedTree(){
             nodeUpdate.select('circle.node')
             .attr('r', 10)
             .style("fill", function(d) {
-                return d._children ? "lightsteelblue" : "#fff";
+                return d._children ? COLOR_NODE : "#fff";
             })
             .attr('cursor', 'pointer');
 
@@ -198,7 +204,7 @@ function expandpackedTree(){
 
             // Toggle children on click.
             function clickPackedFO(d) {
-                console.log(d)
+                // console.log(d)
                 if(d.data.leaf) {
                     talkAboutPackedFO(d.data.uid)
                     // details_I_II(d.data.uid)
@@ -215,9 +221,10 @@ function expandpackedTree(){
             }
         }
     } else {
-        d3.select("#packed_tree_expand_btn").text("expand")
+        d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-down")
+        // d3.select("#packed_tree_expand_btn").text("expand")
         d3.select("#packed_tree_expand").selectAll("*").remove();
-        expandbtn.style.display = "none";
+        // expandbtn.style.display = "none";
         d3.select("#log_packed_FO").style("visibility","hidden")
         d3.select("#log_packed_FO").text("")
   }
@@ -262,8 +269,8 @@ function buildpackedTree(list_packed_uid){
 
 function talkAboutPackedFO(FOuid){
     var selectedFO = ALL_REST_RESPONSE[FOuid]
-    console.log(selectedFO)
-    console.log(FOuid)
+    // console.log(selectedFO)
+    // console.log(FOuid)
     var mime_check = "The file type of " + selectedFO.hid + " is not blacklisted, so it should have been unpacked" 
     if(selectedFO.unpacker["0_ERROR_genericFS"]) mime_check = "During the unpacking process of " + selectedFO.hid + ", a genericFS error arisen"
     if(UNPACK_BLACKLISTED.includes(selectedFO.mime))  mime_check= "Unpacking of " + selectedFO.hid + " skipped due to blacklisted file type"

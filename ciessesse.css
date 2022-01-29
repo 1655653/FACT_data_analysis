@@ -300,7 +300,7 @@ body {
 .node circle {
   fill: #fff;
 stroke: black;
-stroke-width: 3px;
+stroke-width: 2px;
 }
 
 .node text {
