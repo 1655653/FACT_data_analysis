@@ -52,9 +52,11 @@ var LIST_PACKED_UID = []
 var cve_lookup_fw
 var sw_components_fw
 
-ListMimes = [] //? lista con i subtypes
-ListSuperMimes = []//?lista con solo i types
-
+//*mime
+var ListMimes = [] //? lista con i subtypes
+var ListSuperMimes = []//?lista con solo i types
+var colormimeSupertype
+var colormimeSubtype
 //*gestisce la dimensione del sc panel
 d3.select("#leftside").style("max-height",window.screen.height/2.6+"px")
 
@@ -139,15 +141,16 @@ function callFW() {
                 console.log(Tree)
                 //console.log(JSON.stringify(Tree, null, 2))
                 
-                // //***building peckedUI
+                
+                // //***building packedUI
                 console.log("BUILDING PACKED UI")
                 packedUI(data.firmware.analysis.unpacker)
                 console.log("PACKED UI BUILT")
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                //await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
@@ -174,6 +177,13 @@ function callFW() {
                 exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
                 buildBipartiteGraph(exm_data)
                 console.log("---------BIPARTITE GRAPH BUILT")
+                
+                // //** SUNBURST */
+                console.log("BUILDING SUNBURST")
+                MimeMenu()
+                DrawSunburst()
+                console.log("---------SUNBURST BUILT")
+                
             })();
             
         })

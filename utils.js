@@ -86,3 +86,11 @@ function download(uid,contentType){
         link.click();
     })
 }
+//* if only one mime i use the same color of supertype
+function moreThanOne(element){
+    var howmany=0
+    ListMimes.forEach(i => {
+        if(element.split("/")[0]==i.split("/")[0]) howmany++ 
+    });
+    return howmany>1? true: false
+}
