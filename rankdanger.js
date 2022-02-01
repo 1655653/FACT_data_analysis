@@ -274,7 +274,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             if(text.length>10){
                 text = "..."+text.substring(text.length-10,text.length)
             }
-            return text
+            return text.replace("-","_")
         })
 
         

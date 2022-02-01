@@ -25,7 +25,7 @@ body {
     width: 100%;
 }
 #center{
-  width: 70%;
+  width: 50%;
   display: flex;
   flex-direction: row;
 }
@@ -43,6 +43,10 @@ body {
   padding: 5px;
   max-width: 25%;
   
+}
+#bottom{
+  display: flex;
+  align-items: flex-start;
 }
 /** parametri dell'algo con gli slider */
 
@@ -225,7 +229,6 @@ body {
 
 #sc_menu{
   display: flex;
-  justify-content: space-between;
   position: relative;
 }
 #sw_comp_expand{
@@ -348,3 +351,23 @@ stroke-width: 2px;
 #sub_mime_list span{
   margin-top: 15px;
 }
+
+/*directory*/
+.node rect {
+  cursor: pointer;
+  fill: #fff;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+.link_dir {
+  fill: none;
+  stroke: #f8f4f4;
+  stroke-width: 1.5px;
+}
+/*------------directory*/

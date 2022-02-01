@@ -1,5 +1,6 @@
 var exm_to_see = ["C","S"]
 var mitigations_to_hide = []
+var sort_lock = false
 function buildBipartiteGraph(exm_data){
 	exm_data_filtered = filterExmData(exm_data,exm_to_see,mitigations_to_hide)
 	mitigations_filtered = []
@@ -7,21 +8,23 @@ function buildBipartiteGraph(exm_data){
 		if(!mitigations_filtered.includes(element[0])) mitigations_filtered.push(element[0])
 	});
 	//ordino in base alle mitigatons presenti
-	mitigations.sort(function(a,b){
-		if (mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return a>b
-		if (mitigations_filtered.includes(a) && !mitigations_filtered.includes(b)) return -1
-		if (!mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return 1
-		return 0
-	})
+	if(! sort_lock){
+		mitigations.sort(function(a,b){
+			if (mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return a>b
+			if (mitigations_filtered.includes(a) && !mitigations_filtered.includes(b)) return -1
+			if (!mitigations_filtered.includes(a) && mitigations_filtered.includes(b)) return 1
+			return 0
+		})
+	}
 	//*clean
 	d3.select("#svg_bipartite").select("g").remove()
 	d3.select("#svg_legenda").selectAll("*").remove()
 
-	m = mitigations.filter(e=>!mitigations_to_hide.includes(e))
+	// m = mitigations.filter(e=>!mitigations_to_hide.includes(e))
 	//*legenda
     var legenda =d3.select("#svg_legenda")
 		.selectAll(".firstrow")
-		.data(m).enter()
+		.data(mitigations).enter()
     
     legenda_div = legenda.append("svg")
 	legenda_div.append("rect")
@@ -56,8 +59,9 @@ function buildBipartiteGraph(exm_data){
 	//*Bipartite
 	var bP = viz.biPartite()
 		.data(exm_data_filtered)
-		.orient("horizontal")
-		.height(300)
+		.orient("vertical")
+		// .height(600)
+		.width(320)
 		.barSize(20)
 		.pad(1)
 		.min(2)
@@ -136,12 +140,14 @@ function buildBipartiteGraph(exm_data){
 		})	
 	}
 	function mouseclick_legenda(d){
+		sort_lock=true
 		if(!mitigations_to_hide.includes(d)) mitigations_to_hide.push(d)
 		buildBipartiteGraph(exm_data)
 		if(d3.selectAll("#reset_bp").nodes().length == 0){
 			d3.select("#ex_miti_svg_container").append("button").attr("id","reset_bp")
 				.text("Reset")
 				.on("click",function(){
+					sort_lock=false
 					mitigations_to_hide=[]
 					buildBipartiteGraph(exm_data)
 					d3.select("#reset_bp").transition().duration(200).style("opacity","0").remove()

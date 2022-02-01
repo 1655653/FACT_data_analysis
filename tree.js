@@ -248,7 +248,7 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
         const child = fatherNode.children[i];
         if(child.uid!="folder"){ //?se non è foglia, inserisco la posizione dell'elemento
             mime_filtered.forEach(element => {
-                if(child.mime == element) {
+                if(child.mime.includes(element)) {
                     // console.log("child")
                     // console.log(child)
                     l.push(i)
@@ -296,7 +296,7 @@ function RemoveMimeFOFromTree(fatherNode,mime_filtered){
             }
         }
     }
-    console.log(fatherNode)
+    // console.log(fatherNode)
 
 }
 function LabelPackedFOFromTree(Tree,list_packed){
@@ -311,17 +311,18 @@ function LabelPackedFOFromTree(Tree,list_packed){
 function resetTree(){
     Tree = JSON.parse(JSON.stringify(BackupTree))
     mime_filtered = []
-    ListMimes.forEach(e => {
-        document.getElementById(e.replace(/[/.]/g,"_")).checked = false
-        document.getElementById(e.split("/")[0]).checked = false
-    });
-    DrawDirectory()
-    SW_COMP_CVE = JSON.parse(JSON.stringify(BackupHeatMap))
+    DrawSunburst()
+    // ListMimes.forEach(e => {
+    //     document.getElementById(e.replace(/[/.]/g,"_")).checked = false
+    //     document.getElementById(e.split("/")[0]).checked = false
+    // });
+    // DrawDirectory()
+    // SW_COMP_CVE = JSON.parse(JSON.stringify(BackupHeatMap))
     
-    for (const key in exploit_data) {
-        if (Object.hasOwnProperty.call(exploit_data, key)) {
-            const element = exploit_data[key];
-            d3.select("#"+key.replace(/[^A-Z]+/g, "")).transition().duration(800).style("border-color","black")
-        }
-    }
+    // for (const key in exploit_data) {
+    //     if (Object.hasOwnProperty.call(exploit_data, key)) {
+    //         const element = exploit_data[key];
+    //         d3.select("#"+key.replace(/[^A-Z]+/g, "")).transition().duration(800).style("border-color","black")
+    //     }
+    // }
 }

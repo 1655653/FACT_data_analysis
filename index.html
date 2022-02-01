@@ -46,18 +46,21 @@
     </div>
     
     <div class="container" id="container">
+      <div id="center">
+        <div id="sb_container"> </div>
+      </div>
+
+
       <div id="leftside">
         <div id="sc_menu">
-          <text style="visibility: hidden; padding-left: 15px; font-size:14px">SW COMPONENTS AND CVE</text> 
           <button type='button' style="visibility: hidden; height: fit-content;" id='sw_comp_expand_btn' ><i class='fas fa-ellipsis-v' ></i></button>
+          <text style="visibility: hidden; padding-left: 4px; font-size:14px">SW COMPONENTS AND CVE</text> 
         </div>
         <div id="sw_comp_svg_container"style="overflow-x:auto">
         </div>
       </div>
 
-      <div id="center">
-        <div id="sb_container"> </div>
-      </div>
+
 
       <div id="rightside">
         <!-- CRITICAL -->
@@ -105,14 +108,19 @@
       </div>
 
     </div>
-    <div id="ex_miti_svg_container">
-      <svg id="svg_bipartite" height="320"></svg>
-      <svg id="svg_legenda" ></svg>
-      <div class="ex_miti_btn_container" style="display:none">
-        <button id="C_btn_exm">Critical</button>
-        <button id="S_btn_exm">Suspicious</button>
-        <button id="O_btn_exm">Others</button>
+
+    <div id="bottom">
+      <div id="directory_container"></div>
+      <div id="ex_miti_svg_container">
+        <svg id="svg_bipartite" height="400px"></svg>
+        <svg id="svg_legenda" ></svg>
+        <div class="ex_miti_btn_container" style="display:none">
+          <button id="C_btn_exm">Critical</button>
+          <button id="S_btn_exm">Suspicious</button>
+          <button id="O_btn_exm">Others</button>
+        </div>
       </div>
+
     </div>
 
   
@@ -138,4 +146,5 @@
 <script src="expandFo.js"></script>
 <script src="mime_menu.js"></script>
 <script src="sunburst.js"></script>
+<script src="directory.js"></script>
 

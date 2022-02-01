@@ -57,6 +57,7 @@ var ListMimes = [] //? lista con i subtypes
 var ListSuperMimes = []//?lista con solo i types
 var colormimeSupertype
 var colormimeSubtype
+var mime_filtered=[]
 //*gestisce la dimensione del sc panel
 d3.select("#leftside").style("max-height",window.screen.height/2.6+"px")
 
@@ -172,17 +173,27 @@ function callFW() {
                 DrawSWComponents()
                 console.log(ALL_SWC)
                 console.log("---------SW COMPONENTS + CVE VIEW BUILT")
-                
-                console.log("BUILDING BIPARTITE GRAPH")
-                exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
-                buildBipartiteGraph(exm_data)
-                console.log("---------BIPARTITE GRAPH BUILT")
-                
+
                 // //** SUNBURST */
                 console.log("BUILDING SUNBURST")
                 MimeMenu()
                 DrawSunburst()
                 console.log("---------SUNBURST BUILT")
+                
+                // //** DIRECTORY */
+                console.log("BUILDING DIRECTORY")
+                DrawDirectory()
+                console.log("DIRECTORY BUILT")
+
+                // //** BIPARTITE */
+                console.log("BUILDING BIPARTITE GRAPH")
+                exm_data = buildExploitData(data.firmware.analysis.exploit_mitigations.summary)
+                buildBipartiteGraph(exm_data)
+                console.log("---------BIPARTITE GRAPH BUILT")
+                
+                
+
+                
                 
             })();
             

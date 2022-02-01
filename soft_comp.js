@@ -43,15 +43,8 @@ function DrawSWComponents(){
     //var si = d3.scaleLinear().domain([4,20]).range([16,9]) //scala per il font size
     svg_violin
         .selectAll("text").text(function(d){
-            h = ""
-            // SW_COMP_CVE.forEach(element => {
-            //     if( element.cpe_name.includes(d) && element.cpe_name.includes("(CRITICAL)")){
-            //         h =  " ⚠️"
-            //     }
-            // });
-            
             d3.select(this).attr("id", "text_of_"+d)
-            return d.replace("(CRITICAL)","").trim()+h })
+            return d.replace("(CRITICAL)","").trim() })
         .attr("transform", "translate(10,-12)")
         .style("text-anchor", "start")
         .style("font-size", "17px")
@@ -231,12 +224,14 @@ function menuSWCOMP(){
         if(is_vertical){
             //apri tutto
             ls_bound = document.getElementById("leftside").getBoundingClientRect();
-            set_left = ls_bound.width + ls_bound.left
+            set_left = ls_bound.left - getDimFloat("sc_settings_container","width") -10
             //container
-            d3.select("#sc_settings_container")
-                .style("left",set_left+"px")
-            if(!lock_width)
+
+            if(!lock_width){
                 original_width = getDimFloat("sc_settings_container","width")
+                d3.select("#sc_settings_container")
+                    .style("left",set_left+"px")
+            }
             
             
             //radio-button

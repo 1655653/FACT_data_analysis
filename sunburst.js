@@ -8,6 +8,9 @@ var margin_sb = {top: 0, right: 0, bottom: 0, left: 0}
 
 
 function DrawSunburst(){
+    d3.select("#bigsun").remove()
+    d3.selectAll(".tooltip_sb").remove()
+
     var width_sb = d3.select("#leftside").node().getBoundingClientRect().width.toFixed(2)
     var height_sb = width_sb
     var radius = Math.min(width_sb, height_sb) / 2;
@@ -98,11 +101,16 @@ function DrawSunburst(){
             .style("fill",function(d){//devi vedere come colorare le folder
                 //return colormimeSupertype(d.data.mime)
                 if(d.data.mime){
-                    if(d3.select("#"+d.data.mime.split("/")[0]+"_checkbox").node().checked){
-                        if(moreThanOne(d.data.mime))
-                        return colormimeSubtype(d.data.mime)
+                    try {
+                        if(d3.select("#"+d.data.mime.split("/")[0]+"_checkbox").node().checked){
+                            if(moreThanOne(d.data.mime))
+                            return colormimeSubtype(d.data.mime)
+                        }
+                        return colormimeSupertype(d.data.mime.split("/")[0])  
+                        
+                    } catch (error) {
+                        return colormimeSupertype(d.data.mime.split("/")[0]) 
                     }
-                    return colormimeSupertype(d.data.mime.split("/")[0])  
                 }
                 else{ //se sono mixed folder do un colore standrd, senno quello del figlio
                     var only = 0
@@ -132,7 +140,8 @@ function DrawSunburst(){
             .on("mouseleave", mouseleave)
             .on("click", click)
     
-    
+    d3.select("#bigsun").style("opacity","0").transition().duration(400).style("opacity","1")
+
     
     function click(d) {
         // colorMiniSunburst(d)
