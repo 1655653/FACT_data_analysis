@@ -80,14 +80,24 @@ d3.json(url, function(data) {
     });
     
 })
-
+var debug_mode = false
 document.getElementById("start").onclick = callFW//? <---- chiamata quando premi bottone
+document.getElementById("debug").onclick = db_callFW
+function db_callFW() {
+    debug_mode = true
+    callFW()
+}
 //* starts analysis on a selected FW
 function callFW() {
     console.log("STARTED")
     ShowLoader(true)
+    
     var selectBox = document.getElementById("allFW");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    if(debug_mode){
+        selectedValue = "de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970"
+        //selectedValue = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866"
+    }
     //console.log(selectedValue)
     if(selectedValue != "---"){
         url = endpoint+"firmware/"+selectedValue+"?summary=true"
@@ -165,9 +175,12 @@ function callFW() {
                 
                 //*-------CVE 
                 console.log("ASKING NIST")
-                await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
-                //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                if(!debug_mode) await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
+                else{
+                    SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                    //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                }
+                d3.select("#db_mod").remove()
                 console.log("---------NIST RESPONDED WITH ALL CVE")
                 console.log(SW_COMP_CVE)
 

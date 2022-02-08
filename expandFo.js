@@ -1,5 +1,5 @@
 function createDetailsdiv(fo,t,index){
-    var m_height = 85
+    var m_height = 140
     //*prepara il div
     el = ALL_REST_RESPONSE[fo.uid]
     // console.log(el)
@@ -25,6 +25,7 @@ function createDetailsdiv(fo,t,index){
     div = d3.create("div").attr("id","fo_details").attr("class",selector_name)
         .style("width",details_width+"px")
         .style("min-height",m_height+"px")
+        .style("z-index","2")
     
     //***********LAYOUT SCHEDA FO
     div.select("#uid_tspan").style("font-size","14px")
@@ -48,8 +49,8 @@ function createDetailsdiv(fo,t,index){
     uid.append("i").attr("class",'fas fa-clipboard').style("padding-top", "2px")
         .on("click",function(){
             navigator.clipboard.writeText(fo.uid);
-            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
             uid.append("div").text("copied").style("padding-left","5px").transition().duration(1000).style("opacity",0).remove()
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
         })
         .on("mouseover",function(){
             d3.select(this).transition().duration(400).style("opacity",0.5)
@@ -84,7 +85,8 @@ function createDetailsdiv(fo,t,index){
 
     var unpacker = dettI.append("div").style("display","flex").attr("id","unpacker") //l'id serve per il insertbefore di mime
     unpacker.append("div").text("Unpacker:")
-    unpacker.append("div").text(el.unpacker.summary[0]).style("padding-left","5px")
+    var un_out = el.unpacker.summary[0] != undefined? el.unpacker.summary[0]: "no info"
+    unpacker.append("div").text(un_out).style("padding-left","5px")
         .style("color",function(){
             return el.unpacker.summary[0]=="packed"? "red": "green"
         })
@@ -93,7 +95,9 @@ function createDetailsdiv(fo,t,index){
             var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
             if(is_down) {
                 var n = d3.create("div").attr("id","unpacker_dtls")
-                    n.append("text").text(el.unpacker.output)
+                var out = el.unpacker.output != undefined? el.unpacker.output: "no info"
+                n.append("text").text(out)
+
                 d3.select(this).attr("class","fas fa-caret-up")
                 dettI.node().insertBefore(n.node(), dettI.select("#buttons").node());//inserisci prima di unpacker
             }
@@ -108,9 +112,14 @@ function createDetailsdiv(fo,t,index){
     buttons.append("div").text("Download:")
     buttons.append("i").attr("class",'fas fa-download')
         .on("click",function(d){
-            if (confirm('Are you sure you want to download the file?')) 
-                    // Save it!
-                    download(fo.uid,el.mime)
+            if (confirm('Are you sure you want to download the file?')) download(fo.uid,el.mime)
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+        })
+        .on("mouseover",function(){
+            d3.select(this).transition().duration(400).style("opacity",0.5)
+        })
+        .on("mouseleave",function(){
+            d3.select(this).transition().duration(400).style("opacity",1)
         })
         .style("margin-top","1px")
         .style("margin-left","5px")
@@ -134,6 +143,13 @@ function createDetailsdiv(fo,t,index){
             approved_or_not[id_ell]=true //global to retrieve
             console.log(approved_or_not)
 
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+        })
+        .on("mouseover",function(){
+            d3.select(this).transition().duration(400).style("opacity",0.5)
+        })
+        .on("mouseleave",function(){
+            d3.select(this).transition().duration(400).style("opacity",1)
         })
         
     oknotok.append("i").attr("class","fas fa-minus-circle").style("color","#dd0909")
@@ -148,12 +164,26 @@ function createDetailsdiv(fo,t,index){
                     .style("margin-top","3px")
             
             approved_or_not[id_ell]=false //global to retrieve
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+        })
+        .on("mouseover",function(){
+            d3.select(this).transition().duration(400).style("opacity",0.5)
+        })
+        .on("mouseleave",function(){
+            d3.select(this).transition().duration(400).style("opacity",1)
         })
     //close the div X;
     div.append("i").attr("class","fas fa-times-circle").attr("aria-hidden","true")
         .on("click",function(){
             d3.selectAll("."+selector_name).remove()
             // d3.selectAll("."+selector_name).transition().duration(400).style("opacity","0").remove()
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+        })
+        .on("mouseover",function(){
+            d3.select(this).transition().duration(400).style("opacity",0.5)
+        })
+        .on("mouseleave",function(){
+            d3.select(this).transition().duration(400).style("opacity",1)
         })
 
     FO_name_div.insertBefore(div.node(), FO_name_div.childNodes[index+1]);
@@ -171,6 +201,8 @@ function createDetailsdiv(fo,t,index){
         .style("visibility","hidden")
         .style("width","10px")
         .style("min-height",m_height+"px")
+        .style("max-height",m_height+"px")
+        .style("height",m_height+"px")
     div.append("div").attr("id", "details_I").append("text").html(detailsI).style("overflow-x","auto")
 
     var FO_score_div = d3.select("#FO_score_div_"+t).node();

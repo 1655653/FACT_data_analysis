@@ -194,7 +194,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
             rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
             //* rect spawn
-            d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
+            d3.select("#"+type+"_div").style("max-height",(22*rect_dim)+"px")
             d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
             //* rect loop
             var pad = 5

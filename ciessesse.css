@@ -277,6 +277,7 @@ body {
   border-radius: 5px;
   padding: 5px;
   position: absolute;
+  z-index: 2;
 }
 .tooltip_sw_comp_critical{
   background-color: #6e747e;
