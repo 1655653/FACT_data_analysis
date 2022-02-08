@@ -135,11 +135,14 @@ metric_occurrences_list = []
 
 function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     d3.select("#FO_squares_div_"+t).selectAll("svg").remove()
-    //*draw_neutral
+    d3.select("#rightside").style("width","326px")
+    d3.select("#FO_score_div_"+t).style("margin-right","20px")
+    //*DRAW NEUTRAL
     if(t =="n") {
         drawNeutral(t)
         return
     }
+    //*CRIT E SUS
     metric_occurrences ={
         "CRY":0,
         "CVE":0,
@@ -186,15 +189,11 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 .style("opacity",0)
                 .transition().duration(600)
                 .style("opacity",1)
-            
+            if(total>99 || total == "PCKD") d3.select("#FO_score_div_"+t).style("margin-right","0px")
             
             var svg_rect = d3.select("#FO_squares_div_"+t).append("svg").attr("id",fo.uid).attr('height',  fo_name.style("height"))
             rect_dim = parseFloat(fo_name.style("height")).toFixed(2) - 3
             //* rect spawn
-            if(fo.hid == "/lib/libkrb5-samba4.so.26") {
-                console.log(rect_dim)
-                console.log(fo_name.style("height"))
-            }
             d3.select("#"+type+"_div").style("max-height",(11*rect_dim)+"px")
             d3.select("#FO_titles_div_"+t).style("height",rect_dim+"px")
             //* rect loop
@@ -229,10 +228,27 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     .attr("y",1)
                     .attr("rx",4)
                     .style("opacity", 0.8)
-                    // .on("mouseover", mouseover)
-                    // .on("mousemove", mousemove)
-                    // .on("mouseleave", mouseleave)
-                    //.on("click",clicked)
+                    .on("mouseover",function(d){
+                        
+                        d3.select("body")
+                            .append("div").attr("id","tcd")
+                            .style("visibility", "visible")
+                            .attr("class", "tooltip_sw_comp_critical")
+                            .style('left', (d3.event.clientX) + 'px')
+                            .style('top',(d3.event.clientY-15)+"px")
+                            .append("span").text(" ")
+                            .style("opacity","0")
+                            .style("font-size","11px")
+                            .transition().duration(500)
+                            .style("opacity","1")
+                            
+                        })
+                    .on("mouseleave",function(d){
+                        d3.selectAll("#tcd")
+                        .transition().duration(500)
+                        .style("opacity","0").remove()
+                    })
+                    // .on("click",clicked)
                     .transition().duration(600)
                     .attr("x",x_rect)
                     .attr('width', rect_dim)
@@ -368,7 +384,7 @@ function drawNeutral(t){
             d3.select("#neutral_div").style("height",getDimFloat("others_txt_and_expand","height")+"px").transition().duration(700).style("height",d3.select("#neutral_div").style("max-height"))
             //dim seatrch bar
             // w = getDimFloat("neutral_div","width")
-            d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+30+"px")
+            // d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+30+"px")
         }
         else{
             d3.select("#neutral_div").style("overflow-y","hidden")
@@ -379,7 +395,7 @@ function drawNeutral(t){
             d3.selectAll("#fo_details").remove()
             //dim seatrch bar
             // w = getDimFloat("neutral_div","width")
-            d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+"px") 
+            // d3.select("#search_bar_FO").transition().duration(1000).style("width",original_w+"px") 
         }
         rememberOknotook()
     })
@@ -406,7 +422,7 @@ function summaExpand(rect_dim,t,type){
 function drawHistogramSumma(rect_dim,t,type){
     //console.log(metric_occurrences_list)
     metric_occurrences = metric_occurrences_list[tToIndex(t)]
-    let margin = {top: 20, right: 0, bottom: 15, left: 0};
+    let margin = {top: 20, right: 0, bottom: 25, left: 0};
     let svgWidth = getDimFloat("FO_squares_div_"+t,"width"), svgHeight = rect_dim*5;
     let height = svgHeight- margin.top- margin.bottom, width = svgWidth - margin.left - margin.right;
     let sourceNames = [], sourceCount = [];
@@ -424,7 +440,7 @@ function drawHistogramSumma(rect_dim,t,type){
     
     let svg_histo = d3.select("#summa_"+type+"_div").append("svg");
     var pad  = 5 //from score
-    w = getDimFloat("FO_name_div_"+t,"width") + getDimFloat("FO_score_div_"+t,"width")
+    w = getDimFloat("FO_name_div_"+t,"width") + getDimFloat("FO_score_div_"+t,"width") +  parseInt(d3.select("#FO_score_div_"+t).style("margin-right").replace("px",""))
     svg_histo.style("margin-left",(w+pad)+"px")
     //square_bound = document.getElementById("FO_squares_div_c").getBoundingClientRect();
     //svg_histo.attr("transform", "translate("+ (square_bound.x - pad)+",0)")

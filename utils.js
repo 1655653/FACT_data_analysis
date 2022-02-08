@@ -37,6 +37,7 @@ function cve_count(d,type){
             return d.all_cve_objects_is
     }
 }
+
 function getDimFloat(id,dim){
     var r 
     try {
@@ -93,4 +94,30 @@ function moreThanOne(element){
         if(element.split("/")[0]==i.split("/")[0]) howmany++ 
     });
     return howmany>1? true: false
+}
+
+function downloadReport(uid){
+    var e = "http://192.168.30.177:5000/pdf-download/"
+    var urldw = e+uid
+    window.open(urldw);
+}
+
+function ShowLoader(bool){
+    d3.select(".loader").transition().duration(300).style("opacity","0").remove()
+    if(bool){
+        h = screen.height/2 -120 -90
+        w = screen.width/2 -120
+        d3.select("body").append("div").attr("class","loader")
+            .style("left",w+"px")
+            .style("top",h+"px")
+        d3.select("body").append("text").attr("class","loader_text")
+            .style("left",w+38+"px")
+            .style("top",h+90-22+"px")
+            .text("LOADING")
+    }
+    else{
+        d3.select(".loader").transition().duration(300).style("opacity","0").remove()
+        d3.select(".loader_text").transition().duration(300).style("opacity","0").remove()
+    }
+    bool = ! bool
 }

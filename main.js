@@ -51,6 +51,10 @@ var list_packed_hid=[]
 var LIST_PACKED_UID = []
 var cve_lookup_fw
 var sw_components_fw
+var exm_fw
+//*report
+var has_crit_files=[]
+var has_sus_files=[]
 
 //*mime
 var ListMimes = [] //? lista con i subtypes
@@ -81,6 +85,7 @@ document.getElementById("start").onclick = callFW//? <---- chiamata quando premi
 //* starts analysis on a selected FW
 function callFW() {
     console.log("STARTED")
+    ShowLoader(true)
     var selectBox = document.getElementById("allFW");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     //console.log(selectedValue)
@@ -108,11 +113,20 @@ function callFW() {
                             // Save it!
                             download( data.request.uid ,data.firmware.analysis.file_type.mime )
                 })
+            d3.select("#reportFW").style("visibility", "visible")
+                .on("click",function(d){
+                    BuildReport(data.firmware)
+                    // if (confirm('Are you sure you want to download the report of the firmware?')) 
+                    //         // Save it!
+                    //         downloadReport( data.request.uid)
+                })
             // .on("click",function(){console.log("download started");download( data.request.uid ,data.firmware.analysis.file_type.mime )})
         
             //console.log(data)
             cve_lookup_fw= data.firmware.analysis.cve_lookup.summary
             sw_components_fw= data.firmware.analysis.software_components.summary
+            exm_fw = data.firmware.analysis.exploit_mitigations.summary
+
             //***build root of Tree
             list_packed = data.firmware.analysis.unpacker.summary.packed //? usato per tagggare i FO packed
             Tree["uid"] = data.request.uid
@@ -133,6 +147,7 @@ function callFW() {
                 
                 
                 // //***building tree
+                
                 console.log("BUILDING TREE")
                 await BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
                 calculateLeaves(Tree) 
@@ -191,9 +206,14 @@ function callFW() {
                 buildBipartiteGraph(exm_data)
                 console.log("---------BIPARTITE GRAPH BUILT")
                 
-                
-
-                
+                //*allieneo i divs
+                center  = d3.select("#center").node().getBoundingClientRect().width
+                ls = d3.select("#leftside").node().getBoundingClientRect().width
+                miti = d3.select("#ex_miti_svg_container").node().getBoundingClientRect().width
+                w_miti = center - (miti-ls)
+                d3.select("#directory_container").style("width",w_miti+"px")
+                ShowLoader(false)
+                // d3.select("#center").style("width","fit-content")
                 
             })();
             
@@ -221,4 +241,3 @@ function drawDanger(){
     buildSearchBar()
     rememberOknotook()
 }
-

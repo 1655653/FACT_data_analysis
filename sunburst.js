@@ -126,9 +126,11 @@ function DrawSunburst(){
                         }
                     }
                     if(only == 1) {//? il nodo non foglia ha solo 1 tipo di figlio
-                        if(d3.select("#"+mime.split("/")[0]+"_checkbox").node().checked)
-                            if(moreThanOne(mime))
-                                return colormimeSubtype(mime)
+                        checkbox = d3.select("#"+mime.split("/")[0]+"_checkbox").node()
+                        if(checkbox != null)
+                            if(checkbox.checked)
+                                if(moreThanOne(mime))
+                                    return colormimeSubtype(mime)
                         return colormimeSupertype(mime.split("/")[0])
                         
                     }

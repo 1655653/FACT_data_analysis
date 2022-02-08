@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="toggle_global.css">
   <link rel="stylesheet" href="radio_btn.css">
   <link rel="stylesheet" href="slider.css">
+  <link rel="stylesheet" href="loader.css">
+
 </head>
 
 <!-- Load d3.js -->
@@ -15,12 +17,16 @@
 <script src="http://vizjs.org/viz.v1.3.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://kit.fontawesome.com/5b7f4aa5d7.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+
 
 <body >
     Select a firmware <select id = "allFW"></select>
     
     <button id="start" type="button">start</button>
     <i id="downloadFW" class="fas fa-download" style="visibility: hidden;transform: translate(0px, 2px);" ></i>
+    <i id="reportFW" class="fas fa-file-pdf" style="visibility: hidden;transform: translate(5px, 2px);" ></i>
+    
     </br>
     <!-- <div class="loader" style="display:none"></div> -->
     <div id="reportOf"></div>
@@ -113,11 +119,13 @@
       <div id="directory_container"></div>
       <div id="ex_miti_svg_container">
         <svg id="svg_bipartite" height="400px"></svg>
-        <svg id="svg_legenda" ></svg>
-        <div class="ex_miti_btn_container" style="display:none">
-          <button id="C_btn_exm">Critical</button>
-          <button id="S_btn_exm">Suspicious</button>
-          <button id="O_btn_exm">Others</button>
+        <div id= "ex_miti_menu">
+          <div class="ex_miti_btn_container" style="display:none">
+            <button id="C_btn_exm">Critical</button>
+            <button id="S_btn_exm">Suspicious</button>
+            <button id="O_btn_exm">Others</button>
+          </div>
+          <svg id="svg_legenda" ></svg>
         </div>
       </div>
 
@@ -147,4 +155,6 @@
 <script src="mime_menu.js"></script>
 <script src="sunburst.js"></script>
 <script src="directory.js"></script>
+<script src="icon_data_url.js"></script>
+<script src="pdfReport.js"></script>
 

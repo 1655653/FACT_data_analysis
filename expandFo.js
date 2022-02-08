@@ -1,5 +1,5 @@
 function createDetailsdiv(fo,t,index){
-    
+    var m_height = 139
     //*prepara il div
     el = ALL_REST_RESPONSE[fo.uid]
     // console.log(el)
@@ -15,7 +15,7 @@ function createDetailsdiv(fo,t,index){
     // //
     
     //*NAME
-    details_width = 265
+    details_width = 285
     // d3.select("#FO_name_div_"+t).style("max-width","180px")
     var FO_name_div = d3.select("#FO_name_div_"+t).node();
     if(FO_name_div.childNodes[index+1] != undefined &&FO_name_div.childNodes[index+1].id=="fo_details") {
@@ -24,7 +24,7 @@ function createDetailsdiv(fo,t,index){
 
     div = d3.create("div").attr("id","fo_details").attr("class",selector_name)
         .style("width",details_width+"px")
-        .style("min-height","85px")
+        .style("min-height",m_height+"px")
     
     //***********LAYOUT SCHEDA FO
     div.select("#uid_tspan").style("font-size","14px")
@@ -44,7 +44,19 @@ function createDetailsdiv(fo,t,index){
     
     var uid = dettI.append("div").style("display","flex")
     uid.append("div").text("UID: ").style("word-break","normal")
-    uid.append("div").text(fo.uid).style("font-size","11px").style("padding-top","3px").style("padding-left","5px")
+    uid.append("div").text(fo.uid.substring(0, 15)+"...").style("font-size","11px").style("padding-top","3px").style("padding-left","5px")
+    uid.append("i").attr("class",'fas fa-clipboard').style("padding-top", "2px")
+        .on("click",function(){
+            navigator.clipboard.writeText(fo.uid);
+            d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+            uid.append("div").text("copied").style("padding-left","5px").transition().duration(1000).style("opacity",0).remove()
+        })
+        .on("mouseover",function(){
+            d3.select(this).transition().duration(400).style("opacity",0.5)
+        })
+        .on("mouseleave",function(){
+            d3.select(this).transition().duration(400).style("opacity",1)
+        })
 
     var size = dettI.append("div").style("display","flex")
     size.append("div").text("Size:")
@@ -105,14 +117,7 @@ function createDetailsdiv(fo,t,index){
         .style("transform","scale(0.9)")
 
 
-    // var UNPACK = "<tspan id = 'unpack_tspan'>"+el.unpacker.summary[0]+"</tspan> <i id='btn_unpck_dtls' class='fas fa-caret-down'></i>"
-    // div.select("#details_I_II").append("div").attr("id", "details_II").append("text").html(UNPACK)
-    // div.select("#unpack_tspan").style("color","green")
-    // //TODO COMPLETARE LA SCHEDA DEL FO
-    // div.select("#btn_unpck_dtls").on("click",function(e){
-    //     console.log(d3.select(this).attr("class"))
-    //     console.log(d3.select(this))
-    // })
+    
     //*********FINE LAYOUT SCHEDA FO */
     //*ok not ok
     var oknotok = div.select("#details_I_II").append("div").attr("id", "oknotok")
@@ -127,8 +132,10 @@ function createDetailsdiv(fo,t,index){
                     .style("transform","scale(0.6)")
                     .style("margin-top","3px")
             approved_or_not[id_ell]=true //global to retrieve
+            console.log(approved_or_not)
 
         })
+        
     oknotok.append("i").attr("class","fas fa-minus-circle").style("color","#dd0909")
         .on("click",function(){
             id_ell = FO_name_div.childNodes[index].id
@@ -163,7 +170,7 @@ function createDetailsdiv(fo,t,index){
     div = d3.create("div").attr("id","fo_details").attr("class",selector_name)//for the score
         .style("visibility","hidden")
         .style("width","10px")
-        .style("min-height","85px")
+        .style("min-height",m_height+"px")
     div.append("div").attr("id", "details_I").append("text").html(detailsI).style("overflow-x","auto")
 
     var FO_score_div = d3.select("#FO_score_div_"+t).node();
@@ -176,7 +183,7 @@ function createDetailsdiv(fo,t,index){
             .style("height",original_h+"px")//for the squares
             .style("padding-bottom","5px")//for the squares
             .style("visibility","hidden")
-            .style("min-height","85px")
+            .style("min-height",m_height+"px")
     div.append("div").attr("id", "details_I").append("text").html(detailsI).style("overflow-x","auto")
         
     var FO_square_div = d3.select("#FO_squares_div_"+t).node();

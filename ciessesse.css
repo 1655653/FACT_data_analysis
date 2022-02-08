@@ -38,7 +38,7 @@ body {
 }
 #rightside{
   position: absolute;
-  top:30px;
+  top:10px;
   margin: 5px;
   padding: 5px;
   max-width: 25%;
@@ -178,8 +178,14 @@ body {
   overflow-x: auto;
   word-break: break-all;
   padding-left: 5px;
+  justify-content:space-between;
+  border-width: 5px;
   /* width: fit-content; */
   /* width: 328px;  deve avere dimensione fissa!!!!! */
+}
+#details_I_II{
+  padding-left: 2px;
+  padding-top: 5px;
 }
 #ft_dtls{
   font-size: 12px;
@@ -297,9 +303,9 @@ body {
   transform: translate(0px,-15px);
   opacity: 0;
 }
-.ex_miti_btn_container{
+/* .ex_miti_btn_container{
   position: absolute;
-}
+} */
 #reset_bp{
   height: fit-content;
   border: 1px solid white;
@@ -371,3 +377,12 @@ stroke-width: 2px;
   stroke-width: 1.5px;
 }
 /*------------directory*/
+
+.tooltip_rect_rankdanger{
+  background-color: #4f545c;
+  border: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+}

@@ -84,11 +84,14 @@ function BuildIconSC(){
                 for (const sc in sw_components_fw) {
                     if (Object.hasOwnProperty.call(sw_components_fw, sc)) {
                         if(e.includes(sc)){
+                            console.log(sc)
                             const uids = sw_components_fw[sc];
                             var i = 0
                             uids.forEach(uid => {
                                 CRITICAL_FO.system.forEach(crit_fo => {
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
+                                        has_crit_files.push(sc)
+
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
                                         d3.select(this).append("svg:image")
@@ -110,6 +113,8 @@ function BuildIconSC(){
                                 });
                                 SUS_FO.system.forEach(crit_fo => {
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
+                                        has_sus_files.push(sc)
+
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
                                         d3.select(this).append("svg:image")

@@ -16,7 +16,7 @@ function convertSWCtoVolin(){
         });
 
     });
-    //console.log(new_dataset)
+    console.log(new_dataset)
 
 
     //*sorto come voglio io
@@ -40,12 +40,6 @@ function convertSWCtoVolin(){
             if(element.cpe_name == b && max_b < element.score) max_b = element.score
         });
         return max_a > max_b ? -1 : 1
-        // if(a.includes("(CRITICAL)") && b.includes("(CRITICAL)")) return d3.ascending(a,b)
-        // if(a.includes("(CRITICAL)")) return -1
-        // if(b.includes("(CRITICAL)")) return 1
-        // if(SW_COMP_CVE_LIGHT.includes(a)) return -1
-        // if(SW_COMP_CVE_LIGHT.includes(b)) return 1
-        // return d3.ascending(a,b)
     })
 
     return new_dataset

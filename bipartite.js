@@ -28,7 +28,7 @@ function buildBipartiteGraph(exm_data){
     
     legenda_div = legenda.append("svg")
 	legenda_div.append("rect")
-		.attr("y", function(d,i){return 30 + i*20})
+		.attr("y", function(d,i){return 10 + i*20})
 		.attr("x", 10)
 		.attr("width", 10)
 		.attr("height", 10)
@@ -47,7 +47,7 @@ function buildBipartiteGraph(exm_data){
 			});
 			return d+" ("+i+")"+" ("+j+")"
 		})
-		.attr("y", function(d,i){return 40 + i*20})
+		.attr("y", function(d,i){return 20 + i*20})
 		.attr("x", 22)
 		.attr("font-size","12px")
 		.attr("fill", function(d){return mitigations_filtered.includes(d)? "black": "#adadad57" })
@@ -76,8 +76,11 @@ function buildBipartiteGraph(exm_data){
 		.on("mouseout",mouseout)
 		
 	//* end, resize 
+	h = parseFloat(d3.select("#g_bipartite").node().getBoundingClientRect().height.toFixed(2)) + 10
 	w = parseFloat(d3.select("#g_bipartite").node().getBoundingClientRect().width.toFixed(2)) + 10
 	d3.select("#svg_bipartite").style("width", w+"px")
+	d3.select("#svg_bipartite").style("height", h+"px")
+	d3.select("#svg_legenda").style("height", h-50+"px")
 	d3.select("#ex_miti_svg_container").style("border","solid")
 	//*resize buttons
 	svgl = d3.select("#svg_legenda").node().getBoundingClientRect()
@@ -88,7 +91,7 @@ function buildBipartiteGraph(exm_data){
 	d3.select(".ex_miti_btn_container").style("display","block").style("opacity","0")
 		.transition().duration(1000).style("opacity","1")
 
-
+	
 
 	//*mouseovering
 	function mouseover(d){
@@ -99,19 +102,20 @@ function buildBipartiteGraph(exm_data){
 				d3.select(this)
 					.append("text")
 					.attr("class","perc")
-					.text(function(d){ return (d.key) })
+					.text(function(d){ return (ALL_REST_RESPONSE[d.key].hid) })
 					.style("text-anchor","end")
 					.style("transform",function(t){
-						if(e.part == "primary") return "translate(0px,-15px)"
-						if(e.part == "secondary") return "translate(0px,25px)"
+						return "translate(-15px,1px)"
+						// if(e.part == "primary") return "translate(0px,-15px)"
+						// if(e.part == "secondary") return "translate(0px,25px)"
 					})
 					.transition()
 					.duration(400)
 					.style("opacity",1)
-				this_bc = d3.select(this).node().getBoundingClientRect()
-				cont_bc = d3.select("#svg_bipartite").node().getBoundingClientRect()
-				if(this_bc.x < cont_bc.x)
-					d3.select(this).select("text").style("text-anchor","start")
+				// this_bc = d3.select(this).node().getBoundingClientRect()
+				// cont_bc = d3.select("#svg_bipartite").node().getBoundingClientRect()
+				// if(this_bc.x < cont_bc.x)
+				// 	d3.select(this).select("text").style("text-anchor","start")
 			}
 		})	
 	}
@@ -144,13 +148,15 @@ function buildBipartiteGraph(exm_data){
 		if(!mitigations_to_hide.includes(d)) mitigations_to_hide.push(d)
 		buildBipartiteGraph(exm_data)
 		if(d3.selectAll("#reset_bp").nodes().length == 0){
-			d3.select("#ex_miti_svg_container").append("button").attr("id","reset_bp")
+			d3.select(".ex_miti_btn_container").append("br").attr("class","reset_miti_decorations")
+			d3.select(".ex_miti_btn_container").append("button").style("visibility","hidden").attr("class","reset_miti_decorations").text("PADDING")
+			d3.select(".ex_miti_btn_container").append("button").attr("id","reset_bp").attr("class","reset_miti_decorations")
 				.text("Reset")
 				.on("click",function(){
 					sort_lock=false
 					mitigations_to_hide=[]
 					buildBipartiteGraph(exm_data)
-					d3.select("#reset_bp").transition().duration(200).style("opacity","0").remove()
+					d3.selectAll(".reset_miti_decorations").transition().duration(200).style("opacity","0").remove()
 				})
 		}
 	}
@@ -163,7 +169,7 @@ function filterExmData(exm_data,to_see,mitigations_to_hide){
 	if(to_see.includes("C")){
 		CRITICAL_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+				if(tupla[1]==critical_fo.uid && !mitigations_to_hide.includes(tupla[0])) 
 					exm_data_filtered.push(tupla)
 			});
 		});
@@ -171,7 +177,7 @@ function filterExmData(exm_data,to_see,mitigations_to_hide){
 	if(to_see.includes("S")){
 		SUS_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+				if(tupla[1]==critical_fo.uid && !mitigations_to_hide.includes(tupla[0])) 
 					exm_data_filtered.push(tupla)
 			});
 		});
@@ -179,12 +185,12 @@ function filterExmData(exm_data,to_see,mitigations_to_hide){
 	if(to_see.includes("O")){
 		NEUTRAL_FO.system.forEach(critical_fo => {
 			exm_data.forEach(tupla => {
-				if(tupla[1]==critical_fo.hid && !mitigations_to_hide.includes(tupla[0])) 
+				if(tupla[1]==critical_fo.uid && !mitigations_to_hide.includes(tupla[0])) 
 					exm_data_filtered.push(tupla)
 			});
 		});
 	}
-	console.log(exm_data_filtered)
+	// console.log(exm_data_filtered)
 
 	
 	return exm_data_filtered
@@ -208,7 +214,7 @@ function buildExploitData(exp_miti){
 			if(!mitigations.includes(miti)) mitigations.push(miti)
             if(enordi == "enabled" || enordi== "present") {
                 uid_array.forEach(uid => {
-                    bpart_data.push([miti,ALL_REST_RESPONSE[uid].hid,1])
+                    bpart_data.push([miti,uid,1])
                 });
             }
 
