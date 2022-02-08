@@ -1,5 +1,5 @@
 function createDetailsdiv(fo,t,index){
-    var m_height = 139
+    var m_height = 85
     //*prepara il div
     el = ALL_REST_RESPONSE[fo.uid]
     // console.log(el)
