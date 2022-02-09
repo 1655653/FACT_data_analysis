@@ -1,4 +1,56 @@
 //*utils 
+
+
+function connectWithSc(hid,event){
+    try {
+        id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+        x_icon=parseFloat(d3.select("#"+id).style("y").replace("px",""))
+        position = event == "mouseover" ? x_icon+8:x_icon-8
+        d3.select("#"+id)
+        .transition().duration(50).style("y",position+"px")
+        .transition().duration(50).style("y",position+"px")
+    } catch (e) {
+        
+    }
+    
+}
+
+function connectWithBp(hid,event){
+    a = d3.select("#g_bipartite").selectAll(".viz-biPartite-mainBar").each(function(e, i){
+        try {
+            if(ALL_REST_RESPONSE[e.key].hid == hid) {
+                d3.select(this).dispatch(event)
+            }
+        } catch (n) {
+            
+        }
+    })
+}
+function connectWithSun(uid,event){
+    a = d3.select("#bigsun").selectAll(".node").each(function(e, i){
+        op1= event=="mouseover"? "0.2": "1"
+        op2= event=="mouseover"? "1": "0.2"
+        try {
+            if(e.data.uid != uid){
+                d3.select(this).transition().duration(1000).style("opacity",op1)
+            }
+            else{
+                d3.select(this).transition().duration(1000).style("opacity",op2)
+            }
+        } catch (n) {
+        }
+    })
+}
+
+function connectWithRd(hid,event){
+    bkg = event=="mouseover"? "black": "white"
+    id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+    d3.select("#rightside").select("#"+id)
+    .transition().duration(400).style("color",bkg)
+}
+
+
+
 function tToIndex(t){
     // //? serve a creare un selettore per metric_occurrences ={
     //     "CRY":0,...

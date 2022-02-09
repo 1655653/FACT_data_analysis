@@ -44,8 +44,10 @@ function DrawSunburst(){
         if(d.data.size==0){
             b = ""
         }
+        var f = d.data.uid != "folder"? "":d.data.uid + ": "
         Tooltip
-            .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+b+m)
+            // .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+b+m)
+            .html(f+d.data.hid)
             .style('left', (d3.event.pageX + 10) + 'px')
             .style('top', (d3.event.pageY + 10) + 'px')
     }

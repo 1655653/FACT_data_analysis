@@ -94,8 +94,10 @@ function BuildIconSC(){
 
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
+                                            .attr("id",id)
                                             .attr('y', -23)
                                             .attr('width', 20)
                                             .attr('height', 20)
@@ -105,21 +107,28 @@ function BuildIconSC(){
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithSun(uid,"mouseover")
                                             })
                                             .on("mouseout",function(){
                                                 tooltip_destroy()
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithSun(uid,"mouseout")
                                             })
                                     }
                                 });
                                 SUS_FO.system.forEach(crit_fo => {
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
                                         has_sus_files.push(sc)
-
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
                                             .attr('y', -23)
+                                            .attr("id",id)
                                             .attr('width', 20)
                                             .attr('height', 20)
                                             .attr("xlink:href", "icons/alert_yell.png")
@@ -128,9 +137,15 @@ function BuildIconSC(){
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithSun(uid,"mouseover")
                                             })
                                             .on("mouseout",function(){
                                                 tooltip_destroy()
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithSun(uid,"mouseout")
                                             })
                                     }
                                 });
@@ -138,9 +153,11 @@ function BuildIconSC(){
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
                                             .attr('y', -23)
+                                            .attr("id",id)
                                             .attr('width', 20)
                                             .attr('height', 20)
                                             .attr("xlink:href", "icons/alert_grey.png")
@@ -149,9 +166,15 @@ function BuildIconSC(){
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseover")
+                                                connectWithSun(uid,"mouseover")
                                             })
                                             .on("mouseout",function(){
                                                 tooltip_destroy()
+                                                connectWithRd(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithBp(ALL_REST_RESPONSE[uid].hid,"mouseout")
+                                                connectWithSun(uid,"mouseout")
                                             })
                                     }
                                 });
@@ -169,7 +192,6 @@ function BuildIconSC(){
 }
 
 function tooltip_create(e){
-    console.log(e)
     d3.select("#sw_comp_svg_container")
         .append("div").attr("id","tcd")
         .style("visibility", "visible")

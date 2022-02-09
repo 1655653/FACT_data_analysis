@@ -183,6 +183,19 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     }
                 }
             })
+            //*hovering on swc,exm,sun
+            fo_name.on("mouseover",function(d){
+                connectWithBp(fo.hid,"mouseover")
+                connectWithSc(fo.hid,"mouseover")
+                connectWithSun(fo.uid,"mouseover")
+                
+            })
+            fo_name.on("mouseout",function(d){
+                connectWithBp(fo.hid,"mouseout")
+                connectWithSc(fo.hid,"mouseout")
+                connectWithSun(fo.uid,"mouseout")
+
+            })
             total = fo.overall
             if(fo.packed) total = "PCKD"
             d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
@@ -506,5 +519,4 @@ function drawHistogramSumma(rect_dim,t,type){
     svg_w = getDimFloat("FO_name_div_c","width") + getDimFloat("FO_score_div_c","width") 
 
 }
-
 
