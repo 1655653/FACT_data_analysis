@@ -40,12 +40,8 @@ function MimeMenu(){
                     mimes_div.append("button").attr("id","reset_mime")
                         .text("Reset")
                         .on("click",function(){
-                            Tree = JSON.parse(JSON.stringify(BackupTree))
-                            MimeMenu()
-                            d3.select("#reset_mime").transition().duration(200).style("opacity","0").remove()
+                            resetMime()
                             
-                            mime_filtered = []
-                            DrawSunburst()
                         })
                 }
                 //DELETE FO
@@ -86,13 +82,7 @@ function MimeMenu(){
                                         mimes_div.append("button").attr("id","reset_mime")
                                             .text("Reset")
                                             .on("click",function(){
-                                                Tree = JSON.parse(JSON.stringify(BackupTree))
-                                                MimeMenu()
-                                                d3.select("#reset_mime").transition().duration(200).style("opacity","0").remove()
-                                                
-                                                mime_filtered = []
-                                                DrawSunburst()
-                                                DrawDirectory()
+                                                resetMime()
                                             })
                                     }
                                     //DELETE FO
@@ -199,4 +189,14 @@ function mimeOccurence(m){
         }
     }
     return occ==0? 1: occ
+}
+
+function resetMime(){
+    Tree = JSON.parse(JSON.stringify(BackupTree))
+    MimeMenu()
+    d3.select("#reset_mime").transition().duration(200).style("opacity","0").remove()
+    
+    mime_filtered = []
+    DrawSunburst()
+    DrawDirectory()
 }

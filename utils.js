@@ -6,9 +6,11 @@ function connectWithSc(hid,event){
         id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
         x_icon=parseFloat(d3.select("#"+id).style("y").replace("px",""))
         position = event == "mouseover" ? x_icon+8:x_icon-8
+        p = event == "mouseover" ? 8:0
         d3.select("#"+id)
-        .transition().duration(50).style("y",position+"px")
-        .transition().duration(50).style("y",position+"px")
+        .transition().duration(50).style("transform","translate(0px,"+p+"px)")
+        // .transition().duration(50).style("y",position+"px")
+        // .transition().duration(50).style("y",position+"px")
     } catch (e) {
         
     }
@@ -26,15 +28,25 @@ function connectWithBp(hid,event){
         }
     })
 }
-function connectWithSun(uid,event){
+function connectWithSun(uid,event,vi){
+    if(n_fos>1000) return 
     a = d3.select("#bigsun").selectAll(".node").each(function(e, i){
-        op1= event=="mouseover"? "0.2": "1"
-        op2= event=="mouseover"? "1": "0.2"
+        
+        op1= event=="mouseover"? "0.2": "1" //sbagliati
+        op2 = "1" //giusti
         try {
-            if(e.data.uid != uid){
+            if(e.data.uid != uid && uid!= "folder"){ //NON è il fo
                 d3.select(this).transition().duration(1000).style("opacity",op1)
             }
-            else{
+            else if(uid == "folder"){
+                if(e.data.vi == vi){ //è la folder giusta
+                    d3.select(this).transition().duration(1000).style("opacity",op2)
+                }
+                else{ //non è la fodler giusta
+                    d3.select(this).transition().duration(1000).style("opacity",op1)
+                }
+            }
+            else{//è il fo giusto
                 d3.select(this).transition().duration(1000).style("opacity",op2)
             }
         } catch (n) {
@@ -44,12 +56,20 @@ function connectWithSun(uid,event){
 
 function connectWithRd(hid,event){
     bkg = event=="mouseover"? "black": "white"
-    id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
-    d3.select("#rightside").select("#"+id)
-    .transition().duration(400).style("color",bkg)
+    try {
+        id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+        d3.select("#rightside").select("#"+id)
+        .transition().duration(400).style("color",bkg)
+        
+    } catch (error) {
+        
+    }
 }
 
-
+function clickRd(hid){
+    id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+    d3.select("#rightside").select("#"+id).dispatch("click")
+}
 
 function tToIndex(t){
     // //? serve a creare un selettore per metric_occurrences ={

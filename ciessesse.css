@@ -197,6 +197,11 @@ body {
   border: solid 1px #6e747e;
   padding: 2px;
 }
+#uap_dtls{
+  font-size: 12px;
+  border: solid 1px #6e747e;
+  padding: 2px;
+}
 
 #oknotok{
   display: flex;
@@ -360,6 +365,10 @@ stroke-width: 2px;
 }
 
 /*directory*/
+#directory_container{
+  display: flex;
+  flex-direction: column;
+}
 .node rect {
   cursor: pointer;
   fill: #fff;
@@ -386,4 +395,16 @@ stroke-width: 2px;
   border-radius: 5px;
   padding: 5px;
   position: absolute;
+}
+
+#toggle_sun_div {
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  visibility: hidden;
+  opacity: 1;
+  position: absolute;
+  flex-direction: column;
+  opacity: 0.5;
+  transform: scale(0.6);
 }

@@ -1,5 +1,5 @@
 function createDetailsdiv(fo,t,index){
-    var m_height = 140
+    var m_height = 190
     //*prepara il div
     el = ALL_REST_RESPONSE[fo.uid]
     // console.log(el)
@@ -63,6 +63,12 @@ function createDetailsdiv(fo,t,index){
     size.append("div").text("Size:")
     size.append("div").text(el.size+"  bytes").style("padding-left","5px")
 
+    if(el.cpu!= undefined){
+        var cpu = dettI.append("div").style("display","flex").attr("id","cpu")
+        cpu.append("div").text("Cpu:")
+        cpu.append("div").text(el.cpu).style("padding-left","5px")
+    }
+
     var mime = dettI.append("div").style("display","flex")
     mime.append("div").text("MIME:")
     mime.append("div").text(el.mime).style("padding-left","5px")
@@ -99,7 +105,8 @@ function createDetailsdiv(fo,t,index){
                 n.append("text").text(out)
 
                 d3.select(this).attr("class","fas fa-caret-up")
-                dettI.node().insertBefore(n.node(), dettI.select("#buttons").node());//inserisci prima di unpacker
+                pivot = el.uap == undefined? "buttons" : "uap"
+                dettI.node().insertBefore(n.node(), dettI.select("#"+pivot).node());//inserisci prima di unpacker
             }
             else{
                 dettI.select("#unpacker_dtls").remove()
@@ -108,6 +115,38 @@ function createDetailsdiv(fo,t,index){
         })
         .style("margin-top","3px")
         .style("margin-left","5px")
+    
+    console.log(el)
+    
+    console.log(el.uap)
+    if(el.uap.length>0 ){
+        var uap = dettI.append("div").style("display","flex").attr("id","uap")
+        uap.append("div").text("Plain credentials: ")
+        uap.append("i").attr("class",'fas fa-caret-down').style("color","red")
+        .on("click",function(){
+            var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
+            if(is_down) {
+                var n = d3.create("div").attr("id","uap_dtls")
+                n.append("text").text(el.uap)
+
+                d3.select(this).attr("class","fas fa-caret-up")
+                pivot = el.crypto == undefined? "buttons" : "cry"
+                dettI.node().insertBefore(n.node(), dettI.select("#"+pivot).node());//inserisci prima di unpacker
+            }
+            else{
+                dettI.select("#uap_dtls").remove()
+                d3.select(this).attr("class","fas fa-caret-down")
+            }
+        })
+        .style("margin-top","3px")
+        .style("margin-left","5px")
+    }
+
+    if(el.crypto != undefined){
+        var cry = dettI.append("div").style("display","flex").attr("id","cry")
+        cry.append("div").text("Crypto material: "+el.crypto).style("color","red")
+    }
+
     var buttons = dettI.append("div").style("display","flex").attr("id","buttons") //l'id serve per il insertbefore di mime
     buttons.append("div").text("Download:")
     buttons.append("i").attr("class",'fas fa-download')
@@ -124,6 +163,7 @@ function createDetailsdiv(fo,t,index){
         .style("margin-top","1px")
         .style("margin-left","5px")
         .style("transform","scale(0.9)")
+    
 
 
     

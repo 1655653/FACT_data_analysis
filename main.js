@@ -53,6 +53,7 @@ var LIST_PACKED_UID = []
 var cve_lookup_fw
 var sw_components_fw
 var exm_fw
+var n_fos
 //*report
 var has_crit_files=[]
 var has_sus_files=[]
@@ -117,6 +118,7 @@ function callFW() {
             var plu = ", CPU architecture"
             cpu_info.length > 1 ? plu += "s: " : plu+= ": "
             mb = parseFloat(data.firmware.meta_data.size)/1000000
+            n_fos = data.firmware.meta_data.total_files_in_firmware
             d3.select("#reportOf").html("Report of "+ data.firmware.meta_data.hid +" ("+data.firmware.meta_data.total_files_in_firmware +" files, "+mb.toFixed(2)+"MB )"+ "<tspan>  MIME: "+data.firmware.analysis.file_type.mime +"</tspan>" + plu +cpu_info)
             d3.select("#downloadFW").style("visibility", "visible")
                 .on("click",function(d){

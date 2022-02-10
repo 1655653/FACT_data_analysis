@@ -5,9 +5,22 @@ var margin_sb = {top: 0, right: 0, bottom: 0, left: 0}
 // height_sb = 330 - margin_sb.top - margin_sb.bottom;
 // var radius = Math.min(width_sb, height_sb) / 2;
 
-
+var sun_mode_child = true
 
 function DrawSunburst(){
+    d3.select("#toggle_sun_div").style("visibility","visible")
+        .on("change",function(d){
+            sun_mode_child = !sun_mode_child
+            var text = sun_mode_child ? "Leaves":"Size"
+            d3.select(this).select("text").text(text)
+            DrawSunburst()
+        })
+        .on("mouseover",function(d){
+            d3.select(this).transition().duration(500).style("opacity","1")
+        })
+        .on("mouseout",function(d){
+            d3.select(this).transition().duration(500).style("opacity","0.5")
+        })
     d3.select("#bigsun").remove()
     d3.selectAll(".tooltip_sb").remove()
 
@@ -33,8 +46,10 @@ function DrawSunburst(){
         Tooltip
             .style("opacity", 1)
             .style("visibility", "visible")
-        d3.select(this)
-            .style("opacity", 1)
+        d3.select(this).style("opacity", 1)
+        connectWithRd(d.data.hid,"mouseover")
+        connectWithSc(d.data.hid,"mouseover")
+        connectWithBp(d.data.hid,"mouseover")
     }
 
     var mousemove = function(d) {
@@ -52,6 +67,9 @@ function DrawSunburst(){
             .style('top', (d3.event.pageY + 10) + 'px')
     }
     var mouseleave = function(d) {
+        connectWithRd(d.data.hid,"mouseleave")
+        connectWithSc(d.data.hid,"mouseleave")
+        connectWithBp(d.data.hid,"mouseout")
         Tooltip
             .style("opacity", 0)
             .style("visibility", "hidden")
@@ -75,9 +93,9 @@ function DrawSunburst(){
         var leafnum = d.contacome
         if(d.leaves==0) leafnum = 2
         //console.log(d)
-        // return document.getElementById("byteCBOX").checked ? d.bytes : leafnum
+        return sun_mode_child ? leafnum :  d.bytes 
         // return (d.children ? 0 : d.bytes)
-        return leafnum
+        // return leafnum
     }); 
 
     partition(root);
@@ -145,11 +163,14 @@ function DrawSunburst(){
             .on("click", click)
     
     d3.select("#bigsun").style("opacity","0").transition().duration(400).style("opacity","1")
-
+    bs_w = parseFloat(d3.select("#bigsun").style("width").replace("px"))
+    d3.select("#toggle_sun_div").style("left",bs_w/2-20+"px")
+    d3.select("#toggle_sun_div").style("top",bs_w/2+20+"px")
     
     function click(d) {
         // colorMiniSunburst(d)
-        // console.log(d)
+        var viz = d.depth==0? viz = "visible":"hidden"
+        d3.select("#toggle_sun_div").style("visibility",viz)
         svg_sb.transition()
             .duration(750)
             .tween("scale", function() {
@@ -160,6 +181,9 @@ function DrawSunburst(){
             })
         .selectAll("path")
             .attrTween("d", function(d) { return function() { return arc(d); }; });
+        clickRd(d.data.hid)
+
+
         // if(d.height == 0){
         //     d3.select("#treemap_div").append("button").attr("id","dwnl_leaf").text("download").style("height","fit-content").style("align-self","center")
         //     .on("click",function(f){download(d.data.uid,d.data.mime)})

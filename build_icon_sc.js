@@ -104,6 +104,7 @@ function BuildIconSC(){
                                             .attr("xlink:href", "icons/alert_red.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                                clickRd(ALL_REST_RESPONSE[uid].hid)
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)
@@ -134,6 +135,7 @@ function BuildIconSC(){
                                             .attr("xlink:href", "icons/alert_yell.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                                clickRd(ALL_REST_RESPONSE[uid].hid)
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)
@@ -163,6 +165,7 @@ function BuildIconSC(){
                                             .attr("xlink:href", "icons/alert_grey.png")
                                             .on("click",function(f){
                                                 console.log(ALL_REST_RESPONSE[uid].hid)
+                                                clickRd(ALL_REST_RESPONSE[uid].hid)
                                             })
                                             .on("mouseover",function(){
                                                 tooltip_create(ALL_REST_RESPONSE[uid].hid)

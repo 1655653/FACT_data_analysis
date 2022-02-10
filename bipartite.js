@@ -102,7 +102,7 @@ function buildBipartiteGraph(exm_data){
 				d3.select(this)
 					.append("text")
 					.attr("class","perc")
-					.text(function(d){ return (ALL_REST_RESPONSE[d.key].hid) })
+					.text(function(d){ return ALL_REST_RESPONSE[d.key]!=undefined? (ALL_REST_RESPONSE[d.key].hid):""})
 					.style("text-anchor","end")
 					.style("transform",function(t){
 						return "translate(-15px,1px)"

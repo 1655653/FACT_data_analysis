@@ -17,6 +17,11 @@ var clicked = []
 
 function DrawDirectory(){
     d3.select("#directory_container").select("#directory_svg").remove();
+    if(d3.selectAll("#dir_title").nodes().length==0){
+        d3.select("#directory_container").append("span").text("FILE DIRECTORY")
+        .attr("id","dir_title")
+        .style("margin-left","25px")
+    }
     svg_dir = d3.select("#directory_container").append("svg")
         .attr("width", widthdir) // + margin.left + margin.right)
         .attr("id","directory_svg")
@@ -89,7 +94,9 @@ function update(source) {
     .attr("height", barHeight)
     .attr("width", barWidth)
     .style("fill", function(d) { return fillnode(d)})
-    .on("click", click);
+    .on("click", click)
+    .on("mouseover",mouseover)
+    .on("mouseout",mouseout)
 
     nodeEnter.append("text")
     .style("fill", "black")
@@ -192,11 +199,24 @@ function click(d) {
     }
     if(d.data.children.length==0){
         console.log(d.data.uid)
+        clickRd(d.data.hid)
     }
     //console.log(clicked)
     update(d);
 }
-
+function mouseover(d){
+    connectWithBp(d.data.hid,"mouseover")
+    connectWithSc(d.data.hid,"mouseover")
+    connectWithSun(d.data.uid,"mouseover",d.data.vi)
+    connectWithRd(d.data.hid,"mouseover")
+}
+function mouseout(d){
+    // if(d.data.uid == "folder")console.log(d.data)
+    connectWithBp(d.data.hid,"mouseout")
+    connectWithSc(d.data.hid,"mouseout")
+    connectWithSun(d.data.uid,"mouseout",d.data.vi)
+    connectWithRd(d.data.hid,"mouseout")
+}
 function fillnode(d){//devi vedere come colorare le folder
     //return colormimeSupertype(d.data.mime)
     if(d.data.mime){
