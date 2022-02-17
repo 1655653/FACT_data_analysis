@@ -1,28 +1,90 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
-<table id="myTable">
-  <tr>
-    <th>Firstname</th>
-    <th>Lastname</th>
-    <th>Age</th>
-  </tr>
-  <tr>
-    <td>Jill</td>
-    <td>Smith</td>
-    <td>50</td>
-  </tr>
-  <tr>
-    <td>Eve</td>
-    <td>Jackson</td>
-    <td>94</td>
-  </tr>
-</table>
-<button id="downloadPdf">Download Table as PDF</button>
+<script src="jspdf.min.js"></script>
+<script src="data.js"></script>
+<script src="jspdf.plugin.autotable.min.js"></script>
 <script>
-  $("#downloadPdf").click(function(){
-    var doc = new jsPDF()
-    doc.autoTable({ html: '#myTable' })
-    doc.save('table.pdf')
-})
+  // var doc = new jsPDF()
+  // doc.autoTable({
+  //   head: [['Name', 'Email', 'Country']],
+  //   body: [
+  //     ['David', 'david@example.com', 'Sweden'],
+  //     ['Castille', 'castille@example.com', 'Spain'],
+  //     // ...
+  //   ],
+  // })
+  //**--------------------------------
+  // var doc = new jsPDF('l')
+
+  // var head = headRows()
+  // head[0]['text'] = 'Text'
+  // var body = bodyRows(4)
+  // body.forEach(function (row) {
+  //   row['text'] = "mario"
+  // })
+
+  // doc.text("Overflow 'ellipsize' with one column with long content", 14, 20)
+  // doc.autoTable({
+  //   head: head,
+  //   body: body,
+  //   startY: 25,
+  //   // Default for all columns
+  //   styles: { overflow: 'ellipsize', cellWidth: 'wrap' },
+  //   // Override the default above for the text column
+  //   columnStyles: { text: { cellWidth: 'auto' } },
+  // })
+  // doc.text(
+  //   "Overflow 'linebreak' (default) with one column with long content",
+  //   14,
+  //   doc.lastAutoTable.finalY + 10
+  // )
+  // doc.autoTable({
+  //   head: head,
+  //   body: body,
+  //   startY: doc.lastAutoTable.finalY + 15,
+  //   rowPageBreak: 'auto',
+  //   bodyStyles: { valign: 'top' },
+  // })
+  // doc.save('table.pdf')
+ 
+ 
+  function headRows() {
+    return [
+      { id: 'ID', name: 'Name', cve: 'CVE', crit: 'Critical', crit_fo: 'Critical files',sus_fo:"Suspicious Files" },
+    ]
+  }
+  function bodyRows(rowCount) {
+    rowCount = rowCount || 10
+    var body = []
+    for (var j = 1; j <= rowCount; j++) {
+      body.push({
+        id: j,
+        name: ALL_SWC[j-1],
+        cve: "mario",
+        crit: "mario",
+        crit_fo: "mario",
+        sus_fo: "mario"
+      })
+    }
+    console.log(body)
+    return body
+  }
+  //*----------------------------------
+  var doc = new jsPDF()
+
+  doc.setFontSize(18)
+  doc.text('Software Components', 14, 22)
+  doc.setFontSize(11)
+  doc.setTextColor(100)
+
+  doc.autoTable({
+    head: headRows(),
+    body: bodyRows(ALL_SWC.length),
+    startY: 50,
+    showHead: 'firstPage',
+  })
+
+  // doc.text("", 10, doc.lastAutoTable.finalY + 10)
+  doc.save('table.pdf')
 </script>

@@ -36,6 +36,7 @@ function expandpackedTree(){
     var expand = d3.select("#packed_tree_expand_btn").attr("class")
     // console.log(expand)
     if (expand=="fas fa-caret-down") {
+        d3.select("#toggle_sun_div").style("visibility","hidden")
         d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-up")
         d3.select("#log_packed_FO").style("visibility","visible")
         document.getElementById("packed_tree_expand").style.display = "block";
@@ -221,10 +222,9 @@ function expandpackedTree(){
             }
         }
     } else {
+        d3.select("#toggle_sun_div").style("visibility","visible")
         d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-down")
-        // d3.select("#packed_tree_expand_btn").text("expand")
         d3.select("#packed_tree_expand").selectAll("*").remove();
-        // expandbtn.style.display = "none";
         d3.select("#log_packed_FO").style("visibility","hidden")
         d3.select("#log_packed_FO").text("")
   }

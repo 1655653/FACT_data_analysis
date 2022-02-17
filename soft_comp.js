@@ -170,12 +170,21 @@ function DrawSWComponents(){
                         cves_list.push(element)
                 });
                 vis = cves_list.length>0? "visible":"hidden"
-
+                cves_list.sort(function(a,b){
+                    //oder by score
+                    // if(parseFloat(a.score)>parseFloat(b.score)) return 1
+                    // return -1
+                    //orderby name
+                    if(parseInt(a.cve_name.split("-")[1]) > parseInt(b.cve_name.split("-")[1])) return -1
+                    return 1
+                })
                 d3.select(".tooltip_sw_comp")
                     .style('left', (d3.event.pageX) + 'px')
                     .style('top', (d3.event.pageY) + 'px')
                     .style("visibility", vis)
                     .lower()
+                var icon  = !toggle_tooltip? "fa-solid fa-lock-open": "fa-solid fa-lock"
+                d3.select(".tooltip_sw_comp").append("i").attr("class",icon).style("position","absolute").style("transform","translate(0px, -20px)")
                 cves_list.forEach(e => {
                     d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
                         .on("click", function(h){
@@ -191,6 +200,8 @@ function DrawSWComponents(){
             })
             .on("click",function(d){
                 toggle_tooltip = !toggle_tooltip
+                var icon  = !toggle_tooltip? "fa-solid fa-lock-open": "fa-solid fa-lock"
+                d3.select(".tooltip_sw_comp").select("i").attr("class",icon)
             })
     d3.selectAll(".viol_hist").transition()
             .duration(400)

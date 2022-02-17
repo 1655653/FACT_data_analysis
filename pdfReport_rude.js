@@ -13,21 +13,15 @@ function BuildReport(fw){
     currY += new_chapter
 
     //**METADATA
-    doc.setDrawColor(170, 173, 171) // draw red lines
-    doc.line(0, currY, 1000, currY); // horizontal line
-    doc.setTextColor("black")
-    cy = currY
-    cy+=new_line
-    cy+=new_line
-
+    doc.line(0, 15, 1000, currY); // horizontal line
+    currY+=new_line
     doc.setFontSize(13)
-    doc.text("Metadata", 30, cy);
+    doc.text("Metadata", 15, currY);
     doc.setFontSize(9)
 
-    // currY+=new_line
-    doc.addImage(meta_2, "PNG", 15, cy-10, 15, 15);
-
     currY+=new_line
+    doc.addImage(metadata_data_url, "PNG", 15, currY-2, 25, 25);
+
     doc.text("Vendor: "+ meta.vendor, centerX, currY);
 
     currY+=new_line
@@ -47,22 +41,17 @@ function BuildReport(fw){
 
     currY+=new_line
 
-    //**-------END-------------METADATA
+    //**----------------------METADATA
 
 
-    //*File TYPES
-    doc.setTextColor(100)
+    //*MIME TYPES
     doc.line(0, currY, 1000, currY); // horizontal line
-    doc.setTextColor("black")
     currY+=new_line
-    currY+=new_line
-    cy = currY
-    cy+=new_line
-    cy+=new_line
     doc.setFontSize(13)
-    doc.text("File Types", 30, cy+5);
+    doc.text("File Types", 15, currY);
     doc.setFontSize(9)
-    doc.addImage(ft_data_url, "PNG", 10, currY+5, 20, 20);
+    currY+=new_line
+    doc.addImage(ft_data_url, "PNG", 15, currY+5, 30, 30);
 
     const sortable = Object.fromEntries(
         Object.entries(Tree.mime_types).sort(([,a],[,b]) => b-a)
@@ -76,149 +65,102 @@ function BuildReport(fw){
         currY+=new_line
       }
     }
-    //*------END--------File TYPES
+    //*--------------------MIME TYPES
     //*EXP MITIGATIONS
     currY+=new_line
-    doc.setTextColor(100)
     doc.line(0, currY, 1000, currY); // horizontal line
-    doc.setTextColor("black")
     currY+=new_line
-    currY+=new_line
-    cy = currY
-    cy+=new_line
-    cy+=new_line
     doc.setFontSize(13)
-    doc.text("Exploit Mitigations", 30, cy+2);
+    doc.text("Exploit Mitigations", 15, currY);
     doc.setFontSize(9)
     currY+=new_line
 
-    doc.addImage(exploit2, "PNG", 15, currY-2, 13, 13);
+    doc.addImage(ex_du, "PNG", 15, currY-2, 25, 25);
 
     e = getExmReport(exm_fw)
     e.forEach(element => {
-      doc.text(element[0]+": " + element[1], centerX, currY-5);
+      doc.text(element[0]+": " + element[1], centerX, currY);
       currY+=new_line
     });
 
     
-    //*----END-------EXP MITIGATIONS
+    //*---------------EXP MITIGATIONS
 
 
 
 
 
-    // //*MY ANALYSIS
-
+    //*MY ANALYSIS
     currY+=new_line
-    doc.setTextColor(100)
+    
     doc.line(0, currY, 1000, currY); // horizontal line
-    doc.setTextColor("black")
     doc.setFontSize(13)
     currY+=new_line
+    // doc.text("Analysis", 50, currY);
     currY+=new_line
-    doc.setFontSize(18)
-    doc.text("Analysis of file objects", 15, currY);
-    doc.setFontSize(11)    
-    currY+=new_line
-    py = currY
-    // //*parameters
+    var Yparam = currY
+    //*parameters
     doc.setFontSize(13)
-    doc.text("Parameters", 140, py);
+    doc.text("Parameters", 140, Yparam);
     doc.setFontSize(9)
-    doc.setTextColor(100)
-    currY+=new_line
-
-    headparam = [{parameter:"Parameter", value:"Value"}]
-    doc.autoTable({
-      head: headparam,
-      body: generateParamData(),
-      startY: currY,
-      showHead: 'firstPage',
-      styles: {overflow: 'hidden'}, 
-      margin: {left: 120} 
-    })
-    
-    function generateParamData(){
-      result = []
-      parameters.forEach((p,i) => {
-          var data = {
-            parameter: param_str[i],
-            value: p
-        };
-        result.push(Object.assign({}, data));
-      });
-      return result
-    }
-    // //*end parameters
-    doc.setTextColor("black")
+    Yparam+=new_line
+    parameters.forEach((p,i) => {
+      doc.text(param_str[i].replaceAll("_"," ")+" = "+ p, 140, Yparam);
+      Yparam+=new_line
+    });
+    //*end parameters
     doc.setFontSize(13)
-    doc.text("Critical Files", 15, py);
+    doc.text("Critical Files", 15, currY);
     doc.setFontSize(9)
-    doc.setTextColor(100)
-    headcs = [{name:"HID", score:"Score", state: "State"}]
-
-    doc.autoTable({
-      head: headcs,
-      body: generateCData(CRITICAL_FO),
-      startY: currY,
-      showHead: 'firstPage',
-      styles: {overflow: 'hidden'}, 
-      margin: {right: 120} 
-    })
-    
-    currY += 8*(CRITICAL_FO.system.length+2)
-    doc.setTextColor("black")
+    currY+=new_line
+    var cs_headers = createHeaders([
+      "name",
+      "score",
+      "state",
+    ]);
+    doc.table(10, currY, generateCData(CRITICAL_FO), cs_headers);
+    currY += 25 *CRITICAL_FO.system.length
+    doc.setLineDash([2.5]);
+    doc.line(0, currY, 1000, currY); // horizontal line
+    doc.setLineDash();
+    currY+=new_line
+    currY+=new_line
     doc.setFontSize(13)
     doc.text("Suspicious Files", 15, currY);
     doc.setFontSize(9)
-    doc.setTextColor(100)
     currY+=new_line
-
-    doc.autoTable({
-      head: headcs,
-      body: generateCData(SUS_FO),
-      startY: currY,
-      showHead: 'firstPage',
-      styles: {overflow: 'hidden'}, 
-      margin: {right: 120} 
-    })
-
-
+    doc.table(10, currY, generateCData(SUS_FO), cs_headers);
 
     
 
     //*--------------END----MY ANALYSIS
     currY+=new_line
-    
+
     //*SOFTWARE COMPONENTS
     doc.addPage("a4");
     currY=10
     doc.line(0, currY, 1000, currY); // horizontal line
     currY+=new_line
-    currY+=new_line
-    doc.setTextColor("black")
-    doc.setFontSize(18)
+    doc.setFontSize(13)
     doc.text("Software Components and CVE", 15, currY);
-    doc.setFontSize(11)
-    doc.setTextColor(100)
-    
+    doc.setFontSize(9)
+
+    var headers = createHeaders([
+      "name",
+      "CVE",
+      "is_critical",
+      "has_critical_files",
+      "has_suspicious_files"
+    ]);
+
+
     currY+=new_line
-    doc.autoTable({
-      head: headRowsSWC(),
-      body: generateSWCData(),
-      startY: currY,
-      showHead: 'firstPage',
-    })
-    
+    doc.table(10, currY, generateSWCData(), headers);
 
     doc.save("a4.pdf");
 
 }
-function headRowsSWC() {
-  return [
-    { id: 'ID', name: 'Name', cve: 'CVE', crit: 'Critical', crit_fo: 'Critical files',sus_fo:"Suspicious Files" },
-  ]
-}
+
 
 
 function generateCData(c){
@@ -243,7 +185,7 @@ function generateCData(c){
 
 function generateSWCData(){
   var result = [];
-  ALL_SWC.forEach((swc,i) => {
+  ALL_SWC.forEach(swc => {
     var crit = swc.includes("(CRITICAL)")? true:false
 
     has_cf = false
@@ -264,22 +206,14 @@ function generateSWCData(){
       }
     });
     var data = {
-        id: i+1,
         name: swc.replace("(CRITICAL)",""),
-        cve: cve,
-        crit: crit,
-        crit_fo: has_cf,
-        sus_fo: has_sf,
+        CVE: cve,
+        is_critical: crit,
+        has_critical_files: has_cf,
+        has_suspicious_files: has_sf,
     };
     result.push(Object.assign({}, data));
   });
-  //sort result
-  result.sort(function(a,b){
-    if(a.crit_fo && !b.crit_fo) return -1
-    if(!a.crit_fo && b.crit_fo) return 1
-    return parseInt(a.cve)>parseInt(b.cve) ? -1 : 1
-  })
-  result.map((e,i)=> e.id = i+1)
   return result;
 };
 
@@ -301,7 +235,7 @@ function createHeaders(keys) {
       padding: 0
     });
   }
-  //console.log(result)
+  console.log(result)
   return result;
 }
 
