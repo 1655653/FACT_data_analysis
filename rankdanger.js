@@ -153,8 +153,14 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     metric_occurrences_list[tToIndex(t)] = metric_occurrences
     var rect_dim
     var list_fo
-    if(t=="c") list_fo = CRITICAL_FO
-    if(t=="s") list_fo = SUS_FO
+    if(t=="c") {
+        list_fo = CRITICAL_FO
+        AAA_FILL = "#c80003"
+    }
+    if(t=="s") {
+        list_fo = SUS_FO
+        AAA_FILL = "yellow"
+    }
     // if(t=="n") list_fo = NEUTRAL_FO
     if(list_fo.system.length>0){
         d3.select("#"+type+"_div").style("visibility","visible")
@@ -273,6 +279,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             }
         });
         d3.select("#"+type+"_div").style("border-style", "solid") //appears
+        d3.select("#summa_"+type+"_div").style("border-style", "solid") //appears
         d3.select("#rightside").style("border-style", "solid") //appears
 
         d3.select("#FO_squares_div_"+t).style("width",d3.select("#FO_titles_div_"+t).style("width"))
@@ -281,8 +288,31 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
 
         var name_div
         var color
-        if(t=="c") {name_div = "CRITICAL";color = "red"}
-        if(t=="s") {name_div = "SUSPICIOUS";color = "yellow"}
+        if(t=="c") {
+            name_div = "CRITICAL";color = "red"
+            d3.select("#rightside").append("span").text(name_div)
+            .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+            .style("width",d3.select("#FO_titles_div_"+t).style("width"))
+            .style("color",color)
+            .style("text-align","end")
+            .lower() 
+            .attr("class","no_search")
+            .style("margin","5px")
+            .style("font-size","25px")
+        }
+        if(t=="s") {
+            name_div = "SUSPICIOUS";color = "yellow"
+            var n = d3.create("span").text(name_div)
+            .style("height",d3.select("#FO_titles_div_"+t).style("height"))
+            .style("width",d3.select("#FO_titles_div_"+t).style("width"))
+            .style("color",color)
+            .style("text-align","end")
+            .attr("class","no_search")
+            .style("margin","5px")
+            .style("font-size","25px")
+            d3.select("#rightside").node().insertBefore(n.node(), d3.select("#summa_sus_div").node())
+        }
+        
         d3.select("#FO_name_div_"+t).append("span").text(name_div)
             .style("height",d3.select("#FO_titles_div_"+t).style("height"))
             .style("width",d3.select("#FO_titles_div_"+t).style("width"))
@@ -290,10 +320,13 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .style("text-align","end")
             .lower() 
             .attr("class","no_search")
-        d3.select("#FO_score_div_"+t).append("span").text("placeholder")
+            .style("visibility","hidden")
+        d3.select("#FO_score_div_"+t).append("span").text("score")
             .style("height",d3.select("#FO_titles_div_"+t).style("height"))
             .style("width","1px")
-            .style("visibility","hidden")
+            // .style("visibility","hidden")
+            .style("margin-left","20px")
+            .style("font-size","13px")
             .lower()
             .attr("class","no_search")
         
@@ -310,19 +343,35 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         //* draw istogramma 
         d3.select("#summa_expand_"+t).style("visibility","visible")
         //summaExpand(rect_dim,t,type)
-        pad = 20 //from name
-        w = getDimFloat("FO_name_div_"+t,"width") 
-        if (w == 0){
-            if(t == "s")   w = getDimFloat("FO_name_div_c","width") 
-            if(t == "c")   w = getDimFloat("FO_name_div_s","width") 
-        }
-        d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
+        // pad = 20 //from name
+        // w = getDimFloat("FO_name_div_"+t,"width") 
+        // if (w == 0){
+        //     if(t == "s")   w = getDimFloat("FO_name_div_c","width") 
+        //     if(t == "c")   w = getDimFloat("FO_name_div_s","width") 
+        // }
+        // d3.select("#summa_expand_"+t).style("margin-left",(w+pad)+"px")
         d3.select("#summa_expand_"+t).on("click",function(d){
             summaExpand(rect_dim,t,type)
         })
         //* text total files
         var a = type == "sus"? "suspicious": type
-        d3.select("#summa_"+type+"_div").append("text").text(list_fo.system.length +" "+ a +" files").style("position","absolute").lower()
+        a = a.charAt(0).toUpperCase() + a.substring(1, a.length);
+        // d3.select("#summa_"+type+"_div").append("text").text(list_fo.system.length +" "+ a +" files").style("position","absolute").lower()
+        d3.select("#summa_"+type+"_div").append("div").lower().style("display","flex").style("flex-direction","column")
+            .append("span").text(a +" files: " + list_fo.system.length )
+
+        tots = 0
+        if(t=="s"){
+            SUS_FO.system.forEach(element => {
+                tots+=element.overall
+            });
+        }
+        else{
+            CRITICAL_FO.system.forEach(element => {
+                tots+=element.overall
+            });
+        }
+        d3.select("#summa_"+type+"_div").select("div").append("span").text("Total score: "+tots.toFixed(2))
     }
         //neutral div width
     else{
@@ -421,18 +470,24 @@ function summaExpand(rect_dim,t,type){
     if(is_down) {
         drawHistogramSumma(rect_dim,t,type)
         d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-up")
-        if(t =="s") d3.select("#neutral_div").style("margin-top","5px")
-        if(t =="c") d3.select("#sus_div").style("margin-top","5px")
+        // if(t =="s") d3.select("#summa_sus_div").style("margin-bottom","0px")
+        // if(t =="c") d3.select("#summa_critical_div").style("margin-bottom","0px")
+        // if(t =="s") d3.select("#neutral_div").style("margin-top","5px")
+        // if(t =="c") d3.select("#sus_div").style("margin-top","5px")
     }
     else{
         d3.select("#summa_"+type+"_div").select("svg").remove()
         d3.select("#summa_expand_"+t).select("i").attr("class","fas fa-caret-down")
-        if(t =="s") d3.select("#neutral_div").style("margin-top","25px")
-        if(t =="c") d3.select("#sus_div").style("margin-top","25px")
+        // if(t =="s") d3.select("#summa_sus_div").style("margin-bottom","25px")
+        // if(t =="c") d3.select("#summa_critical_div").style("margin-bottom","25px")
+        // if(t =="s") d3.select("#neutral_div").style("margin-top","25px")
+        // if(t =="c") d3.select("#sus_div").style("margin-top","25px")
     }
 }
 //*draw histogram
 function drawHistogramSumma(rect_dim,t,type){
+    AAA_FILL = t =="s"? "yellow":"#c80003"
+    
     //console.log(metric_occurrences_list)
     metric_occurrences = metric_occurrences_list[tToIndex(t)]
     let margin = {top: 20, right: 0, bottom: 25, left: 0};
@@ -454,7 +509,7 @@ function drawHistogramSumma(rect_dim,t,type){
     let svg_histo = d3.select("#summa_"+type+"_div").append("svg");
     var pad  = 5 //from score
     w = getDimFloat("FO_name_div_"+t,"width") + getDimFloat("FO_score_div_"+t,"width") +  parseInt(d3.select("#FO_score_div_"+t).style("margin-right").replace("px",""))
-    svg_histo.style("margin-left",(w+pad)+"px")
+    // svg_histo.style("margin-left",(w+pad)+"px")
     //square_bound = document.getElementById("FO_squares_div_c").getBoundingClientRect();
     //svg_histo.attr("transform", "translate("+ (square_bound.x - pad)+",0)")
 

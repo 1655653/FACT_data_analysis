@@ -247,7 +247,7 @@ function callFW() {
 
 function drawDanger(){
     d3.select("#search_bar_FO").remove()
-    d3.select(".refresh").selectAll("*").remove()
+    // d3.select(".refresh").selectAll("*").remove()
     d3.select("#rightside").selectAll("text").remove()
     d3.select("#rightside").selectAll("span").remove()
     d3.selectAll("#fo_details").remove()
@@ -256,4 +256,5 @@ function drawDanger(){
     drawSingleDanger("n","neutral")
     buildSearchBar()
     rememberOknotook()
+    d3.selectAll(".summa_expand").dispatch("click")
 }

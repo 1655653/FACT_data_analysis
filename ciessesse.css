@@ -99,6 +99,31 @@ body {
   justify-content: center;
 }
 /** CRITICAL DIV */
+#summa_sus_div{
+  /* margin-bottom: 25px; */
+  display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+    border-color: whitesmoke;
+  border-radius: 2px;
+  border-width: 2px;
+  border-bottom-width: 1px;
+}
+#summa_critical_div{
+  /* margin-bottom: 25px; */
+  display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+    border-color: whitesmoke;
+  border-radius: 2px;
+  border-width: 2px;
+  border-bottom-width: 1px;
+}
+#summa_expand_c{
+  top: 0;
+}
 #critical_div{
   display: flex;
   overflow: auto;
@@ -106,6 +131,8 @@ body {
   border-color: whitesmoke;
   border-radius: 2px;
   border-width: 2px;
+  border-top: 0;
+  /* margin-top:25px; */
 }
 #sus_div{
   display: flex;
@@ -114,7 +141,9 @@ body {
   border-color: whitesmoke;
   border-radius: 2px;
   border-width: 2px;
-  margin-top:25px;
+  border-top: 0;
+  /* margin-top:25px; */
+  
 }
 #neutral_div{
   display: flex;
@@ -151,7 +180,7 @@ body {
 
 .summa_expand{
   visibility: hidden;
-  position: absolute;
+  /* position: absolute; */
 }
 
 .tooltip_danger{
