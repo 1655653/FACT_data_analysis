@@ -15,7 +15,14 @@ function packedUI(unpacker){
         
         d3.select("#reportOf").append("text").text(txt)
             .append("i").attr("id","packed_tree_expand_btn").attr("class","fas fa-caret-down")
-                .on("click",expandpackedTree)
+                .on("click",function(){
+                    expandpackedTree(unpacker.output)
+                })
+                .style("margin-right","5px")
+        d3.select("#reportOf").append("i").attr("id","output_unpack").attr("class","fa-brands fa-readme").style("opacity","1")
+                .on("click",function(){
+                    output_unpack(unpacker.output)
+                })
                 // <i class="fas fa-expand-arrows-alt"></i>
         // d3.select("#reportOf").append("text").text(txt)
         //     .append("button").text("expand").attr("id","packed_tree_expand_btn")
@@ -29,14 +36,40 @@ function packedUI(unpacker){
         
         d3.select("#reportOf").append("text").text(txt)
     }
+    else{
+        txt ="FACT has been able to unpack all elements  " 
+        d3.select("#reportOf").append("br")
+        
+        d3.select("#reportOf").append("text").text(txt)
+        .append("i").attr("id","output_unpack").attr("class","fa-brands fa-readme").style("opacity","1")
+        .on("click",function(){
+            output_unpack(unpacker.output)
+        })
+    }
     d3.select("#reportOf").append("text").attr("id","log_packed_FO")
 }
+function output_unpack(out){
+    var expand = d3.select("#output_unpack").style("opacity")
+    if (expand=="1"){ //clicco che è verso il basso quinid  chiusa e quindi devo aprire tutto
+        // d3.select("#toggle_sun_div").style("visibility","hidden")
+        d3.select("#output_unpack").transition().duration(400).style("opacity","0.2")
+        d3.select("#log_packed_FO").style("visibility","visible")
+        .append("div").attr("id","uap_dtls").style("max-width","70%").append("text").text(out)
+    }
+    else{
+        // d3.select("#toggle_sun_div").style("visibility","visible")
+        d3.select("#output_unpack").transition().duration(400).style("opacity","1")
+        d3.select("#output_unpack").selectAll("*").remove();
+        d3.select("#log_packed_FO").style("visibility","hidden")
+        d3.select("#log_packed_FO").text("")
+    }
 
+}
 function expandpackedTree(){
     var expand = d3.select("#packed_tree_expand_btn").attr("class")
     // console.log(expand)
     if (expand=="fas fa-caret-down") {
-        d3.select("#toggle_sun_div").style("visibility","hidden")
+        // d3.select("#toggle_sun_div").style("visibility","hidden")
         d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-up")
         d3.select("#log_packed_FO").style("visibility","visible")
         document.getElementById("packed_tree_expand").style.display = "block";
@@ -111,6 +144,7 @@ function expandpackedTree(){
             // Add labels for the nodes
             nodeEnter.append('text')
                 .attr("dy", ".35em")
+                .style("font-size","16px")
                 .attr("x", function(d) {
                     return d.children || d._children ? -13 : 13;
                 })
@@ -222,7 +256,7 @@ function expandpackedTree(){
             }
         }
     } else {
-        d3.select("#toggle_sun_div").style("visibility","visible")
+        // d3.select("#toggle_sun_div").style("visibility","visible")
         d3.select("#packed_tree_expand_btn").attr("class","fas fa-caret-down")
         d3.select("#packed_tree_expand").selectAll("*").remove();
         d3.select("#log_packed_FO").style("visibility","hidden")

@@ -4,7 +4,7 @@ var fattest_fo = []
 var red_danger_fo = []
 var yellow_danger_fo = []
 //* builds the tree calling all packed/unpacked FO
-
+var exm_white= ['application/x-executable', 'application/x-object', 'application/x-sharedlib']
 async function BuildTree(included_files, fatherNode, fw){ //input is list of included files of the father node
             //*rest call of every FO
             if( included_files.length > 0){
@@ -32,10 +32,11 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["uap"] = response.data.file_object.analysis.users_and_passwords.summary
                     ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
                     
-                   
+                    
 
                     //*-------mime_lists
                     var m = response.data.file_object.analysis.file_type.mime
+                    if(exm_white.includes(m)) fo_by_exm.push(response.data.request.uid)
                     if(! ListMimes.includes(m)) ListMimes.push(m)
                     if(!ListSuperMimes.includes(m.split("/")[0]))ListSuperMimes.push(m.split("/")[0])
                     

@@ -108,7 +108,8 @@ function BuildReport(fw){
 
 
     // //*MY ANALYSIS
-
+    doc.addPage("a4")
+    currY=0
     currY+=new_line
     doc.setTextColor(100)
     doc.line(0, currY, 1000, currY); // horizontal line

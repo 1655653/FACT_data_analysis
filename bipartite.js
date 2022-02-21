@@ -74,6 +74,7 @@ function buildBipartiteGraph(exm_data){
 	bPg.selectAll(".viz-biPartite-mainBar")
 		.on("mouseover",mouseover)
 		.on("mouseout",mouseout)
+		.on("click",clicks)
 		
 	//* end, resize 
 	h = parseFloat(d3.select("#g_bipartite").node().getBoundingClientRect().height.toFixed(2)) + 10
@@ -112,6 +113,12 @@ function buildBipartiteGraph(exm_data){
 					.transition()
 					.duration(400)
 					.style("opacity",1)
+				if(ALL_REST_RESPONSE[d.key]!=undefined){
+					h = ALL_REST_RESPONSE[d.key].hid
+					connectWithRd(h,"mouseover")
+					connectWithSc(h,"mouseover")
+					connectWithSun(d.key,"mouseover")
+				}
 				// this_bc = d3.select(this).node().getBoundingClientRect()
 				// cont_bc = d3.select("#svg_bipartite").node().getBoundingClientRect()
 				// if(this_bc.x < cont_bc.x)
@@ -127,8 +134,29 @@ function buildBipartiteGraph(exm_data){
 			.duration(400)
 			.style("opacity",0)
 			.remove()
+		d3.select(".viz-biPartite").selectAll("g").each(function(e, i){
+			if(e.key == d.key){
+				if(ALL_REST_RESPONSE[d.key]!=undefined){
+					h = ALL_REST_RESPONSE[d.key].hid
+					connectWithRd(h,"mouseleave")
+					connectWithSc(h,"mouseleave")
+					connectWithSun(d.key,"mouseout")
+				}
+			}
+		})
 	}
-	
+	function clicks(d){
+		d3.select(".viz-biPartite").selectAll("g").each(function(e, i){
+			if(e.key == d.key){
+				if(ALL_REST_RESPONSE[d.key]!=undefined){
+					h = ALL_REST_RESPONSE[d.key].hid
+					clickRd(h)
+				}
+			}
+		})
+		
+	}
+
 	function mouseover_legenda(d){
 		d3.select(".viz-biPartite").selectAll("g").each(function(e, i){
 			if(e.part=="primary"&& e.key==d) {
@@ -190,12 +218,11 @@ function filterExmData(exm_data,to_see,mitigations_to_hide){
 			});
 		});
 	}
-	// console.log(exm_data_filtered)
+	console.log(exm_data_filtered)
 
 	
 	return exm_data_filtered
 }
-
 
 function buildExploitData(exp_miti){
     bpart_data = []

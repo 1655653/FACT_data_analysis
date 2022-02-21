@@ -2,18 +2,34 @@
 
 
 function connectWithSc(hid,event){
+    var cpe = ""
     try {
         id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
         x_icon=parseFloat(d3.select("#"+id).style("y").replace("px",""))
         position = event == "mouseover" ? x_icon+8:x_icon-8
         p = event == "mouseover" ? 8:0
+        f = event == "mouseover" ? "black":"white"
+        op = event == "mouseover" ? "0.2":"1"
         d3.select("#"+id)
         .transition().duration(50).style("transform","translate(0px,"+p+"px)")
-        // .transition().duration(50).style("y",position+"px")
-        // .transition().duration(50).style("y",position+"px")
+        var id = d3.select("#"+id).node().parentNode.getElementsByTagName("text")
+        cpe = id[0].innerHTML
     } catch (e) {
-        
+        console.log(e)
     }
+    // .transition().duration(50).style("y",position+"px")
+    // .transition().duration(50).style("y",position+"px")
+    d3.select("#sw_comp_svg_container").selectAll(".tick").each(function(e,i){
+        if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
+            if(d3.select(this).select("text").text() == cpe){
+                // d3.select(this).select("text").transition().duration(100).style("fill",f)
+            }
+            else{
+                d3.select(this).select("text").transition().duration(100).style("opacity",op)
+            }
+        }
+    })
+
     
 }
 
@@ -56,10 +72,19 @@ function connectWithSun(uid,event,vi){
 
 function connectWithRd(hid,event){
     bkg = event=="mouseover"? "black": "white"
+    op = event == "mouseover" ? "0.2":"1"
     try {
         id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
-        d3.select("#rightside").select("#"+id)
-        .transition().duration(400).style("color",bkg)
+        d3.select("#rightside").selectAll("span, text").each(function(e,i){
+            if(d3.select(this).attr("id")==id){
+                // d3.select(this).transition().duration(400).style("color",bkg)
+            }
+            else{
+                d3.select(this).transition().duration(400).style("opacity",op)
+            }
+        })
+        // d3.select("#rightside").select("#"+id)
+        // .transition().duration(400).style("color",bkg)
         
     } catch (error) {
         

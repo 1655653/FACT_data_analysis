@@ -3,6 +3,7 @@ function BuildIconSC(){
     d3.select("#sw_comp_svg_container").selectAll(".tick")
         .each(function(e,i){
             if(! Number.isInteger(e)){ //rimuovo i tick dei num 1-10
+                d3.select(this).select("text").style("fill","white")
                 d3.select(this).append("svg:image")
                     .attr('x', -27)
                     .attr('y', -33)

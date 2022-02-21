@@ -164,8 +164,13 @@ function DrawSunburst(){
     
     d3.select("#bigsun").style("opacity","0").transition().duration(400).style("opacity","1")
     bs_w = parseFloat(d3.select("#bigsun").style("width").replace("px"))
-    d3.select("#toggle_sun_div").style("left",bs_w/2-20+"px")
-    d3.select("#toggle_sun_div").style("top",bs_w/2+20+"px")
+    // d3.select("#toggle_sun_div").style("left",bs_w/2-20+"px")
+    // d3.select("#toggle_sun_div").style("top",bs_w/2+20+"px")
+    d3.select("#toggle_sun_div").style("top","49%")
+    d3.select("#toggle_sun_div").style("width","fit-content")
+    d3.select("#toggle_sun_div").style("left","40%")
+
+    
     
     function click(d) {
         // colorMiniSunburst(d)

@@ -42,6 +42,7 @@ var exm_data
 var color_scale
 var mitigations = []
 var mitigations_not_present = []
+var fo_by_exm =[]
 // var bP //Bipartite!
 
 //* global vars
