@@ -95,7 +95,7 @@ function BuildIconSC(){
 
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
-                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
                                             .attr("id",id)
@@ -124,7 +124,7 @@ function BuildIconSC(){
                                 SUS_FO.system.forEach(crit_fo => {
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
                                         has_sus_files.push(sc)
-                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
                                         d3.select(this).append("svg:image")
@@ -156,7 +156,7 @@ function BuildIconSC(){
                                     if(crit_fo.uid == uid){ //devo inserire l'icona
                                         txt_elem = d3.select(this).select("text").node().getBoundingClientRect()
                                         i++
-                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                                        var id = "icon_scw_of"+ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                                         d3.select(this).append("svg:image")
                                             .attr('x', txt_elem.width+(i*20))
                                             .attr('y', -23)

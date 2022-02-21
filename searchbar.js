@@ -40,7 +40,7 @@ function buildSearchBar(){
                 
                 d3.select("#FO_squares_div_c").selectAll("svg").filter(function(){
                     var id = d3.select(this).attr("id")//uid
-                    hid = ALL_REST_RESPONSE[id].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                    hid = ALL_REST_RESPONSE[id].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                     if(Object.keys(approved_or_not).includes(hid))
                         if(approved_or_not[hid] == oknotok)
                             return false
@@ -48,7 +48,7 @@ function buildSearchBar(){
                 }).transition().duration(400).style("opacity","0").remove()
                 d3.select("#FO_squares_div_s").selectAll("svg").filter(function(){
                     var id = d3.select(this).attr("id")//uid
-                    hid = ALL_REST_RESPONSE[id].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                    hid = ALL_REST_RESPONSE[id].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                     if(Object.keys(approved_or_not).includes(hid))
                         if(approved_or_not[hid] == oknotok)
                             return false
@@ -58,7 +58,7 @@ function buildSearchBar(){
             //*classic search (by hid)
             else{
                 //*remove not matched
-                valid_s = string.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+                valid_s = string.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
                 //filtro quelli che non matchano
                 removeItem("critical_div","span")
                 removeItem("critical_div","text")

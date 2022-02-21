@@ -313,6 +313,10 @@ body {
   position: absolute;
   z-index: 2;
 }
+.tooltip_sw_comp text{
+  cursor: pointer;
+  
+}
 .tooltip_sw_comp_critical{
   background-color: #6e747e;
   border: solid;
@@ -436,4 +440,29 @@ stroke-width: 2px;
   flex-direction: column;
   opacity: 0.5;
   transform: scale(0.6);
+}
+
+#bigsun .node{
+   cursor: pointer;
+}
+#mime_list > *{
+  cursor: pointer;
+}
+#sub_mime_list > *{
+  cursor: pointer;
+}
+/* image{
+  cursor: pointer;
+} */
+#FO_name_div_s{
+  cursor: pointer;
+}
+#FO_name_div_c{
+  cursor: pointer;
+}
+#FO_name_div_n{
+  cursor: pointer;
+}
+.viz-biPartite-mainBar rect{
+  cursor: pointer;
 }

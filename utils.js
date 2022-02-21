@@ -3,19 +3,19 @@
 
 function connectWithSc(hid,event){
     var cpe = ""
+    op = event == "mouseover" ? "0.2":"1"
     try {
-        id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+        id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
         x_icon=parseFloat(d3.select("#"+id).style("y").replace("px",""))
         position = event == "mouseover" ? x_icon+8:x_icon-8
         p = event == "mouseover" ? 8:0
         f = event == "mouseover" ? "black":"white"
-        op = event == "mouseover" ? "0.2":"1"
         d3.select("#"+id)
         .transition().duration(50).style("transform","translate(0px,"+p+"px)")
         var id = d3.select("#"+id).node().parentNode.getElementsByTagName("text")
         cpe = id[0].innerHTML
     } catch (e) {
-        console.log(e)
+        // console.log(e)
     }
     // .transition().duration(50).style("y",position+"px")
     // .transition().duration(50).style("y",position+"px")
@@ -74,7 +74,7 @@ function connectWithRd(hid,event){
     bkg = event=="mouseover"? "black": "white"
     op = event == "mouseover" ? "0.2":"1"
     try {
-        id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+        id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
         d3.select("#rightside").selectAll("span, text").each(function(e,i){
             if(d3.select(this).attr("id")==id){
                 // d3.select(this).transition().duration(400).style("color",bkg)
@@ -92,7 +92,7 @@ function connectWithRd(hid,event){
 }
 
 function clickRd(hid){
-    id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+    id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
     d3.select("#rightside").select("#"+id).dispatch("click")
 }
 

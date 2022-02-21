@@ -168,7 +168,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
         d3.select("#summa_expand_"+t).style("visibility","visible")
   
         list_fo.system.forEach((fo, index) => {
-            
+            if(fo.hid.includes("~")) fo.hid = fo.hid.replace("~","_TILDE")
             var fo_name = d3.select("#FO_name_div_"+t).append("span").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
             fo_name.style("opacity",0).transition().duration(600).style("opacity",1)
             fo_name.style("height","23.8px")
@@ -184,7 +184,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 nodes= d3.select("#FO_name_div_"+t).node().childNodes
                 for (let index = 0; index < nodes.length; index++) {
                     const node = nodes[index];
-                    if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")){
+                    if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")){
                         createDetailsdiv(fo,t,index)
                     }
                 }
@@ -204,7 +204,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             })
             total = fo.overall
             if(fo.packed) total = "PCKD"
-            d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+            d3.select("#FO_score_div_"+t).append("text").text(total).attr("class","div_column overall").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE"))
                 .style("opacity",0)
                 .transition().duration(600)
                 .style("opacity",1)
@@ -336,7 +336,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             if(text.length>10){
                 text = "..."+text.substring(text.length-10,text.length)
             }
-            return text.replace("-","_")
+            return text.replaceAll("-","_").replaceAll("_TILDE","~")
         })
 
         
@@ -422,14 +422,14 @@ function drawNeutral(t){
         if(is_down){
             //fill with files
             NEUTRAL_FO.system.forEach(fo => {
-                var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_"))
+                var fo_name = d3.select("#FO_name_div_"+t).append("text").text(fo.hid).attr("class","div_column").attr("id",fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE"))
                 fo_name.style("opacity",0).transition().duration(600).style("opacity",1)
                 //*details for every fo
                 fo_name.on("click",function(d){
                     nodes= d3.select("#FO_name_div_"+t).node().childNodes
                     for (let index = 0; index < nodes.length; index++) {
                         const node = nodes[index];
-                        if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")){
+                        if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")){
                             createDetailsdiv(fo,t,index)
                         }
                     }

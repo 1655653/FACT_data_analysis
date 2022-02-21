@@ -114,6 +114,7 @@ function DrawSWComponents(){
             .style("stroke", "black")
             .style("fill","red")
             .style("opacity","0")
+            .style("cursor","pointer")
             .attr("d", d3.area()
                 .y0( yNum(0) )
                 .y1(function(d){

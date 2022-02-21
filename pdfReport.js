@@ -227,7 +227,7 @@ function generateCData(c){
   var result = [];
   c.system.forEach(fo => {
     stato = " "
-    id = fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_")
+    id = fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
     if(Object.keys(approved_or_not).includes(id)) stato = ""+approved_or_not[id]
     if(stato=="false") stato = "Dangerous"
     if(stato=="true") stato = "Safe"
