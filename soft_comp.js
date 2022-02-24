@@ -133,8 +133,8 @@ function DrawSWComponents(){
                     }
                 } )
                 .x(function(d){return(x_viol(d.x0)) } )
-                .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
-                //.curve(d3.curveStep)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+                //.curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+                .curve(d3.curveStep)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
             )
             .on("mouseover", function(e){
                 d3.selectAll(".tooltip_sw_comp").remove()
