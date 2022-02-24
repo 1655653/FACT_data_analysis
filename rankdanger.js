@@ -81,7 +81,10 @@ function rankdanger_single(fw,uid,score){
         e.uid_affected.forEach(u => {
             if(u==uid) {
                 CVE+= parseFloat(e[score]* cve_count(e,SCORE_TYPE).length *w_cve)
-                //console.log(e)
+                // console.log(e)
+                // console.log(e[score])
+                // console.log(cve_count(e,SCORE_TYPE))
+                // console.log(cve_count(e,SCORE_TYPE).length)
             }
         });
     });
@@ -109,16 +112,20 @@ function rankdanger_single(fw,uid,score){
         "overall": overall,
         "packed": is_packed //il prob è quando è true
     }
-    
+    var rank = "Suspicious"
     if(overall > THRESHOLD){
         // console.log(ALL_REST_RESPONSE[uid])
         // console.log(uid+"  CRYPTO  "+CRYPTO +"  USR_N_PWD  "+USR_N_PWD +"  EXPLOIT  "+EXPLOIT +"  CVE  "+CVE )
         CRITICAL_FO.system.push(el)
+        rank = "Critical"
     }
     else if((overall>0 && overall < THRESHOLD)||is_packed) SUS_FO.system.push(el)
     else{
         NEUTRAL_FO.system.push(el)
+        rank = "Other"
     }
+    TreeRankUpdate(el,rank,Tree)
+    
 
 }
 

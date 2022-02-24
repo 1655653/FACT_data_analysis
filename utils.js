@@ -4,6 +4,8 @@
 function connectWithSc(hid,event){
     var cpe = ""
     op = event == "mouseover" ? "0.2":"1"
+    bord_co = event == "mouseover" ? "#d56f717a":"#ffffff94"
+    
     try {
         id = "icon_scw_of"+hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
         x_icon=parseFloat(d3.select("#"+id).style("y").replace("px",""))
@@ -14,9 +16,11 @@ function connectWithSc(hid,event){
         .transition().duration(50).style("transform","translate(0px,"+p+"px)")
         var id = d3.select("#"+id).node().parentNode.getElementsByTagName("text")
         cpe = id[0].innerHTML
+        d3.select("#leftside").transition().duration(400).style("border-color",bord_co)
     } catch (e) {
-        // console.log(e)
+        console.log(e)
     }
+    // d3.select("#leftside").transition().duration(400).style("border-color",bord_co)
     // .transition().duration(50).style("y",position+"px")
     // .transition().duration(50).style("y",position+"px")
     d3.select("#sw_comp_svg_container").selectAll(".tick").each(function(e,i){

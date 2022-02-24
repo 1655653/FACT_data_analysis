@@ -58,6 +58,7 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                         rankfattest(response.data.request.uid, response.data.file_object.meta_data.size)
                         node["leaves"]=0
                         node["children"] = []
+                        node["rank"] = "other"
                         path = path.substring(path.indexOf("/")).split("/").filter(d => d != "") //uso path per avere il singolo path
                         path.pop();
                         if(path.length>0)
@@ -329,4 +330,31 @@ function resetTree(){
     //         d3.select("#"+key.replace(/[^A-Z]+/g, "")).transition().duration(800).style("border-color","black")
     //     }
     // }
+}
+
+
+function TreeRankUpdate(el,rank,node){
+    // console.log(node)
+    // console.log(node.length)
+    
+    // if(node.children.length==0){
+    //     if(el.uid==node.uid) {
+    //         node.rank = rank
+    //         if(el.uid == "201ac67dd9abe5826f687f02526d3ae616d28a8b4a1bca0c451be66b93b539ea_2034604"){
+    //             console.log(node)
+    //         }
+    //         return
+    //     }
+    // }
+    node.children.forEach(child => {
+        // console.log(child)
+        if(el.uid==child.uid) {
+            child.rank = rank
+            // if(el.uid == "201ac67dd9abe5826f687f02526d3ae616d28a8b4a1bca0c451be66b93b539ea_2034604"){
+            //     console.log(child)
+            // }
+            return
+        }
+        TreeRankUpdate(el,rank,child)
+    });
 }

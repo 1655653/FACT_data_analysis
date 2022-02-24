@@ -227,7 +227,7 @@ var original_width
 // })
 function menuSWCOMP(){
     //*appearance
-    d3.select("#leftside").transition().delay(400).duration(400).style("border","solid")
+    d3.select("#leftside").transition().delay(400).duration(400).style("border","solid").style("border-color","#ffffff94")
     d3.select("#sw_comp_expand_btn").style("visibility","visible")
     d3.select("#sc_menu").select("text").style("visibility","visible")
     d3.select("#toggle_all_sc_div").style("visibility","hidden")

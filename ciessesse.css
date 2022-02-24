@@ -31,6 +31,7 @@ body {
 }
 #leftside{
   width: 20%;
+  border-color: #ffffff94;
   /* width: 600px; */
   /* overflow-x: hidden; */
   
@@ -311,7 +312,7 @@ body {
   border-radius: 5px;
   padding: 5px;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
 }
 .tooltip_sw_comp text{
   cursor: pointer;

@@ -197,6 +197,8 @@ function callFW() {
                 extraDiv(data.firmware)
                 console.log("---------RANK ENDED")
                 console.log(DANGER)
+                console.log("TREE ranked")
+                BackupTree = JSON.parse(JSON.stringify(Tree))
                 
                 //*-------SW COMPONENTS + CVE VIEW (LEFTSIDE) 
                 //buildEXMDataset(data.firmware.analysis.exploit_mitigations.summary)
@@ -231,7 +233,7 @@ function callFW() {
                 d3.select("#directory_container").style("width",w_miti+"px")
                 ShowLoader(false)
                 // d3.select("#center").style("width","fit-content")
-                
+                d3.select("#directory_container").select("rect").dispatch("click")
             })();
             
         })
@@ -258,4 +260,5 @@ function drawDanger(){
     buildSearchBar()
     rememberOknotook()
     d3.selectAll(".summa_expand").dispatch("click")
+    BackupTree = JSON.parse(JSON.stringify(Tree))
 }

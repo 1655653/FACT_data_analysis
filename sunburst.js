@@ -60,11 +60,20 @@ function DrawSunburst(){
             b = ""
         }
         var f = d.data.uid != "folder"? "":d.data.uid + ": "
+        var rank = d.data.uid=="folder"? "": "<br><span>Ranked as: "+d.data.rank+"</span>"
+        if(d.data.rank == undefined) rank =""
+        var dtls = ""
+        if(d.data.rank=="Other") dtls = "<br>uid:"+d.data.uid+b+m
         Tooltip
             // .html("hid:" + d.data.hid + "<br>uid:"+d.data.uid+b+m)
-            .html(f+d.data.hid)
+            .html(f+d.data.hid+rank+dtls)
             .style('left', (d3.event.pageX + 10) + 'px')
             .style('top', (d3.event.pageY + 10) + 'px')
+        Tooltip.select("span").style("color", function(){
+            if(d.data.rank =="Critical") return "red"
+            if(d.data.rank =="Suspicious") return "yellow"
+            return 
+        })
     }
     var mouseleave = function(d) {
         connectWithRd(d.data.hid,"mouseleave")

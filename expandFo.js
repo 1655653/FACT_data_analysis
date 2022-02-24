@@ -101,7 +101,8 @@ function createDetailsdiv(fo,t,index){
             var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
             if(is_down) {
                 var n = d3.create("div").attr("id","unpacker_dtls")
-                var out = el.unpacker.output != undefined? el.unpacker.output: "no info"
+                var out = el.unpacker.output != undefined? el.unpacker.output: el.unpacker.info
+                if(out==undefined) un_out="no info"
                 n.append("text").text(out)
 
                 d3.select(this).attr("class","fas fa-caret-up")
@@ -121,7 +122,7 @@ function createDetailsdiv(fo,t,index){
     console.log(el.uap)
     if(el.uap.length>0 ){
         var uap = dettI.append("div").style("display","flex").attr("id","uap")
-        uap.append("div").text("Plain credentials: ")
+        uap.append("div").text("Plain credentials: ").style("color","red")
         uap.append("i").attr("class",'fas fa-caret-down').style("color","red")
         .on("click",function(){
             var is_down = d3.select(this).attr("class") == "fas fa-caret-down"? true:false
