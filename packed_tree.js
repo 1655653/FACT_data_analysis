@@ -1,5 +1,12 @@
 var COLOR_NODE = "#2e3035"
 function packedUI(unpacker){
+    d3.select("#reportOf").append("i").attr("id","ext_dict_icon").attr("class","fa-solid fa-book")
+        .style("opacity","1")
+        .style("margin-left","5px")
+        .on("click",function(){
+            ext_dict(extension_dict)
+        })
+    d3.select("#reportOf").append("text").attr("id","ext_dict_log")
     var txt =""
     var packed
     
@@ -9,6 +16,9 @@ function packedUI(unpacker){
         packed=0
     }
     if(packed>0){//? se ci sono packed allora li mette
+        
+
+
         LIST_PACKED_UID = unpacker.summary.packed //global
         txt ="FACT has not been able to unpack "+ packed + " elements  " 
         d3.select("#reportOf").append("br")
@@ -310,5 +320,31 @@ function talkAboutPackedFO(FOuid){
     if(UNPACK_BLACKLISTED.includes(selectedFO.mime))  mime_check= "Unpacking of " + selectedFO.hid + " skipped due to blacklisted file type"
     d3.select("#log_packed_FO").text(mime_check)
     d3.select("#log_packed_FO").style("opacity","0").transition().duration(400).style("opacity","1")
+    d3.select("#log_packed_FO").append("i").attr("class",'fas fa-download')
+            .on("click",function(d){
+                if (confirm('Are you sure you want to download the file?')) download( FOuid ,selectedFO.mime)
+                d3.select(this).style("opacity",0.5).transition().duration(400).style("opacity",1)
+            })
+}
 
+function ext_dict(extension_dict){
+    var expand = d3.select("#ext_dict_icon").style("opacity")
+    if (expand=="1"){ //clicco che è verso il basso quinid  chiusa e quindi devo aprire tutto
+        // d3.select("#toggle_sun_div").style("visibility","hidden")
+
+        var s =""
+        extension_dict.forEach(e => {
+            if(e!=undefined) s+="     "+e +"     "
+        });
+        d3.select("#ext_dict_icon").transition().duration(400).style("opacity","0.2")
+        d3.select("#ext_dict_log").style("visibility","visible")
+        .append("div").attr("id","ext_dict_log_dtls").style("max-width","70%").append("text").text(s)
+    }
+    else{
+        // d3.select("#toggle_sun_div").style("visibility","visible")
+        d3.select("#ext_dict_icon").transition().duration(400).style("opacity","1")
+        d3.select("#ext_dict_icon").selectAll("*").remove();
+        d3.select("#ext_dict_log").style("visibility","hidden")
+        d3.select("#ext_dict_log").text("")
+    }
 }

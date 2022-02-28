@@ -234,6 +234,13 @@ function callFW() {
                 ShowLoader(false)
                 // d3.select("#center").style("width","fit-content")
                 d3.select("#directory_container").select("rect").dispatch("click")
+
+                //sposto right un po piu a sinistra
+                t = parseFloat(d3.select("#rightside").style("right").replace("px",""))
+                d3.select("#rightside").style("right",t+35+"px")
+
+                console.log(extension_dict)
+
             })();
             
         })

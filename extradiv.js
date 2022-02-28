@@ -5,6 +5,8 @@
 // W_EXPLOIT = 1.5
 // W_KNOWN_VULN = 5.0
 //SCORE_TYPE = "base_score"
+
+old_config = []
 function extraDiv(fw){
     var ex_w = getDimFloat("extra_right_side","width")    
     var pad = 10
@@ -50,18 +52,24 @@ function extraDiv(fw){
 
 function extraDivLogic(fw){
     parameters = [W_CRYPTO,W_CVE_CRIT, W_CVE_N_CRIT,SCORE_TYPE,W_USR_N_PWD,W_EXPLOIT,W_KNOWN_VULN,THRESHOLD]
+    old_config = parameters
     param_str = ["W_CRYPTO","W_CVE_CRIT", "W_CVE_N_CRIT","SCORE_TYPE","W_USR_N_PWD","W_EXPLOIT","W_KNOWN_VULN","THRESHOLD"]
     d3.select("#parameters_container").selectAll("div").remove("*")
     parameters.forEach((param,index) => {
         par_div = d3.select("#parameters_container").append("div").attr("class","param_div")
         par_div.append("text")
             .attr("class","param_text")
-            .text(param_str[index].toLowerCase())
+            .text(Labelize(param_str[index].toLowerCase()))
         var max = 100
         var step = 1
         if(index == 1 || index == 2 || index == 5){
             if(index != 5) max = 10
             step = 0.1
+        }
+        if(index==7){
+            CRITICAL_FO.system.forEach(element => {
+                max = max<element.overall? element.overall:max
+            });
         }
         if(index != 3){ //score_type
             par_div.append("input")
@@ -72,15 +80,40 @@ function extraDivLogic(fw){
                 .attr("max",max)
                 .attr("step",step)
                 .attr("value",param)
+                .on("mousedown",function(){
+                    old_config[index]= this.value
+                })
                 .on("input",function(){
                     d3.select(this).attr("value",this.value)
                     d3.select("#"+param_str[index]+"_value").text(this.value)
                     v = this.value
+                    // old_config[index]= window[param_str[index]]
                     window[param_str[index]] = v
                 })
-            par_div.append("text").attr("id",param_str[index]+"_value")
+                .on("mouseup",function(){
+                    v = this.value
+                    // old_config[index]= window[param_str[index]]
+                    window[param_str[index]] = v
+
+                    rankdanger(fw,SCORE_TYPE) //Riempie DANGER
+                    drawDanger(fw)
+                    
+                    d3.select("#summa_critical_div").select("svg").remove()
+                    d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-down")
+                    d3.select("#summa_sus_div").select("svg").remove()
+                    d3.select("#summa_expand_s").select("i").attr("class","fas fa-caret-down")
+                    d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
+                    d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
+                    
+                    changeMaxThresh()
+                    // d3.select("#apply_params").dispatch("click")
+                })
+            text_div = par_div.append("div").attr("class","params_text_div")
+            text_div.append("text").text("0")
+            text_div.append("text").attr("id",param_str[index]+"_value")
                 .attr("class","param_text")
                 .text(param)
+            text_div.append("text").attr("id",param_str[index]+"_max").text(max)
         }
         else{
             score_cont = par_div.append("div").attr("class","radio_toolbar_extradiv")
@@ -93,6 +126,18 @@ function extraDivLogic(fw){
 
 
     bottom = d3.select("#parameters_container").append("div").attr("id","reset_start_container")
+
+    bottom.append("i").attr("class","fa-solid fa-arrow-rotate-left").on("click",function(){
+        console.log(old_config)
+        for (let index = 0; index < old_config.length; index++) {
+            window[param_str[index]] = old_config[index];
+        }
+        extraDivLogic(fw)
+        rankdanger(fw,SCORE_TYPE)
+        drawDanger()
+    })
+
+
     bottom.append("button").text("reset").style("width","fit-content").style("margin-right","10px").on("click",function(d){
         W_CRYPTO = 30.0
         W_CVE_CRIT = 0.2
@@ -106,25 +151,25 @@ function extraDivLogic(fw){
         rankdanger(fw,SCORE_TYPE)
         drawDanger()
         rotateLabel("90","0",0)
-    })
-    bottom.append("button").text("apply").style("width","fit-content").on("click",function(d){
-        rankdanger(fw,SCORE_TYPE) //Riempie DANGER
-        drawDanger(fw)
-        rotateLabel("90","0",0)
-        d3.select("#parameters_expand").dispatch('click')
-        
-        d3.select("#summa_critical_div").select("svg").remove()
-        d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-down")
-        d3.select("#summa_sus_div").select("svg").remove()
-        d3.select("#summa_expand_s").select("i").attr("class","fas fa-caret-down")
-        d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
-        d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
-
-
-        
-        
+        changeMaxThresh()
 
     })
+    // bottom.append("button").text("apply").style("width","fit-content").attr("id","apply_params")
+    //     .on("click",function(d){
+    //         rankdanger(fw,SCORE_TYPE) //Riempie DANGER
+    //         drawDanger(fw)
+    //         rotateLabel("90","0",0)
+    //         d3.select("#parameters_expand").dispatch('click')
+            
+    //         d3.select("#summa_critical_div").select("svg").remove()
+    //         d3.select("#summa_expand_c").select("i").attr("class","fas fa-caret-down")
+    //         d3.select("#summa_sus_div").select("svg").remove()
+    //         d3.select("#summa_expand_s").select("i").attr("class","fas fa-caret-down")
+    //         d3.select("#others_expand").select("i").attr("class","fas fa-caret-down")
+    //         d3.select("#neutral_div").transition().duration(700).style("height",getDimFloat("others_txt_and_expand","height")+"px")
+    //     })
+
+
 }
 
 function buildBtns(cont,id,family,name){ //shared with sc component
@@ -140,4 +185,38 @@ function buildBtns(cont,id,family,name){ //shared with sc component
                     if(family == "score_sc_btn") DrawSWComponents()
                 })
     
+}
+
+
+
+function changeMaxThresh(){
+    
+    var max = 10
+    CRITICAL_FO.system.forEach(element => {
+        max = max<element.overall? element.overall:max
+    });
+    d3.select("#THRESHOLD_max").text(max)
+}
+
+
+
+function Labelize(l){
+    switch (l) {
+        case "w_crypto":
+            return "Crypto Weight"
+        case "w_cve_crit":
+            return "Critical CVE Weight"
+        case "w_cve_n_crit":
+            return "Non-critical CVE Weight"
+        case "score_type":
+            return "Score type"
+        case "w_usr_n_pwd":
+            return "User-Password Weight"
+        case "w_exploit":
+            return "Mitigation Weight"
+        case "w_known_vuln":
+            return "Known Vuln Weight"
+        case "threshold":
+            return "Threshold"
+    }
 }

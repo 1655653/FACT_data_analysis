@@ -1,15 +1,16 @@
 function createDetailsdiv(fo,t,index){
-    var m_height = 190
+    var m_height = 230
     //*prepara il div
     el = ALL_REST_RESPONSE[fo.uid]
     // console.log(el)
     var selector_name = "ao"+fo.uid
 
-    //refuso per i plaeholder
+    //*refuso per i plaeholder
     br = "</br>"
     var UID = "UID:  <tspan id = 'uid_tspan'>"+ fo.uid +"</tspan>"
     var HID = "HID:  <tspan id = 'hid_tspan'>"+ el.hid +"</tspan>"
     var MIME = "Mime:  <tspan id = 'mime_tspan'>"+ el.mime +"</tspan>"
+    
     detailsI = HID + br + UID + br +"Size: "+ el.size+" bytes"+br+ MIME
    
     // //
@@ -25,6 +26,7 @@ function createDetailsdiv(fo,t,index){
     div = d3.create("div").attr("id","fo_details").attr("class",selector_name)
         .style("width",details_width+"px")
         .style("min-height",m_height+"px")
+        .style("margin-bottom","10px")
         .style("z-index","2")
     
     //***********LAYOUT SCHEDA FO
@@ -69,6 +71,14 @@ function createDetailsdiv(fo,t,index){
         cpu.append("div").text(el.cpu).style("padding-left","5px")
     }
 
+    var score = dettI.append("div").style("display","flex")
+    score.append("div").text("Scores:")
+    var s = ""
+    Object.keys(fo).forEach(k => {
+        if(fo[k]>0 && k!="overall") s+=" "+k+" = " +fo[k].toFixed(2)
+    });
+    score.append("div").text(s).style("padding-left","5px")
+
     var mime = dettI.append("div").style("display","flex")
     mime.append("div").text("MIME:")
     mime.append("div").text(el.mime).style("padding-left","5px")
@@ -102,11 +112,25 @@ function createDetailsdiv(fo,t,index){
             if(is_down) {
                 var n = d3.create("div").attr("id","unpacker_dtls")
                 var out = el.unpacker.output != undefined? el.unpacker.output: el.unpacker.info
-                if(out==undefined) un_out="no info"
+                if(out==undefined) out="no info"
+                n.append("text").text("Plug-in used: "+el.unpacker.plugin_used+" v "+el.unpacker.plugin_version+"  ")
+                n.append("br")
                 n.append("text").text(out)
 
                 d3.select(this).attr("class","fas fa-caret-up")
-                pivot = el.uap == undefined? "buttons" : "uap"
+                // pivot = el.uap == undefined || el.uap.length==0? "buttons" : "uap"
+                // pivot = "uap"
+                // if(el.uap == undefined || el.uap.length==0){
+                //     if(el.crypto == undefined || el.crypto.length==0){
+                //         pivot = "buttons"
+                //     }
+                //     else{
+                //         pivot = "cry"
+                //     }
+                // }
+                pivot = el.uap == undefined || el.uap.length==0? el.crypto == undefined || el.crypto.length==0? "buttons" : "cry" : "uap"
+                console.log(pivot)
+                console.log(el)
                 dettI.node().insertBefore(n.node(), dettI.select("#"+pivot).node());//inserisci prima di unpacker
             }
             else{
@@ -117,9 +141,9 @@ function createDetailsdiv(fo,t,index){
         .style("margin-top","3px")
         .style("margin-left","5px")
     
-    console.log(el)
+    // console.log(el)
     
-    console.log(el.uap)
+    // console.log(el.uap)
     if(el.uap.length>0 ){
         var uap = dettI.append("div").style("display","flex").attr("id","uap")
         uap.append("div").text("Plain credentials: ").style("color","red")
@@ -241,7 +265,7 @@ function createDetailsdiv(fo,t,index){
     div = d3.create("div").attr("id","fo_details").attr("class",selector_name)//for the score
         .style("visibility","hidden")
         .style("width","10px")
-        .style("min-height",m_height+"px")
+        .style("min-height",m_height+6+"px")
         .style("max-height",m_height+"px")
         .style("height",m_height+"px")
     div.append("div").attr("id", "details_I").append("text").html(detailsI).style("overflow-x","auto")

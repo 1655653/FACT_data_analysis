@@ -3,6 +3,7 @@ var BOUND_FATTEST = 5
 var fattest_fo = []
 var red_danger_fo = []
 var yellow_danger_fo = []
+var extension_dict = []
 //* builds the tree calling all packed/unpacked FO
 var exm_white= ['application/x-executable', 'application/x-object', 'application/x-sharedlib']
 async function BuildTree(included_files, fatherNode, fw){ //input is list of included files of the father node
@@ -31,7 +32,9 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["crypto"] = response.data.file_object.analysis.crypto_material.summary[0]
                     ioi_response["uap"] = response.data.file_object.analysis.users_and_passwords.summary
                     ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
-                    
+                    ext_exist = response.data.file_object.meta_data.hid.lastIndexOf(".")
+                    ext = response.data.file_object.meta_data.hid.substring(ext_exist)
+                    if(!extension_dict.includes(ext) && ext_exist >-1) extension_dict.push(ext)
                     
 
                     //*-------mime_lists

@@ -36,7 +36,7 @@ function DrawSWComponents(){
     var y_viol = d3.scaleBand()
     .range([ 0, height_violin ])
     .domain(SWC_ARRAY)
-    .padding(0.05) // This is important: it is the space between 2 groups. 0 means no padding. 1 is the maximum.
+    .padding(0.07) // This is important: it is the space between 2 groups. 0 means no padding. 1 is the maximum.
     //console.log(y_viol.domain())
     svg_violin.append("g").call( d3.axisLeft(y_viol) )
 
@@ -45,7 +45,7 @@ function DrawSWComponents(){
         .selectAll("text").text(function(d){
             d3.select(this).attr("id", "text_of_"+d)
             return d.replace("(CRITICAL)","").trim() })
-        .attr("transform", "translate(10,-12)")
+        .attr("transform", "translate(10,12)")
         .style("text-anchor", "start")
         .style("font-size", "17px")
         .on("click",function(d){
@@ -180,12 +180,13 @@ function DrawSWComponents(){
                     return 1
                 })
                 d3.select(".tooltip_sw_comp")
-                    .style('left', (d3.event.pageX) + 'px')
-                    .style('top', (d3.event.pageY) + 'px')
+                    .style('left', (d3.event.pageX) + 5+'px')
+                    .style('top', (d3.event.pageY) +5+ 'px')
                     .style("visibility", vis)
                     .lower()
                 var icon  = !toggle_tooltip? "fa-solid fa-lock-open": "fa-solid fa-lock"
                 d3.select(".tooltip_sw_comp").append("i").attr("class",icon).style("position","absolute").style("transform","translate(0px, -20px)")
+                d3.select(".tooltip_sw_comp").append("text").text("Total CVEs: "+cves_list.length).append("br")
                 cves_list.forEach(e => {
                     d3.select(".tooltip_sw_comp").append("text").text(e.cve_name+" score: "+e.score)
                         .on("click", function(h){
@@ -204,6 +205,7 @@ function DrawSWComponents(){
                 var icon  = !toggle_tooltip? "fa-solid fa-lock-open": "fa-solid fa-lock"
                 d3.select(".tooltip_sw_comp").select("i").attr("class",icon)
             })
+            .style("transform","scale(1,-1)translate(0px, -87px)")
     d3.selectAll(".viol_hist").transition()
             .duration(400)
             .style("opacity","1")
@@ -213,7 +215,8 @@ function DrawSWComponents(){
     })
     //*icons
     BuildIconSC()
-    
+    //ipse dixit
+    // d3.select("#sw_comp_svg_container").selectAll("text")
 }
 
 

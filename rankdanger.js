@@ -5,6 +5,7 @@
 	CVE  -->  Cve (score parametrico) = ( ∑ [1,10] * i-th_cve ) * w_CVE
 P+Cry+CVE-E
 Tutti i packed vanno tra i suspicious*/
+var INTERPOL
 EXM_FILL = "#83cd4b"
 AAA_FILL = "#c80003"
 EXTRA_DIV_COLOR = "#6e747e"
@@ -163,10 +164,17 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
     if(t=="c") {
         list_fo = CRITICAL_FO
         AAA_FILL = "#c80003"
+        // AAA_FILL = "red"
+        // AAA_MIN_FILL = "#b95b5d"
+        AAA_MIN_FILL = "#ff6464"
+        
     }
     if(t=="s") {
         list_fo = SUS_FO
         AAA_FILL = "yellow"
+        // AAA_MIN_FILL = "#b7b75c"
+        AAA_MIN_FILL = "#ffff64"
+        // AAA_MIN_FILL = "#f7ee9e"
     }
     // if(t=="n") list_fo = NEUTRAL_FO
     if(list_fo.system.length>0){
@@ -234,26 +242,36 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     else if( fo[item] == 0 && item == "EXM" ) metric_occurrences[item]++
                     stroke_color = '#000000a6'
                     svg_rect.append('rect')
-                    .attr('stroke-width', '2px')
-                    .attr('fill', function(d){
-                        if(fo.packed) return "#ffffff00"
-                        if(fo[item] > 0 && item!="EXM") {
-                            stroke_color = AAA_FILL
-                            return stroke_color
-                        }
-                        else if(fo[item] == 0 && item=="EXM") {
-
-                            stroke_color = AAA_FILL
-                            return stroke_color
-                        }
-                        return "#ffffff00"
-                    })
-                    .attr('stroke', stroke_color )
-                    .attr("id",item+"_"+fo.uid)
-                    .attr("x",0)
-                    .attr("y",1)
-                    .attr("rx",4)
-                    .style("opacity", 0.8)
+                        .attr('stroke-width', '2px')
+                        .attr('fill', function(d){
+                            //max item
+                            m = Math.max(fo.CRY, fo.CVE, fo.EXM, fo.KVU, fo.UPW)
+                            //min
+                            var mn = m
+                            Object.keys(fo).forEach(element => {
+                                mn = fo[element]<mn && fo[element]>0 && mn!= m? fo[element]:mn
+                            });
+                            if(mn==m) mn = 1
+                            
+                            if(fo.packed) return "#ffffff00"
+                            if(fo[item] > 0 && item!="EXM") {
+                                scale = d3.scaleLinear().domain([mn,m]).range([AAA_MIN_FILL, AAA_FILL])
+                                stroke_color = scale(fo[item])
+                                return stroke_color
+                            }
+                            else if(fo[item] == 0 && item=="EXM") {
+                                scale = d3.scaleLinear().domain([mn,m]).range([AAA_MIN_FILL, AAA_FILL])
+                                stroke_color = scale(fo[item])
+                                return stroke_color
+                            }
+                            return "#ffffff00"
+                        })
+                        .attr('stroke', stroke_color )
+                        .attr("id",item+"_"+fo.uid)
+                        .attr("x",0)
+                        .attr("y",1)
+                        .attr("rx",4)
+                        .style("opacity", 0.8)
                     // .on("mouseover",function(d){
                         
                     //     d3.select("body")
@@ -275,11 +293,11 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                     //     .style("opacity","0").remove()
                     // })
                     // .on("click",clicked)
-                    .transition().duration(600)
-                    .attr("x",x_rect)
-                    .attr('width', rect_dim)
-                    .attr('height', rect_dim)
-                    .attr("max-height",original_square_height)
+                        .transition().duration(600)
+                        .attr("x",x_rect)
+                        .attr('width', rect_dim)
+                        .attr('height', rect_dim)
+                        .attr("max-height",original_square_height)
                     
                     x_rect+= rect_dim + pad
                 }
@@ -368,17 +386,22 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
             .append("span").text(a +" files: " + list_fo.system.length )
 
         tots = 0
+        avg = 0
         if(t=="s"){
             SUS_FO.system.forEach(element => {
                 tots+=element.overall
             });
+            avg = tots/SUS_FO.system.length
         }
         else{
             CRITICAL_FO.system.forEach(element => {
                 tots+=element.overall
             });
+            avg = tots/CRITICAL_FO.system.length
         }
         d3.select("#summa_"+type+"_div").select("div").append("span").text("Total score: "+tots.toFixed(2))
+
+        d3.select("#summa_"+type+"_div").select("div").append("span").text("Average score: "+avg.toFixed(2))
     }
         //neutral div width
     else{

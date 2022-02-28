@@ -6,6 +6,7 @@ body {
     line-height: 1.4;
     color: #fff;
     background-color: #4f545c;
+    overflow-x: hidden
 
   }
 /** macro aree */
@@ -50,7 +51,17 @@ body {
   align-items: flex-start;
 }
 /** parametri dell'algo con gli slider */
-
+.params_text_div{
+  display: flex;
+  justify-content: space-between;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+#param_label{
+  position: absolute;
+  padding-left: 15px;
+  width: 200px;
+}
 #extra_right_side{
   margin-left: 5px;
   border-radius: 2px;
@@ -64,6 +75,8 @@ body {
   width: fit-content;
   color: white;
   background-color: #978e8e78;
+  z-index: 4;
+  cursor: pointer;
 }
 #appendix{
   display: flex;
@@ -97,7 +110,7 @@ body {
 }
 #reset_start_container{
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 /** CRITICAL DIV */
 #summa_sus_div{

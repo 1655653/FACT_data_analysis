@@ -18,7 +18,7 @@ function connectWithSc(hid,event){
         cpe = id[0].innerHTML
         d3.select("#leftside").transition().duration(400).style("border-color",bord_co)
     } catch (e) {
-        console.log(e)
+        //console.log(e)
     }
     // d3.select("#leftside").transition().duration(400).style("border-color",bord_co)
     // .transition().duration(50).style("y",position+"px")
