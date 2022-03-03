@@ -23,7 +23,7 @@ W_CVE_N_CRIT = 0.1
 W_USR_N_PWD = 30.0
 W_EXPLOIT = 1.5
 W_KNOWN_VULN = 5.0
-THRESHOLD = 25
+THRESHOLD = 29
 var CRITICAL_FO={"system":[],"user":[]}
 var SUS_FO={"system":[],"user":[]}
 var NEUTRAL_FO={"system":[],"user":[]}
@@ -238,7 +238,11 @@ function callFW() {
                 //sposto right un po piu a sinistra
                 t = parseFloat(d3.select("#rightside").style("right").replace("px",""))
                 d3.select("#rightside").style("right",t+35+"px")
-
+                
+                rw =  parseFloat(d3.select("#rightside").style("width").split("px")[0])
+                ex_r = parseFloat(d3.select("#extra_right_side").style("right").replace("px",""))
+                d3.select("#extra_right_side").style("right",ex_r+rw+t+55+"px")
+                
                 console.log(extension_dict)
 
             })();

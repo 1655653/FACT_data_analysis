@@ -146,7 +146,7 @@ function extraDivLogic(fw){
         W_EXPLOIT = 1.5
         W_KNOWN_VULN = 5.0
         SCORE_TYPE = "base_score"
-        THRESHOLD = 25
+        THRESHOLD = 29
         extraDivLogic(fw)
         rankdanger(fw,SCORE_TYPE)
         drawDanger()

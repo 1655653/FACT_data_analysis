@@ -455,7 +455,20 @@ stroke-width: 2px;
   opacity: 0.5;
   transform: scale(0.6);
 }
-
+.single_ext{
+  padding: 0px 5px 0px 5px;
+  margin: 0px 5px 0px 5px;
+  border: solid;
+  border-width: thin;
+  cursor: pointer;
+}
+#ext_dict_log{
+  display: flex;
+  justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70%;
+}
 #bigsun .node{
    cursor: pointer;
 }

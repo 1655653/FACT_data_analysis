@@ -71,8 +71,9 @@ function rankdanger_single(fw,uid,score){
             });
         }
     }
-    EXPLOIT *= W_EXPLOIT/2
-
+    // EXPLOIT *= W_EXPLOIT/2
+    var n_ex = EXPLOIT
+    EXPLOIT = (11 - EXPLOIT) * W_EXPLOIT/2
     var CVE = 0
     var cpe = SW_COMP_CVE
 
@@ -101,7 +102,7 @@ function rankdanger_single(fw,uid,score){
         //In the array!
         is_packed = true
     } 
-    var overall = parseFloat((CRYPTO+CVE+USR_N_PWD+KNOWN_VULN-EXPLOIT).toFixed(1))
+    var overall = parseFloat((CRYPTO+CVE+USR_N_PWD+KNOWN_VULN+EXPLOIT).toFixed(1))
     el = {
         "uid":uid,
         "hid":ALL_REST_RESPONSE[uid].hid,
@@ -114,13 +115,13 @@ function rankdanger_single(fw,uid,score){
         "packed": is_packed //il prob è quando è true
     }
     var rank = "Suspicious"
-    if(overall > THRESHOLD){
+    if(overall > THRESHOLD && (overall-EXPLOIT)>0.95){
         // console.log(ALL_REST_RESPONSE[uid])
         // console.log(uid+"  CRYPTO  "+CRYPTO +"  USR_N_PWD  "+USR_N_PWD +"  EXPLOIT  "+EXPLOIT +"  CVE  "+CVE )
         CRITICAL_FO.system.push(el)
         rank = "Critical"
     }
-    else if((overall>0 && overall < THRESHOLD)||is_packed) SUS_FO.system.push(el)
+    else if(((overall-EXPLOIT)>0.95 && overall < THRESHOLD) ||is_packed) SUS_FO.system.push(el)
     else{
         NEUTRAL_FO.system.push(el)
         rank = "Other"
@@ -239,7 +240,8 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 if(item!="hid" && item != "uid" && item != "overall" && item != "packed"){
                     if(index==0) d3.select("#FO_titles_div_"+t).append("text").text(item).attr("class","acronym_title")
                     if(fo[item] > 0 && item != "EXM") metric_occurrences[item]++
-                    else if( fo[item] == 0 && item == "EXM" ) metric_occurrences[item]++
+                    // else if( fo[item] == 0 && item == "EXM" ) metric_occurrences[item]++
+                    else if( fo[item] == (11* W_EXPLOIT/2) && item == "EXM" ) metric_occurrences[item]++
                     stroke_color = '#000000a6'
                     svg_rect.append('rect')
                         .attr('stroke-width', '2px')
@@ -259,7 +261,7 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                                 stroke_color = scale(fo[item])
                                 return stroke_color
                             }
-                            else if(fo[item] == 0 && item=="EXM") {
+                            else if(fo[item] == (11* W_EXPLOIT/2) && item=="EXM") {
                                 scale = d3.scaleLinear().domain([mn,m]).range([AAA_MIN_FILL, AAA_FILL])
                                 stroke_color = scale(fo[item])
                                 return stroke_color

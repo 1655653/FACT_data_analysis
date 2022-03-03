@@ -21,7 +21,7 @@ function packedUI(unpacker){
 
         LIST_PACKED_UID = unpacker.summary.packed //global
         txt ="FACT has not been able to unpack "+ packed + " elements  " 
-        d3.select("#reportOf").append("br")
+        // d3.select("#reportOf").append("br")
         
         d3.select("#reportOf").append("text").text(txt)
             .append("i").attr("id","packed_tree_expand_btn").attr("class","fas fa-caret-down")
@@ -42,13 +42,13 @@ function packedUI(unpacker){
     
     else if(packed==-1){
         txt ="FACT unpacked 0 elements " 
-        d3.select("#reportOf").append("br")
+        // d3.select("#reportOf").append("br")
         
         d3.select("#reportOf").append("text").text(txt)
     }
     else{
         txt ="FACT has been able to unpack all elements  " 
-        d3.select("#reportOf").append("br")
+        // d3.select("#reportOf").append("br")
         
         d3.select("#reportOf").append("text").text(txt)
         .append("i").attr("id","output_unpack").attr("class","fa-brands fa-readme").style("opacity","1")
@@ -333,12 +333,19 @@ function ext_dict(extension_dict){
         // d3.select("#toggle_sun_div").style("visibility","hidden")
 
         var s =""
+        edl = d3.select("#ext_dict_log").style("visibility","visible")
         extension_dict.forEach(e => {
-            if(e!=undefined) s+="     "+e +"     "
+            // if(e!=undefined) s+="     "+e +"     "
+                    edl.append("div").style("max-width","70%").append("text").text(e).attr("class","single_ext")
+                    .on("click",function(){
+                        ur = "https://www.file-extensions.org/"+e.replaceAll(".","")+"-file-extension"
+                        window.open(ur, '_blank').focus();
+                    })
+
         });
         d3.select("#ext_dict_icon").transition().duration(400).style("opacity","0.2")
-        d3.select("#ext_dict_log").style("visibility","visible")
-        .append("div").attr("id","ext_dict_log_dtls").style("max-width","70%").append("text").text(s)
+        // d3.select("#ext_dict_log").style("visibility","visible")
+        // .append("div").attr("id","ext_dict_log_dtls").style("max-width","70%").append("text").text(s)
     }
     else{
         // d3.select("#toggle_sun_div").style("visibility","visible")
@@ -346,5 +353,7 @@ function ext_dict(extension_dict){
         d3.select("#ext_dict_icon").selectAll("*").remove();
         d3.select("#ext_dict_log").style("visibility","hidden")
         d3.select("#ext_dict_log").text("")
+        d3.select("#reportOf").select("br").remove()
     }
+
 }
