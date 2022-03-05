@@ -6,12 +6,26 @@ var margin_sb = {top: 0, right: 0, bottom: 0, left: 0}
 // var radius = Math.min(width_sb, height_sb) / 2;
 
 var sun_mode_child = true
+var sun_mode_child_rank = false
 
 function DrawSunburst(){
     d3.select("#toggle_sun_div").style("visibility","visible")
         .on("change",function(d){
             sun_mode_child = !sun_mode_child
-            var text = sun_mode_child ? "Leaves":"Size"
+            var text = sun_mode_child ? "Child":"Size"
+            d3.select(this).select("text").text(text)
+            DrawSunburst()
+        })
+        .on("mouseover",function(d){
+            d3.select(this).transition().duration(500).style("opacity","1")
+        })
+        .on("mouseout",function(d){
+            d3.select(this).transition().duration(500).style("opacity","0.5")
+        })
+    d3.select("#toggle_sun_div_rank").style("visibility","visible")
+        .on("change",function(d){
+            sun_mode_child_rank = !sun_mode_child_rank
+            var text = sun_mode_child_rank ? "MIME":"Rank"
             d3.select(this).select("text").text(text)
             DrawSunburst()
         })
@@ -127,7 +141,14 @@ function DrawSunburst(){
             .attr("d", arc)
             .style('stroke', '#4f545c')
             .style("opacity", function(d) {return d.data.filtered? 0.2 : 0.8})
-            .style("fill",function(d){//devi vedere come colorare le folder
+            .style("fill",function(d){
+                if(sun_mode_child_rank){
+                    if(d.data.rank=="Other") return "black"
+                    if(d.data.rank =="Critical") return "red"
+                    if(d.data.rank =="Suspicious") return "yellow"
+                    return "#ad9b79" //folder yellow
+                }
+                //devi vedere come colorare le folder
                 //return colormimeSupertype(d.data.mime)
                 if(d.data.mime){
                     try {
@@ -178,6 +199,9 @@ function DrawSunburst(){
     d3.select("#toggle_sun_div").style("top","49%")
     d3.select("#toggle_sun_div").style("width","fit-content")
     d3.select("#toggle_sun_div").style("left","40%")
+    d3.select("#toggle_sun_div_rank").style("top","49%")
+    d3.select("#toggle_sun_div_rank").style("width","fit-content")
+    d3.select("#toggle_sun_div_rank").style("left","40%")
 
     
     
@@ -185,6 +209,7 @@ function DrawSunburst(){
         // colorMiniSunburst(d)
         var viz = d.depth==0? viz = "visible":"hidden"
         d3.select("#toggle_sun_div").style("visibility",viz)
+        d3.select("#toggle_sun_div_rank").style("visibility",viz)
         svg_sb.transition()
             .duration(750)
             .tween("scale", function() {

@@ -31,7 +31,12 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["cpu"] = response.data.file_object.analysis.cpu_architecture.summary[0]
                     ioi_response["crypto"] = response.data.file_object.analysis.crypto_material.summary[0]
                     ioi_response["uap"] = response.data.file_object.analysis.users_and_passwords.summary
+                    
+                    console.log(ALL_REST_RESPONSE[response.data.request.uid])
+                    // if(ALL_REST_RESPONSE[response.data.request.uid]!=undefined) NIBBA_ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
+                    // else ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
                     ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
+
                     ext_exist = response.data.file_object.meta_data.hid.lastIndexOf(".")
                     ext = response.data.file_object.meta_data.hid.substring(ext_exist)
                     if(!extension_dict.includes(ext) && ext_exist >-1) extension_dict.push(ext)

@@ -75,10 +75,40 @@ function connectWithSun(uid,event,vi){
 }
 
 function connectWithRd(hid,event){
+    
     bkg = event=="mouseover"? "black": "white"
     op = event == "mouseover" ? "0.2":"1"
+    
+
     try {
         id = hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
+        var found = false
+        //vedi se lo trovi
+        d3.select("#rightside").selectAll("span, text").each(function(e,i){
+            if(d3.select(this).attr("id")==id){
+                found = true
+            }
+        })
+
+        if(!found){ //se non lo trovi 
+            NEUTRAL_FO.system.forEach(element => {
+                if(element.hid == hid) found = true
+            });
+            if(!found){ //è un link
+                var uid 
+                a = d3.select("#bigsun").selectAll(".node").each(function(e, i){
+                    if(hid == e.data.hid){
+                        // console.log(e.data)
+                        uid = e.data.uid
+                    }
+                })
+                // console.log(uid)
+                // console.log(ALL_REST_RESPONSE[uid].hid)//l'hid cambia
+                id = ALL_REST_RESPONSE[uid].hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")
+                // console.log(id)
+            }
+        }
+
         d3.select("#rightside").selectAll("span, text").each(function(e,i){
             if(d3.select(this).attr("id")==id){
                 // d3.select(this).transition().duration(400).style("color",bkg)
@@ -87,11 +117,9 @@ function connectWithRd(hid,event){
                 d3.select(this).transition().duration(400).style("opacity",op)
             }
         })
-        // d3.select("#rightside").select("#"+id)
-        // .transition().duration(400).style("color",bkg)
         
     } catch (error) {
-        
+        // console.log(error)
     }
 }
 

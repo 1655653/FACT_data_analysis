@@ -456,6 +456,18 @@ stroke-width: 2px;
   opacity: 0.5;
   transform: scale(0.6);
 }
+#toggle_sun_div_rank {
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  visibility: hidden;
+  opacity: 1;
+  position: relative;
+  flex-direction: column;
+  opacity: 0.5;
+  transform: scale(0.6);
+}
+
 .single_ext{
   padding: 0px 5px 0px 5px;
   margin: 0px 5px 0px 5px;
