@@ -20,7 +20,9 @@ function packedUI(unpacker){
 
 
         LIST_PACKED_UID = unpacker.summary.packed //global
-        txt ="FACT has not been able to unpack "+ packed + " elements  " 
+        var alert_unpack = unpacker.plugin_used=="generic_carver"? "Be careful, FACT could have unpacked this file badly" : ""
+
+        txt ="FACT has not been able to unpack "+ packed + " elements.  " +alert_unpack
         // d3.select("#reportOf").append("br")
         
         d3.select("#reportOf").append("text").text(txt)

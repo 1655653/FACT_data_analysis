@@ -201,7 +201,12 @@ function drawSingleDanger(t,type){ //t=c,s,n type=critical,sus,neutral
                 for (let index = 0; index < nodes.length; index++) {
                     const node = nodes[index];
                     if(d3.select(node).attr("id") == fo.hid.replace(/[/]/g,"_").replace(/[.]/g,"_EXTENSION_").replace("~","_TILDE")){
-                        createDetailsdiv(fo,t,index)
+                        if(LIST_PACKED_UID.includes(fo.uid)){
+                            d3.select("#packed_tree_expand_btn").dispatch("click")
+                        }
+                        else{
+                            createDetailsdiv(fo,t,index)
+                        }
                     }
                 }
             })

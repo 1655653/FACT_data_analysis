@@ -104,7 +104,7 @@ function createDetailsdiv(fo,t,index){
     var un_out = el.unpacker.summary[0] != undefined? el.unpacker.summary[0]: "no info"
     unpacker.append("div").text(un_out).style("padding-left","5px")
         .style("color",function(){
-            return el.unpacker.summary[0]=="packed"? "red": "green"
+            return el.unpacker.plugin_used=="generic_carver"? "yellow" : el.unpacker.summary[0]=="packed"? "red": "green"
         })
     unpacker.append("i").attr("class",'fas fa-caret-down')
         .on("click",function(){
@@ -113,7 +113,8 @@ function createDetailsdiv(fo,t,index){
                 var n = d3.create("div").attr("id","unpacker_dtls")
                 var out = el.unpacker.output != undefined? el.unpacker.output: el.unpacker.info
                 if(out==undefined) out="no info"
-                n.append("text").text("Plug-in used: "+el.unpacker.plugin_used+" v "+el.unpacker.plugin_version+"  ")
+                var alert_unpack = el.unpacker.plugin_used=="generic_carver"? "Be careful, FACT could have unpacked this file badly" : ""
+                n.append("text").text("Plug-in used: "+el.unpacker.plugin_used+" v "+el.unpacker.plugin_version+"  "+alert_unpack)
                 n.append("br")
                 n.append("text").text(out)
 

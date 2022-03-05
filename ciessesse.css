@@ -379,7 +379,8 @@ stroke-width: 2px;
 
 .link_pckd {
   fill: none;
-  stroke: #979393;
+  /* stroke: #979393; */
+  stroke: #97939336;
   stroke-width: 2px;
 }
 
