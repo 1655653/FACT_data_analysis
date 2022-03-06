@@ -57,6 +57,7 @@ function buildBipartiteGraph(exm_data){
 	// console.log(exm_data)
 	// console.log(exm_data_filtered)
 	//*Bipartite
+	
 	var bP = viz.biPartite()
 		.data(exm_data_filtered)
 		.orient("vertical")
