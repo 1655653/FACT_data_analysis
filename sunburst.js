@@ -25,7 +25,7 @@ function DrawSunburst(){
     d3.select("#toggle_sun_div_rank").style("visibility","visible")
         .on("change",function(d){
             sun_mode_child_rank = !sun_mode_child_rank
-            var text = sun_mode_child_rank ? "MIME":"Rank"
+            var text = sun_mode_child_rank ? "Rank":"MIME"
             d3.select(this).select("text").text(text)
             DrawSunburst()
         })
