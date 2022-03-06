@@ -10,15 +10,17 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
             //*rest call of every FO
             if( included_files.length > 0){
                 promises = [];
-                included_files.forEach(function(item) {
-                    url = endpoint+"file_object/"+item+"?summary=true";
-                    promises.push(axios.get(url));
-                });
-                const res_File_objects = await Promise.all(promises)
-                
-                console.log("-------------------------res_File_objects-----------------------------------------")
-                console.log(JSON.stringify(res_File_objects))
-                console.log("---------------------------END res_File_objects---------------------------------------")
+                // included_files.forEach(function(item) {
+                //     url = endpoint+"file_object/"+item+"?summary=true";
+                //     promises.push(axios.get(url));
+                // });
+                res_File_objects = FO_calls_short
+                ALL_REST_RESPONSE = ALL_REST_RESPONSE_short
+                if(fw="long"){
+                    res_File_objects = FO_calls_long
+                    ALL_REST_RESPONSE = ALL_REST_RESPONSE_long
+                }    
+
                 for(let response of res_File_objects){
                     //all_REST_response[response.data.request.uid] = response
                     //*-------build ALL_REST_RESPONSE
@@ -36,7 +38,6 @@ async function BuildTree(included_files, fatherNode, fw){ //input is list of inc
                     ioi_response["crypto"] = response.data.file_object.analysis.crypto_material.summary[0]
                     ioi_response["uap"] = response.data.file_object.analysis.users_and_passwords.summary
                     ALL_REST_RESPONSE[response.data.request.uid] = ioi_response
-
                     ext_exist = response.data.file_object.meta_data.hid.lastIndexOf(".")
                     ext = response.data.file_object.meta_data.hid.substring(ext_exist)
                     if(!extension_dict.includes(ext) && ext_exist >-1) extension_dict.push(ext)

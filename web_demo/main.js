@@ -61,7 +61,9 @@ var has_sus_files=[]
 
 //*mime
 var ListMimes = [] //? lista con i subtypes
+ListMimes = ["filesystem/squashfs","text/plain","application/x-executable","application/x-sharedlib","inode/symlink","application/x-object","image/gif","image/png","application/octet-stream"]
 var ListSuperMimes = []//?lista con solo i types
+ListSuperMimes = ["filesystem","text","application","inode","image"]
 var colormimeSupertype
 var colormimeSubtype
 var mime_filtered=[]
@@ -71,23 +73,32 @@ d3.select("#leftside").style("max-height",window.screen.height/2.6+"px")
 
 
 //* call all firmwares
-d3.json(url, function(data) {
-    select=document.getElementById("allFW")
-    var ljs = data.uids
-    ljs.unshift("---") //? <----- riempio la lista con gli uid dei firmware (per ora ho solo quelli)
-    ljs.forEach(function (item) {
-        let op = document.createElement('option');
-        op.setAttribute("value", item)
-        select.appendChild(op);
-        op.innerHTML += item;
-    });
+// d3.json(url, function(data) {
+//     select=document.getElementById("allFW")
+//     var ljs = data.uids
+//     ljs.unshift("---") //? <----- riempio la lista con gli uid dei firmware (per ora ho solo quelli)
+//     ljs.forEach(function (item) {
+//         let op = document.createElement('option');
+//         op.setAttribute("value", item)
+//         select.appendChild(op);
+//         op.innerHTML += item;
+//     });
     
-})
+// })
 var debug_mode = false
+var fw = "short"
 document.getElementById("start").onclick = callFW//? <---- chiamata quando premi bottone
 document.getElementById("debug").onclick = db_callFW
+document.getElementById("debug2").onclick = db_callFW2
 function db_callFW() {
     debug_mode = true
+    callFW()
+}
+function db_callFW2() {
+    debug_mode = true
+    fw = "long"
+    ListMimes = ["firmware/trx","filesystem/squashfs","text/plain","image/gif","inode/symlink","application/x-executable","application/x-sharedlib","image/vnd.microsoft.icon","application/x-object","image/png","image/jpeg","application/csv","application/octet-stream","application/x-archive","image/bmp","filesystem/minix","application/x-lzma","application/x-cpio"]
+    ListSuperMimes = ["firmware","filesystem","text","image","inode","application"]
     callFW()
 }
 //* starts analysis on a selected FW
@@ -96,20 +107,21 @@ function callFW() {
     ShowLoader(true)
     
     var selectBox = document.getElementById("allFW");
-    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    var selectedValue
     if(debug_mode){
-        selectedValue = "de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970"
-        //selectedValue = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866"
+        if(fw=="short")selectedValue = "de7ddf183b9b0cea6a96f1af3ab5a6bda5a171c1b13890ddc8aa84264f07ffc9_3662970"
+        else  selectedValue = "ffef4a68007bcde84376e51e3eb9210bb869df9bebe958de31d8ab3850654e04_32759866"
     }
     //console.log(selectedValue)
     if(selectedValue != "---"){
-        url = endpoint+"firmware/"+selectedValue+"?summary=true"
-        d3.json(url, function(data) { //?<----- chiamata alle api
-            
-            
-            console.log("-------------------------DATA-----------------------------------------")
-            console.log( JSON.stringify(data))
-            console.log("---------------------------END DATA---------------------------------------")
+        url = endpoint+"firmware/"+selectedValue+"?summary=true" 
+            var data
+            if(fw=="short"){
+                data = FW_web_demo_short
+            }   
+            else{
+                data = FW_web_demo_long
+            }    
             //console.log(exploit_data)
             //* cpu_architecture string
             var cpu_info =  []
@@ -166,9 +178,17 @@ function callFW() {
                 // //***building tree
                 
                 console.log("BUILDING TREE")
-                await BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
-                calculateLeaves(Tree) 
-                calculateMimes(Tree) 
+                // BuildTree(data.firmware.meta_data.included_files, Tree, data.firmware)
+                // calculateLeaves(Tree) 
+                // calculateMimes(Tree) 
+                ALL_REST_RESPONSE = ALL_REST_RESPONSE_short
+                Tree = TREE_short_web_demo
+                extension_dict = ['.htm', '.gif', '.so', '.js', '.sh', '.service', '.0', '.ico', '.ko', '.png', '.1', '.conf', '.jpg', '.crt', '.7', '.css', '.la', '.pc', '.11', '.2', '.19', '.h', '.53', '.3', '.12', '.8', '.IPv6', '.cgi', '.tmp', '.exe', '.system', '.pem', '.txt', '.GPL', '.rules', '.lai', '.trf', '.26', '.a', '.o', '.html', '.xml', '.6', '.start', '.key', '.5', '.d/avahi-daemon', '.bmp', '.action', '.info', '.d/messagebus', '.52', '.d/avahi-dnsconfd', '.4', '.FAQ', '.55', '.TXT', '.cache', '.cnf', '.51', '.down-root', '.bin', '.d/afpd', '.14', '.default', '.polarssl', '.cpio']
+                console.log(TREE_short_web_demo)
+                if(fw=="long") {
+                    Tree = TREE_long
+                    ALL_REST_RESPONSE = ALL_REST_RESPONSE_long
+                }
                 BackupTree = JSON.parse(JSON.stringify(Tree))
                 console.log("TREE BUILT")
                 console.log(Tree)
@@ -185,7 +205,7 @@ function callFW() {
                 if(!debug_mode) await buildSWComponentWithCVE(data.firmware.analysis.cve_lookup) //!!UNCOMMENT TO RUN IT NORMALLY
                 else{
                     SW_COMP_CVE = FAKE_NIST_CALL_short // debug reasons //!!COMMENT TO RUN IT NORMALLY
-                    //SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
+                    if(fw=="long") SW_COMP_CVE = FAKE_NIST_CALL_long // debug reasons //!!COMMENT TO RUN IT NORMALLY
                 }
                 d3.select("#db_mod").remove()
                 console.log("---------NIST RESPONDED WITH ALL CVE")
@@ -236,7 +256,7 @@ function callFW() {
                 d3.select("#directory_container").style("width",w_miti+"px")
                 ShowLoader(false)
                 // d3.select("#center").style("width","fit-content")
-                d3.select("#directory_container").select("rect").dispatch("click")
+                //d3.select("#directory_container").select("rect").dispatch("click")
 
                 //sposto right un po piu a sinistra
                 t = parseFloat(d3.select("#rightside").style("right").replace("px",""))
@@ -247,20 +267,10 @@ function callFW() {
                 d3.select("#extra_right_side").style("right",ex_r+rw+t+55+"px")
                 
                 console.log(extension_dict)
-                console.log("-------------------------ALL_REST_RESPONSE-----------------------------------------")
-                console.log( JSON.stringify(ALL_REST_RESPONSE))
-                console.log("---------------------------END ALL_REST_RESPONSE---------------------------------------")
-                console.log("---------------------------ListSuperMimes---------------------------------------")
-                console.log( JSON.stringify(ListSuperMimes))
-                console.log("-------------------------------ListMimes-----------------------------------")
-                console.log( JSON.stringify(ListMimes))
-                console.log("-------------------------tree-----------------------------------------")
-                console.log( JSON.stringify(Tree))
-                console.log("---------------------------END tree---------------------------------------")
+                d3.select("#application_checkbox").dispatch("click")
+                d3.select("#application_checkbox").dispatch("click")
 
             })();
-            
-        })
     }
   
     //? pulisco le var
