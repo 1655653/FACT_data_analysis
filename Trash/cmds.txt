@@ -1,0 +1,5 @@
+/mnt/c/Users/theta/Desktop
+sudo chmod a+rwx
+sudo strings ip > report_ip.txt
+sudo objdump -s --section .comment WTP
+stat WTP
