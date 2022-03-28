@@ -15,7 +15,7 @@ NOTE: FACT-Vis has been developed mainly on chrome, so different behaviour are p
 Enjoy!
 
 A  very detailed description of the project has been produced [here](https://github.com/1655653/FACT_data_analysis/blob/main/Real%20docs/Tesi_Longo.pdf).
-<br>But if you are in a hurry, [there is the short version.](Italian%20Crime%20Visualizator.pdf) 
+<br>But if you are in a hurry, [there is the short version.](https://github.com/1655653/FACT_data_analysis/blob/main/Real%20docs/FACT-Vis_lunedi.pdf) 
 
 ## Authors 
 Valerio Longo [<img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" width="20" height="20">](https://www.linkedin.com/in/valerio-longo-51000a10a/) [<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="20" height="20">](https://github.com/1655653)
