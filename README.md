@@ -9,7 +9,7 @@ If you want to contact me please write at longo.1655653@studenti.uniroma1.it.
 
 If you want to play with the tool:
 - You can [try it](https://1655653.github.io/FACT_data_analysis/) 
-- You could download the repo, change the ADDRESS variable and connect it with your machine where FACT runs. 
+- You can download the repo, change the ADDRESS variable and connect it with your machine where FACT runs. 
 
 NOTE: FACT-Vis has been developed mainly on chrome, so different behaviour are possible with other browser.
 Enjoy!
